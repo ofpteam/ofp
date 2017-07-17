@@ -4,20 +4,20 @@
 'UTF-8'
 -private
 -sourcepath
-'D:/Documents/Downloads/wjggwm-webside-master/webside/src/main/java;D:/Documents/Downloads/wjggwm-webside-master/webside/target/generated-sources/annotations'
+'C:/Users/Administrator/git/ofp/src/main/java;C:/Users/Administrator/git/ofp/target/generated-sources/annotations'
 -author
 -bottom
 'Copyright &#169; 2017. All rights reserved.'
 -charset
 'UTF-8'
 -d
-'D:/Documents/Downloads/wjggwm-webside-master/webside/target/apidocs'
+'C:/Users/Administrator/git/ofp/target/apidocs'
 -docencoding
 'UTF-8'
 -doctitle
 'webside 0.0.1-SNAPSHOT API'
 -linkoffline
-'http://docs.oracle.com/javase/8/docs/api' 'D:/Documents/Downloads/wjggwm-webside-master/webside/target/javadoc-bundle-options'
+'http://docs.oracle.com/javase/8/docs/api' 'C:/Users/Administrator/git/ofp/target/javadoc-bundle-options'
 -use
 -version
 -windowtitle

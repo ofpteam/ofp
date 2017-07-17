@@ -514,7 +514,7 @@
 
 			<!-- generate a javadoc -->
 
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.10.3</version>
@@ -534,7 +534,7 @@
 					<docencoding>UTF-8</docencoding>
 					<show>private</show>
 				</configuration>
-			</plugin>
+			</plugin> -->
 
 			<!-- mybatis-generator代码生成 -->
 			<plugin>

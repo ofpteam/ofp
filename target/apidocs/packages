@@ -24,6 +24,11 @@ com.webside.logininfo.mapper
 com.webside.logininfo.model
 com.webside.logininfo.service.impl
 com.webside.logininfo.service
+com.webside.ofp.controller
+com.webside.ofp.mapper
+com.webside.ofp.model
+com.webside.ofp.service.impl
+com.webside.ofp.service
 com.webside.open.controller
 com.webside.quartz.controller
 com.webside.quartz.extension

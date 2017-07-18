@@ -16,10 +16,10 @@
 <div class="page-header">
 	<h1>
 		<c:if test="${empty userEntity}">
-		新增用户
+		新增商品
 		</c:if>
 		<c:if test="${!empty userEntity}">
-		编辑用户
+		编辑商品
 		</c:if>
 	</h1>
 </div>
@@ -45,8 +45,7 @@
 						for="PRODUCT_CODE">商品编码:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="PRODUCT_CODE" id="PRODUCT_CODE"
+							<input class="form-control" name="PRODUCT_CODE" id="PRODUCT_CODE"
 								type="text" value="${userEntity.accountName }"
 								placeholder="商品编码..." />
 						</div>
@@ -62,14 +61,228 @@
 								placeholder="工厂编码..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right"
-						for="UNIT">单位:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="UNIT">单位:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="UNIT" id="UNIT"
-								type="email" value="${userEntity.accountName }"
-								placeholder="单位..." />
+								class="form-control" name="UNIT" id="UNIT" type="email"
+								value="${userEntity.accountName }" placeholder="单位..." />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right"
+						for="PRODUCT_TYPE_ID_1">商品大类(一级):</label>
+					<div class="col-sm-3">
+						<select class="form-control" id="PRODUCT_TYPE_ID_1">
+							<option value="1">杯子</option>
+						</select>
+					</div>
+
+					<label class="col-sm-1 control-label no-padding-right"
+						for="PRODUCT_TYPE_ID_2">商品大类(二级):</label>
+					<div class="col-sm-3">
+						<select class="form-control" id="PRODUCT_TYPE_ID_2">
+						</select>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="CUSTOMS_CODE">海关编码:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="CUSTOMS_CODE" id="CUSTOMS_CODE"
+								type="text" value="${userEntity.accountName }"
+								placeholder="海关编码..." />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right"
+						for="USD_PRICE">美金单价:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="USD_PRICE" id="USD_PRICE"
+								type="number" value="${userEntity.accountName }"
+								placeholder="美金单价..." />
+						</div>
+					</div>
+
+					<label class="col-sm-1 control-label no-padding-right"
+						for="CN_NAME">中文名称:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="CN_NAME" id="CN_NAME" type="text"
+								value="${userEntity.accountName }" placeholder="中文名称..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="EN_NAME">英文名称:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="EN_NAME" id="EN_NAME" type="text"
+								value="${userEntity.accountName }" placeholder="英文名称..." />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right"
+						for="VAT_RATE">增值税率:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="VAT_RATE" id="VAT_RATE" type="number"
+								value="${userEntity.accountName }" placeholder="增值税率..." />
+						</div>
+					</div>
+
+					<label class="col-sm-1 control-label no-padding-right"
+						for="BUY_PRICE">工厂价:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="BUY_PRICE" id="BUY_PRICE"
+								type="number" value="${userEntity.accountName }"
+								placeholder="工厂价..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right" for="WEIGHT">重量:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="WEIGHT" id="WEIGHT" type="number"
+								value="${userEntity.accountName }" placeholder="重量（单位：g）..." />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right" for="VOLUME">容量:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="VOLUME" id="VOLUME" type="number"
+								value="${userEntity.accountName }" placeholder="容量（单位：ml）..." />
+						</div>
+					</div>
+
+					<label class="col-sm-1 control-label no-padding-right" for="TOP">TOP:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="TOP" id="TOP" type="number"
+								value="${userEntity.accountName }" placeholder="TOP（单位：mm）..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right" for="BOTTOM">BOTTOM:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="BOTTOM" id="BOTTOM" type="number"
+								value="${userEntity.accountName }"
+								placeholder="BOTTOM（单位：mm）..." />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right" for="LENGTH">外包装长度:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="LENGTH" id="LENGTH" type="number"
+								value="${userEntity.accountName }" placeholder="外包装长度（单位:cm）..." />
+						</div>
+					</div>
+
+					<label class="col-sm-1 control-label no-padding-right" for="WIDTH">外包装宽度:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="WIDTH" id="WIDTH" type="number"
+								value="${userEntity.accountName }" placeholder="外包装宽度（单位：cm）..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="PACK_HEIGHT">外包装高度:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="PACK_HEIGHT" id="PACK_HEIGHT"
+								type="number" value="${userEntity.accountName }"
+								placeholder="外包装高度（单位：cm）..." />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right" for="GW">G.W:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="GW" id="GW" type="number"
+								value="${userEntity.accountName }" placeholder="G.W..." />
+						</div>
+					</div>
+
+					<label class="col-sm-1 control-label no-padding-right"
+						for="PACKING_RATE">装箱率:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="PACKING_RATE" id="PACKING_RATE"
+								type="number" value="${userEntity.accountName }"
+								placeholder="装箱率..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="TAX_REBATE_RATE">退税率:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="TAX_REBATE_RATE" id="TAX_REBATE_RATE"
+								type="number" value="${userEntity.accountName }"
+								placeholder="退税率..." />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right" for="CBM">CBM:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="CBM" id="CBM" type="number"
+								value="${userEntity.accountName }" placeholder="CBM..." />
+						</div>
+					</div>
+
+					<label class="col-sm-1 control-label no-padding-right"
+						for="PACKING">包装描述:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="PACKING" id="PACKING"
+								type="text" value="${userEntity.accountName }"
+								placeholder="包装描述..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="TAX_REBATE_RATE"></label>
+					<div class="col-sm-3">
+						<div>
 						</div>
 					</div>
 				</div>

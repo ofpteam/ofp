@@ -13,14 +13,9 @@
 			 <i class="fa fa-pencil-square-o"></i>&nbsp;编辑
 		</button>
 	</shiro:hasPermission>
-	<shiro:hasPermission name="product:deleteBatch ">
-	<button id="btnDel" type="button" onclick="webside.common.delModel('/product/deleteBatch.html', productSearch)" class="btn btn-danger btn-sm">
-		<i class="fa fa-trash-o"></i>&nbsp;删除
-	</button>
-	</shiro:hasPermission>
 </div>
 <div class="input-group">
-     <input id="searchKey" type="text" class="input form-control" placeholder="姓名、账户名称...">
+     <input id="searchKey" type="text" class="input form-control" placeholder="商品编码 中文名称...">
      <span class="input-group-btn">
          <button id="btnSearch" class="btn btn-primary btn-sm" type="button"> <i class="fa fa-search"></i> 搜索</button>
      </span>
@@ -32,7 +27,7 @@
 		<div class="widget-box transparent ui-sortable-handle"
 			style="opacity: 1; z-index: 0;">
 			<div class="widget-header">
-				<h4 class="widget-title lighter">产品列表</h4>
+				<h4 class="widget-title lighter">商品列表</h4>
 				<div class="widget-toolbar no-border">
 					<a href="#" data-action="fullscreen" class="orange2"> 
 						<i class="ace-icon fa fa-arrows-alt"></i>

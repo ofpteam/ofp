@@ -105,7 +105,7 @@ public class CustomerEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    private Integer mdoifyUser;
+    private Integer modifyUser;
 
     /**
      * Database Column Remarks:
@@ -318,8 +318,8 @@ public class CustomerEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    public Integer getMdoifyUser() {
-        return mdoifyUser;
+    public Integer getModifyUser() {
+        return modifyUser;
     }
 
     /**
@@ -330,8 +330,8 @@ public class CustomerEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    public void setMdoifyUser(Integer mdoifyUser) {
-        this.mdoifyUser = mdoifyUser;
+    public void setModifyUser(Integer modifyUser) {
+        this.modifyUser = modifyUser;
     }
 
     /**

@@ -57,3 +57,5 @@ function customSearch() {
     grid.parameters['CN_NAME'] = $("#searchKey").val();
     grid.refresh(true);
 }
+
+

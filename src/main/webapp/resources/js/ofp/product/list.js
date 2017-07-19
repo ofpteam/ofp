@@ -1,9 +1,10 @@
 var dtGridColumns = [{
-    id : 'PRODUCT_ID',
-    title : '产品ID',
-    type : 'number',
-    columnClass : 'text-center',
-    headerClass : 'dlshouwen-grid-header'
+	id : 'PRODUCT_ID',
+	title : '编号',
+	type : 'number',
+	columnClass : 'text-center',
+	hideType : 'xs',
+	headerClass : 'dlshouwen-grid-header'
 }, {
     id : 'PRODUCT_CODE',
     title : '商品编码',
@@ -26,6 +27,7 @@ var dtGridColumns = [{
 var dtGridOption = {
     lang : 'zh-cn',
     ajaxLoad : true,
+    check : true,
     extraWidth : '37px',
     loadURL : sys.rootPath + '/product/list.html',
     columns : dtGridColumns,

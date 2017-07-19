@@ -13,9 +13,9 @@ $('#customerForm').validate({
         }
     },
     messages : {
-    	PRODUCT_CODE : {
+    	CUSTOMER_NAME : {
             required : "请填写客户名称",
-        },FACTORY_CODE:{
+        },TELEPHONE:{
         	 required : "请填写电话",
         }
     },

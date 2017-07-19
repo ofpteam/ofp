@@ -20,7 +20,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `interest_rate`;
 CREATE TABLE `interest_rate` (
-  `INTEREST_RATE_ID` int(11) NOT NULL,
+  `INTEREST_RATE_ID` int(11) NOT NULL AUTO_INCREMENT,
   `RATE` decimal(10,0) DEFAULT NULL COMMENT '利率,算利息的',
   PRIMARY KEY (`INTEREST_RATE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -31,7 +31,7 @@ CREATE TABLE `interest_rate` (
 -- ----------------------------
 DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
-  `CUSTOMER_ID` int(11) NOT NULL,
+  `CUSTOMER_ID` int(11) NOT NULL AUTO_INCREMENT,
   `CUSTOMER_NAME` varchar(50) DEFAULT NULL COMMENT '客户名称',
   `TELEPHONE` varchar(30) DEFAULT NULL COMMENT '电话',
   `COUNTRY` varchar(50) DEFAULT NULL COMMENT '国家',
@@ -39,7 +39,7 @@ CREATE TABLE `customer` (
   `CREATE_TIME` datetime DEFAULT NULL COMMENT '创建时间',
   `MODIFY_TIME` datetime DEFAULT NULL COMMENT '修改时间',
   `CREATE_USER` int(11) DEFAULT NULL COMMENT '创建人',
-  `MDOIFY_USER` int(11) DEFAULT NULL COMMENT '修改人',
+  `MODIFY_USER` int(11) DEFAULT NULL COMMENT '修改人',
   `DESCRIPTION` varchar(500) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`CUSTOMER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -53,7 +53,7 @@ CREATE TABLE `customer` (
 -- ----------------------------
 DROP TABLE IF EXISTS `product_type`;
 CREATE TABLE `product_type` (
-  `PRODUCT_TYPE_ID` int(11) NOT NULL,
+  `PRODUCT_TYPE_ID` int(11) NOT NULL AUTO_INCREMENT,
   `CN_NAME` varchar(100) DEFAULT NULL COMMENT '产品类型中文名称',
   `EN_NAME` varchar(100) DEFAULT NULL COMMENT '产品类型英文名称',
   `PARENT_ID` int(11) DEFAULT NULL COMMENT '父类',
@@ -63,7 +63,7 @@ CREATE TABLE `product_type` (
   `CREATE_TIME` datetime DEFAULT NULL COMMENT '创建时间',
   `MODIFY_TIME` datetime DEFAULT NULL COMMENT '修改时间',
   `CREATE_USER` int(11) DEFAULT NULL COMMENT '创建人',
-  `MDOIFY_USER` int(11) DEFAULT NULL COMMENT '修改人',
+  `MODIFY_USER` int(11) DEFAULT NULL COMMENT '修改人',
   `DESCRIPTION` varchar(500) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`PRODUCT_TYPE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -73,7 +73,7 @@ CREATE TABLE `product_type` (
 -- ----------------------------
 DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
-  `PRODUCT_ID` int(11) NOT NULL,
+  `PRODUCT_ID` int(11) NOT NULL AUTO_INCREMENT,
   `PRODUCT_TYPE_ID` int(11) DEFAULT NULL COMMENT '产品类型ID,外键',
   `PRODUCT_CODE` varchar(40) DEFAULT NULL COMMENT '商品编码',
   `FACTORY_CODE` varchar(40) DEFAULT NULL COMMENT '工厂编码',
@@ -104,7 +104,7 @@ CREATE TABLE `product` (
   `CREATE_TIME` datetime DEFAULT NULL COMMENT '创建时间',
   `MODIFY_TIME` datetime DEFAULT NULL COMMENT '修改时间',
   `CREATE_USER` int(11) DEFAULT NULL COMMENT '创建人',
-  `MDOIFY_USER` int(11) DEFAULT NULL COMMENT '修改人',
+  `MODIFY_USER` int(11) DEFAULT NULL COMMENT '修改人',
   `DESCRIPTION` varchar(500) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`PRODUCT_ID`),
   KEY `FK_Reference_1` (`PRODUCT_TYPE_ID`),
@@ -120,7 +120,7 @@ CREATE TABLE `product` (
 -- ----------------------------
 DROP TABLE IF EXISTS `quotation_sheet`;
 CREATE TABLE `quotation_sheet` (
-  `QUOTATION_SHEET_ID` int(11) NOT NULL,
+  `QUOTATION_SHEET_ID` int(11) NOT NULL AUTO_INCREMENT,
   `CUSTOMER_ID` int(11) DEFAULT NULL COMMENT '客户ID,外键',
   `INTEREST_RATE_ID` int(11) DEFAULT NULL COMMENT '利率ID,外键',
   `QUOTATION_SHEET_CODE` varchar(30) DEFAULT NULL COMMENT '报价单号',
@@ -147,7 +147,7 @@ CREATE TABLE `quotation_sheet` (
   `CREATE_TIME` datetime DEFAULT NULL COMMENT '创建时间',
   `MODIFY_TIME` datetime DEFAULT NULL COMMENT '修改时间',
   `CREATE_USER` int(11) DEFAULT NULL COMMENT '创建人',
-  `MDOIFY_USER` int(11) DEFAULT NULL COMMENT '修改人',
+  `MODIFY_USER` int(11) DEFAULT NULL COMMENT '修改人',
   `DESCRIPTION` varchar(500) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`QUOTATION_SHEET_ID`),
   KEY `FK_Reference_4` (`CUSTOMER_ID`),
@@ -162,7 +162,7 @@ CREATE TABLE `quotation_sheet` (
 -- ----------------------------
 DROP TABLE IF EXISTS `quotation_sub_sheet`;
 CREATE TABLE `quotation_sub_sheet` (
-  `QUOTATION_SUB_SHEET` int(11) NOT NULL,
+  `QUOTATION_SUB_SHEET` int(11) NOT NULL AUTO_INCREMENT,
   `PRODUCT_ID` int(11) DEFAULT NULL COMMENT '产品ID,外键',
   `QUOTATION_SHEET_ID` int(11) DEFAULT NULL COMMENT '报价单ID,外键',
   `USD_PRICE` decimal(10,2) DEFAULT NULL COMMENT '美金单价',

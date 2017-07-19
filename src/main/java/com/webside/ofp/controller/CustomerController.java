@@ -30,7 +30,7 @@ import com.webside.dtgrid.util.ExportUtils;
 
 @Controller
 @Scope("prototype")
-@RequestMapping(value = "/customer/")
+@RequestMapping(value = "/ocustomer/")
 public class CustomerController extends BaseController {
 
 	@Autowired

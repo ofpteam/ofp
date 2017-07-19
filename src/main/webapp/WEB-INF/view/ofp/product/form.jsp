@@ -8,9 +8,11 @@
 	src="${ctx }/resources/js/select2/select2.min.js"></script>
 <script type="text/javascript"
 	src="${ctx }/resources/js/select2/zh-CN.js"></script>
-<script type="text/javascript">
+<script type="text/javascript"
+	src="${ctx }/resources/js/ofp/product/form.js"></script>
+	<script type="text/javascript">
 	$(function() {
-		webside.form.user.validateUserForm();
+	    validateForm();
 	});
 </script>
 <div class="page-header">
@@ -65,7 +67,7 @@
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="UNIT" id="UNIT" type="email"
+								class="form-control" name="UNIT" id="UNIT" type="text"
 								value="${userEntity.accountName }" placeholder="单位..." />
 						</div>
 					</div>
@@ -145,13 +147,13 @@
 					</div>
 
 					<label class="col-sm-1 control-label no-padding-right"
-						for="BUY_PRICE">工厂价:</label>
+						for="BUY_PRICE">收购单价:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
 								class="form-control" name="BUY_PRICE" id="BUY_PRICE"
 								type="number" value="${userEntity.accountName }"
-								placeholder="工厂价..." />
+								placeholder="收购单价..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right" for="WEIGHT">重量:</label>
@@ -240,10 +242,9 @@
 						for="PACKING_RATE">装箱率:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="PACKING_RATE" id="PACKING_RATE"
-								type="number" value="${userEntity.accountName }"
-								placeholder="装箱率..." />
+						<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="PACKING_RATE" id="PACKING_RATE" type="text"
+								value="${userEntity.accountName }" placeholder="装箱率..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
@@ -270,20 +271,18 @@
 					</div>
 
 					<label class="col-sm-1 control-label no-padding-right"
-						for="PACKING">包装描述:</label>
+						for="PACKING">PACKING:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="PACKING" id="PACKING"
-								type="text" value="${userEntity.accountName }"
-								placeholder="包装描述..." />
+							<textarea <c:if test="${!empty userEntity}">readonly</c:if> name="PACKING_RATE" id="PACKING_RATE" placeholder="装箱率...">
+						</textarea>
+						
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="TAX_REBATE_RATE"></label>
 					<div class="col-sm-3">
-						<div>
-						</div>
+						<div></div>
 					</div>
 				</div>
 			</div>

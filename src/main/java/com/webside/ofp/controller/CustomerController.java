@@ -70,7 +70,7 @@ public class CustomerController extends BaseController {
 		// 2、设置查询参数
 		parameters = pager.getParameters();
 		if (parameters.size() < 0) {
-			parameters.put("CN_NAME", null);
+			parameters.put("CUSTOMER_NAME", null);
 		}
 		// 3、判断是否是导出操作
 		if (pager.getIsExport()) {
@@ -104,7 +104,7 @@ public class CustomerController extends BaseController {
 	@RequestMapping("addUI.html")
 	public String addUI(Model model) {
 		try {
-			return Common.BACKGROUND_PATH + "/ofp/product/form";
+			return Common.BACKGROUND_PATH + "/ofp/customer/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
 		}

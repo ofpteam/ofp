@@ -63,7 +63,7 @@ public class ProductController extends BaseController {
 				page.setOrderByType(request.getParameter("sord"));
 			}
 			model.addAttribute("page", page);
-			return Common.BACKGROUND_PATH + "/product/list";
+			return Common.BACKGROUND_PATH + "/ofp/product/list";
 		} catch (Exception e) {
 			throw new AjaxException(e);
 		}
@@ -121,7 +121,7 @@ public class ProductController extends BaseController {
 		try {
 			List<RoleEntity> list = roleService.queryListByPage(new HashMap<String, Object>());
 			model.addAttribute("roleList", list);
-			return Common.BACKGROUND_PATH + "/product/form";
+			return Common.BACKGROUND_PATH + "/ofp/product/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
 		}
@@ -160,7 +160,7 @@ public class ProductController extends BaseController {
 			page.setOrderByType(request.getParameter("sord"));
 			model.addAttribute("page", page);
 			model.addAttribute("userEntity", userEntity);
-			return Common.BACKGROUND_PATH + "/user/form";
+			return Common.BACKGROUND_PATH + "/ofp/product/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
 		}

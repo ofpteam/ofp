@@ -1,12 +1,12 @@
 var tree = [ {
 	text : "杯子",
 	id : 1,
-	//state : {
+	// state : {
 	// checked: true,
 	// disabled: true,
 	// expanded: false,
 	// selected: true
-	//},
+	// },
 	nodes : [ {
 		id : 11,
 		text : "压杯"
@@ -21,12 +21,12 @@ var tree = [ {
 		text : "小把杯"
 	} ]
 }, {
-	//state : {
+	// state : {
 	// checked: true,
 	// disabled: true,
 	// expanded: false,
 	// selected: true
-	//},
+	// },
 	text : "瓶子",
 	id : 2,
 	nodes : [ {
@@ -54,26 +54,26 @@ $('#tree').treeview({
 });
 
 $('#btnAdd').click(function() {
-	if(selectId>0){
-		 webside.common.loadPage('/producttype/addUI.html?id='+selectId);
-	}else{
+	if (selectId > 0) {
+		webside.common.loadPage('/producttype/addUI.html?id=' + selectId);
+	} else {
 		layer.msg("你没有选择行", {
-            icon : 0
-        });
+			icon : 0
+		});
+		/*
+		 * layer.confirm("请选中一行", { icon : 3, title : '提示', btn: [] //按钮 });
+		 */
 	}
-	
 })
 $('#btnEdit').click(function() {
-	if(selectId>0){
-		  webside.common.loadPage('/producttype/editUI.html?id='+selectId);
-	}else{
+	if (selectId > 0) {
+		webside.common.loadPage('/producttype/editUI.html?id=' + selectId);
+	} else {
 		layer.msg("你没有选择行", {
-            icon : 0
-        });
-	/*	 layer.confirm("请选中一行", {
-             icon : 3,
-             title : '提示',
-             btn: [] //按钮
-         });*/
+			icon : 0
+		});
+		/*
+		 * layer.confirm("请选中一行", { icon : 3, title : '提示', btn: [] //按钮 });
+		 */
 	}
 })

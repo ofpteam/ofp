@@ -3,7 +3,7 @@
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<script type="text/javascript" src="${pageContext.request.contextPath }/resources/js/ofp/product/list.js"></script>
 <div class="page-header">
-	<shiro:hasPermission name="user:addUI">
+	<shiro:hasPermission name="product:addUI">
 		<button id="btnAdd" type="button" onclick="webside.common.addModel('/product/addUI.html')" class="btn btn-primary btn-sm">
 		  	<i class="fa fa-user-plus"></i>&nbsp;添加
 		</button>

@@ -3,12 +3,12 @@
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<script type="text/javascript" src="${pageContext.request.contextPath }/resources/js/ofp/customer/list.js"></script>
 <div class="page-header">
-	<shiro:hasPermission name="customer:addUI">
+	<shiro:hasPermission name="ocustomer:addUI">
 		<button id="btnAdd" type="button" onclick="webside.common.addModel('/ocustomer/addUI.html')" class="btn btn-primary btn-sm">
 		  	<i class="fa fa-user-plus"></i>&nbsp;添加
 		</button>
 	</shiro:hasPermission>
-	<shiro:hasPermission name="customer:editUI">
+	<shiro:hasPermission name="ocustomer:editUI">
 		<button id="btnEdit" type="button" onclick="webside.common.editModel('/ocustomer/editUI.html')" class="btn btn-success btn-sm">
 			 <i class="fa fa-pencil-square-o"></i>&nbsp;编辑
 		</button>

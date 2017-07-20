@@ -27,7 +27,7 @@ var tree = [ {
 	// expanded: false,
 	// selected: true
 	// },
-	text : "瓶子",
+	text : "服装",
 	id : 2,
 	nodes : [ {
 		id : 21,

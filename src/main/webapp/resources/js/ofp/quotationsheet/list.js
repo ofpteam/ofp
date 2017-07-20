@@ -1,36 +1,28 @@
 var dtGridColumns = [{
-    id : 'itemtypeid',
-    title : '编号',
-    type : 'number',
-    columnClass : 'text-center',
-    headerClass : 'dlshouwen-grid-header'
+	id : 'QUOTATION_SHEET_ID',
+	title : '编号',
+	type : 'number',
+	columnClass : 'text-center',
+	hideType : 'xs',
+	headerClass : 'dlshouwen-grid-header'
 }, {
-    id : 'itemtypename',
-    title : '物料名称',
+    id : 'CUSTOMER_Name',
+    title : '客户名称',
     type : 'string',
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
-}, {
-    id : 'itemtypecreatetime',
-    title : '创建时间',
-    type : 'date',
-    format : 'yyyy-MM-dd hh:mm:ss',
-    otype:'string', 
-    oformat:'yyyy-MM-dd hh:mm:ss',
-    columnClass : 'text-center',
-    headerClass : 'dlshouwen-grid-header',
-    hideType : 'sm|xs'
 }];
 var dtGridOption = {
     lang : 'zh-cn',
     ajaxLoad : true,
+    check : true,
     extraWidth : '37px',
-    loadURL : sys.rootPath + '/itemtype/list.html',
+    loadURL : sys.rootPath + '/quotationsheet/list.html',
     columns : dtGridColumns,
     gridContainer : 'dtGridContainer',
     toolbarContainer : 'dtGridToolBarContainer',
     tools : 'refresh|print',
-    exportFileName : '产品大类信息',
+    exportFileName : '报价单信息',
     pageSize : 10,
     pageSizeLimit : [10, 20, 30]
 };
@@ -52,6 +44,9 @@ $(function() {
 //自定义查询
 function customSearch() {
     grid.parameters = new Object();
-    grid.parameters['itemtypename'] = $("#searchKey").val();
+    grid.parameters['CUSTOMER_NAME'] = $("#searchKey").val();
+    grid.parameters['TIMES'] = $("#id-date-range-picker-1").val();
     grid.refresh(true);
 }
+
+

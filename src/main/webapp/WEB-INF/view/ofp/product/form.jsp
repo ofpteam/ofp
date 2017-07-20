@@ -162,12 +162,12 @@
 								placeholder="收购单价..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right" for="WEIGHT">重量:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="WEIGHT">单品重量:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
 								class="form-control" name="WEIGHT" id="WEIGHT" type="number"
-								value="${userEntity.accountName }" placeholder="重量（单位：g）..." />
+								value="${userEntity.accountName }" placeholder="单品重量（g）..." />
 						</div>
 					</div>
 				</div>
@@ -179,31 +179,39 @@
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
 								class="form-control" name="VOLUME" id="VOLUME" type="number"
-								value="${userEntity.accountName }" placeholder="容量（单位：ml）..." />
+								value="${userEntity.accountName }" placeholder="容量（ml）..." />
 						</div>
 					</div>
 
-					<label class="col-sm-1 control-label no-padding-right" for="TOP">TOP:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="TOP">Top:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
 								class="form-control" name="TOP" id="TOP" type="number"
-								value="${userEntity.accountName }" placeholder="TOP（单位：mm）..." />
+								value="${userEntity.accountName }" placeholder="口TopΦ(mm)..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right" for="BOTTOM">BOTTOM:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="BOTTOM">底:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
 								class="form-control" name="BOTTOM" id="BOTTOM" type="number"
-								value="${userEntity.accountName }"
-								placeholder="BOTTOM（单位：mm）..." />
+								value="${userEntity.accountName }" placeholder="底BottomΦ(mm)..." />
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right" for="LENGTH">高:</label>
+					<div class="col-sm-3">
+						<div>
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="HEIGHT" id="HEIGHT" type="number"
+								value="${userEntity.accountName }" placeholder="高Height(mm)..." />
+						</div>
+					</div>
+
 					<label class="col-sm-1 control-label no-padding-right" for="LENGTH">外包装长度:</label>
 					<div class="col-sm-3">
 						<div>
@@ -221,6 +229,10 @@
 								value="${userEntity.accountName }" placeholder="外包装宽度（单位：cm）..." />
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="PACK_HEIGHT">外包装高度:</label>
 					<div class="col-sm-3">
@@ -231,10 +243,7 @@
 								placeholder="外包装高度（单位：cm）..." />
 						</div>
 					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="row">
+
 					<label class="col-sm-1 control-label no-padding-right" for="GW">G.W:</label>
 					<div class="col-sm-3">
 						<div>
@@ -254,6 +263,10 @@
 								placeholder="装箱率..." />
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="TAX_REBATE_RATE">退税率:</label>
 					<div class="col-sm-3">
@@ -264,10 +277,6 @@
 								placeholder="退税率..." />
 						</div>
 					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right" for="CBM">CBM:</label>
 					<div class="col-sm-3">
 						<div>
@@ -277,30 +286,31 @@
 						</div>
 					</div>
 
+
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="PACKING">PACKING:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-7">
 						<div>
 							<textarea <c:if test="${!empty userEntity}">readonly</c:if>
-							class="form-control"	name="PACKING_RATE" id="PACKING_RATE" placeholder="装箱率...">
+								class="form-control" name="PACKING_RATE" id="PACKING_RATE"
+								placeholder="Description and Packing...">
 						</textarea>
 						</div>
-					</div>
-					<label class="col-sm-1 control-label no-padding-right"
-						for=""></label>
-					<div class="col-sm-3">
-						
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right" for="file">上传附件:</label>
-					<div class="col-sm-8">
+					<div class="col-sm-5">
 						<div>
 							<div id="thelist" class="uploader-list"></div>
-								<div id="picker">选择文件</div>
-								<button id="ctlBtn" class="btn btn-default">开始上传</button>
+							<div id="picker">选择文件</div>
+							<button id="ctlBtn" class="btn btn-default">开始上传</button>
 						</div>
 					</div>
 				</div>

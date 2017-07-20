@@ -1,3 +1,4 @@
+
 //提交
 function validateForm(){
 $('#productForm').validate({

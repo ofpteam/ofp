@@ -4,15 +4,21 @@
 <c:set var="ctx" value="${pageContext.request.contextPath }" />
 <link rel="stylesheet"
 	href="${ctx }/resources/js/select2/select2.min.css" />
+<link rel="stylesheet"
+	href="${ctx }/resources/js/webuploader/webuploader.css" />
 <script type="text/javascript"
 	src="${ctx }/resources/js/select2/select2.min.js"></script>
 <script type="text/javascript"
 	src="${ctx }/resources/js/select2/zh-CN.js"></script>
 <script type="text/javascript"
 	src="${ctx }/resources/js/ofp/product/form.js"></script>
-	<script type="text/javascript">
+<script type="text/javascript"
+	src="${ctx }/resources/js/webuploader/webuploader.min.js"></script>
+<script type="text/javascript"
+	src="${ctx }/resources/js/ofp/product/upload.js"></script>
+<script type="text/javascript">
 	$(function() {
-	    validateForm();
+		validateForm();
 	});
 </script>
 <div class="page-header">
@@ -242,9 +248,10 @@
 						for="PACKING_RATE">装箱率:</label>
 					<div class="col-sm-3">
 						<div>
-						<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="PACKING_RATE" id="PACKING_RATE" type="text"
-								value="${userEntity.accountName }" placeholder="装箱率..." />
+							<input <c:if test="${!empty userEntity}">readonly</c:if>
+								class="form-control" name="PACKING_RATE" id="PACKING_RATE"
+								type="text" value="${userEntity.accountName }"
+								placeholder="装箱率..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
@@ -274,15 +281,27 @@
 						for="PACKING">PACKING:</label>
 					<div class="col-sm-3">
 						<div>
-							<textarea <c:if test="${!empty userEntity}">readonly</c:if> name="PACKING_RATE" id="PACKING_RATE" placeholder="装箱率...">
+							<textarea <c:if test="${!empty userEntity}">readonly</c:if>
+							class="form-control"	name="PACKING_RATE" id="PACKING_RATE" placeholder="装箱率...">
 						</textarea>
-						
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="TAX_REBATE_RATE"></label>
+						for=""></label>
 					<div class="col-sm-3">
-						<div></div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right" for="file">上传附件:</label>
+					<div class="col-sm-8">
+						<div>
+							<div id="thelist" class="uploader-list"></div>
+								<div id="picker">选择文件</div>
+								<button id="ctlBtn" class="btn btn-default">开始上传</button>
+						</div>
 					</div>
 				</div>
 			</div>

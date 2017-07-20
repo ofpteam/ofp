@@ -260,7 +260,7 @@
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
 								class="form-control" name="TOTAL_CBM" id="TOTAL_CBM"
 								type="number" value="${userEntity.accountName }"
-								placeholder="退税率..." />
+								placeholder="CBM合计..." />
 						</div>
 					</div>
 				</div>

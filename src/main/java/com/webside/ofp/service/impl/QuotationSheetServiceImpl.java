@@ -1,12 +1,16 @@
 package com.webside.ofp.service.impl;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.webside.base.baseservice.impl.AbstractService;
 import com.webside.ofp.mapper.QuotationSheetMapper;
+import com.webside.ofp.mapper.QuotationSubSheetMapper;
 import com.webside.ofp.model.QuotationSheetEntity;
+import com.webside.ofp.model.QuotationSubSheetEntity;
 import com.webside.ofp.service.QuotationSheetService;
 
 @Service("quotationSheetService")
@@ -19,16 +23,29 @@ public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEnt
 	public void setBaseMapper() {
 		super.setBaseMapper(quotationSheetMapper);
 	}
+	
+	@Autowired
+	private QuotationSubSheetMapper quotationSubSheetMapper;
 
 	@Override
-	public QuotationSheetEntity findByCustomerId(String id) {
+	public List<QuotationSheetEntity> findByCustomerId(String id) {
 		// TODO Auto-generated method stub
 		return quotationSheetMapper.findByCustomerId(id);
 	}
 
 	@Override
 	public void updateWithSubSheet(QuotationSheetEntity quotationSheetEntity) {
-		
+		quotationSheetMapper.update(quotationSheetEntity);
+		quotationSubSheetMapper.deleteBySheetIdPhysical(quotationSheetEntity.getQuotationSheetId());
+		quotationSubSheetMapper.insertBatch(quotationSheetEntity.getSubSheetList());
+	}
+	
+	public void insertSheetWithSubSheet(QuotationSheetEntity quotationSheetEntity){
+		int i = quotationSheetMapper.insert(quotationSheetEntity);
+		for(QuotationSubSheetEntity quotationSubSheetEntity:quotationSheetEntity.getSubSheetList()){
+			quotationSubSheetEntity.setQuotationSheetId(quotationSheetEntity.getQuotationSheetId());
+		}
+		quotationSubSheetMapper.insertBatch(quotationSheetEntity.getSubSheetList());
 	}
 
 }

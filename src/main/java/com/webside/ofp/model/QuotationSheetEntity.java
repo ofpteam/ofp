@@ -110,7 +110,7 @@ public class QuotationSheetEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    private Date expirationDate;
+    private int expirationDate;
 
     /**
      * Database Column Remarks:
@@ -154,7 +154,7 @@ public class QuotationSheetEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    private Date deliveryDate;
+    private int deliveryDate;
 
     /**
      * Database Column Remarks:
@@ -517,7 +517,7 @@ public class QuotationSheetEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    public Date getExpirationDate() {
+    public int getExpirationDate() {
         return expirationDate;
     }
 
@@ -529,7 +529,7 @@ public class QuotationSheetEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(int expirationDate) {
         this.expirationDate = expirationDate;
     }
 
@@ -613,7 +613,7 @@ public class QuotationSheetEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    public Date getDeliveryDate() {
+    public int getDeliveryDate() {
         return deliveryDate;
     }
 
@@ -625,7 +625,7 @@ public class QuotationSheetEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(int deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 

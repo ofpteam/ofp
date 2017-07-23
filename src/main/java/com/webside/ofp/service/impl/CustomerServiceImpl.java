@@ -13,7 +13,7 @@ public class CustomerServiceImpl extends AbstractService<CustomerEntity, Long> i
 	@Autowired
 	private CustomerMapper customerMapper;
 
-	// 这句必须要加上。不然会报空指针异常，因为在实际调用的时候不是BaseMapper调用，而是具体的mapper，这里为userMapper
+	// 这句必须要加上。不然会报空指针异常，因为在实际调用的时候不是BaseMapper调用，而是具体的mapper
 	@Autowired
 	public void setBaseMapper() {
 		super.setBaseMapper(customerMapper);

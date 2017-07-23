@@ -23,7 +23,12 @@ public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEnt
 	@Override
 	public QuotationSheetEntity findByCustomerId(String id) {
 		// TODO Auto-generated method stub
-		return null;
+		return quotationSheetMapper.findByCustomerId(id);
+	}
+
+	@Override
+	public void updateWithSubSheet(QuotationSheetEntity quotationSheetEntity) {
+		
 	}
 
 }

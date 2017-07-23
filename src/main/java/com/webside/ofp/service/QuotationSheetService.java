@@ -5,4 +5,5 @@ import com.webside.ofp.model.QuotationSheetEntity;
 
 public interface QuotationSheetService extends BaseService<QuotationSheetEntity, Long>{
 	public QuotationSheetEntity findByCustomerId(String id);
+	public void updateWithSubSheet(QuotationSheetEntity quotationSheetEntity);
 }

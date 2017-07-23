@@ -17,7 +17,7 @@ public class QuotationSubSheetEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    private Integer quotationSubSheet;
+    private Integer quotationSubSheetId;
 
     /**
      * Database Column Remarks:
@@ -214,8 +214,8 @@ public class QuotationSubSheetEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    public Integer getQuotationSubSheet() {
-        return quotationSubSheet;
+    public Integer getQuotationSubSheetId() {
+        return quotationSubSheetId;
     }
 
     /**
@@ -226,8 +226,8 @@ public class QuotationSubSheetEntity {
      *
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
-    public void setQuotationSubSheet(Integer quotationSubSheet) {
-        this.quotationSubSheet = quotationSubSheet;
+    public void setQuotationSubSheetId(Integer quotationSubSheetId) {
+        this.quotationSubSheetId = quotationSubSheetId;
     }
 
     /**

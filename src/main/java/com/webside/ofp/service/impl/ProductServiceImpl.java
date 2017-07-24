@@ -23,5 +23,6 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long> imp
 	public ProductEntity findByTypeId(String id) {
 		return productMapper.findByTypeId(id);
 	}
+	
 
 }

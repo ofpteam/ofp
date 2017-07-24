@@ -19,7 +19,7 @@ public class ProductTypeTest extends BaseJunit {
 		this.productTypeService = productTypeService;
 	}
 	
-	@Test
+	/*@Test
 	public void testInsert() {
 		ProductTypeEntity productTypeEntity = new ProductTypeEntity();
 		productTypeEntity.setCnName("吹杯");
@@ -33,7 +33,7 @@ public class ProductTypeTest extends BaseJunit {
 		System.out.println("插入数据id：" + productTypeEntity.getProductTypeId());
     }
 	
-	/*@Test
+	@Test
 	public void testUpdate(){
 		ProductTypeEntity productTypeEntity = new ProductTypeEntity();
 		productTypeEntity.setProductTypeId(1);
@@ -77,10 +77,16 @@ public class ProductTypeTest extends BaseJunit {
 	@Test
 	public void testQueryListAll(){
 		Map<String, Object> parameters = new HashMap<String,Object>();
-		parameters.put("enName","glass");
+		parameters.put("parentId","0");
 		List<ProductTypeEntity> list = productTypeService.queryListAll(parameters);
 		for(ProductTypeEntity productTypeEntity:list){
 			System.out.println("查询返回对象：" + productTypeEntity.toString());
 		}
 	}*/
+	
+	@Test
+	public void testFindAllProductTypeTreeJsonString(){
+		String jsonString = productTypeService.findAllProductTypeTreeJsonString();
+		System.out.println("json:" + jsonString);
+	}
 }

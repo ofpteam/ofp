@@ -1,9 +1,16 @@
 package com.webside.ofp.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.webside.base.baseservice.impl.AbstractService;
+import com.webside.ofp.bean.OfpTreeBean;
 import com.webside.ofp.mapper.ProductTypeMapper;
 import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.ofp.service.ProductTypeService;
@@ -17,6 +24,50 @@ public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, L
 	@Autowired
 	public void setBaseMapper() {
 		super.setBaseMapper(productTypeMapper);
+	}
+
+	@Override
+	public List<OfpTreeBean> findAllProductTypeTree() {
+		Map<String, Object> parameter = new HashMap<String,Object>();
+		//这里id为0必须设置为字符串，不然查询所有
+		parameter.put("parentId", "0");
+		List<ProductTypeEntity> list = productTypeMapper.queryListAll(parameter);
+		List<OfpTreeBean> allOfpTrees = new ArrayList<OfpTreeBean>();
+		for(ProductTypeEntity productTypeEntity:list){
+			OfpTreeBean subOfpTreeBean = new OfpTreeBean();
+			subOfpTreeBean.setText(productTypeEntity.getCnName());
+			subOfpTreeBean.setId(productTypeEntity.getProductTypeId());
+			//递归查找大类下所有子类型
+			this.findProDuctTypeTreeByParentId(subOfpTreeBean);
+			allOfpTrees.add(subOfpTreeBean);
+		}
+		return allOfpTrees;
+	}
+	
+	@Override
+	public void findProDuctTypeTreeByParentId(OfpTreeBean ofpTreeBean){
+		Map<String, Object> parameter = new HashMap<String,Object>();
+		parameter.put("parentId", ofpTreeBean.getId());
+		List<ProductTypeEntity> list = productTypeMapper.queryListAll(parameter);
+		if(list != null && list.size() > 0){
+			List<OfpTreeBean> subProductTypeTreeBean = new ArrayList<OfpTreeBean>();
+			for(ProductTypeEntity productTypeEntity:list){
+				OfpTreeBean subOfpTreeBean = new OfpTreeBean();
+				subOfpTreeBean.setText(productTypeEntity.getCnName());
+				subOfpTreeBean.setId(productTypeEntity.getProductTypeId());
+				this.findProDuctTypeTreeByParentId(subOfpTreeBean);
+				subProductTypeTreeBean.add(subOfpTreeBean);
+			}
+			ofpTreeBean.setNodes(subProductTypeTreeBean);
+		}
+	}
+
+
+	@Override
+	public String findAllProductTypeTreeJsonString() {
+		List<OfpTreeBean> ofpTreeBeans = this.findAllProductTypeTree();
+		String treeJsonString = JSON.toJSONString(ofpTreeBeans);
+		return treeJsonString;
 	}
 
 }

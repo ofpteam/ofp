@@ -357,4 +357,9 @@ public class CustomerEntity {
     public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
     }
+    
+    public String toString(){
+    	return "id:"+this.customerId + ",name:" + this.customerName + ",tel:" + this.telephone + ",country:" + this.country 
+    			+ ",isdelete:" + this.isDelete;
+    }
 }

@@ -158,6 +158,7 @@
 		#{id}
 	</foreach>
   </delete>
+  
   <insert id="insert" parameterType="com.webside.ofp.model.ProductEntity" useGeneratedKeys="true" keyProperty="productId">
   	insert into product (PRODUCT_TYPE_ID, PRODUCT_CODE, 
       FACTORY_CODE, UNIT, CUSTOMS_CODE, 
@@ -214,10 +215,7 @@
       CBM = #{cbm,jdbcType=DECIMAL},
       PACKING = #{packing,jdbcType=VARCHAR},
       HD_MAP_URL = #{hdMapUrl,jdbcType=VARCHAR},
-      IS_DELETE = #{isDelete,jdbcType=INTEGER},
-      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
-      CREATE_USER = #{createUser,jdbcType=INTEGER},
+      MODIFY_TIME = now(),
       MODIFY_USER = #{modifyUser,jdbcType=INTEGER},
       DESCRIPTION = #{description,jdbcType=VARCHAR}
     where PRODUCT_ID = #{productId,jdbcType=INTEGER}

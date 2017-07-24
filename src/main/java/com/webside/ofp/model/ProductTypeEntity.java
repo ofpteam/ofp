@@ -427,4 +427,9 @@ public class ProductTypeEntity {
     public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
     }
+    
+    public String toString(){
+    	return "id:"+this.productTypeId + ",cnname:" + this.cnName + ",enname:" + this.enName + ",parent:" + this.parentId 
+    			+ ",level:" + this.level + ",orderby:" + this.orderby;
+    }
 }

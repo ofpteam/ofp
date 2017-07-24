@@ -1,3 +1,97 @@
+var url= sys.rootPath+"/quotationsheet/getSubSheet.html";
+		 oTable = $('#example').dataTable( {
+			  	"sScrollY": "400px",
+			    "sScrollX": "100%", //横向滚动条       
+			    "bScrollCollapse": true,
+			    "bProcessing": true, // 显示是否加载
+			    "bStateSave": true,
+			    "bJQueryUI": true, //jqueryUI样式
+			    "bSort": true,
+			    "bServerSide": false,
+			    "sAjaxSource": url , //后台地址
+			    "bAutoWidth": true,
+				"fnServerData": function (sSource, aoData, fnCallback, oSettings) {
+			        oSettings.jqXHR = $.ajax({
+			            "dataType": 'json',
+			            "contentType": "application/json; charset=utf-8",
+			            "url": sSource,
+			            "success": function (modellist) {
+			            	debugger;
+			                fnCallback(modellist); //string to json
+			            },
+			            "error": function (resp) {
+			                alert("错误代码：" + resp.status + "," + "错误信息：" + resp.readyState);
+			            }
+			        });
+			    }, "aoColumnDefs" :[
+				                         { "bVisible": false, "aTargets": [0] }/*第一列隐藏*/
+			                               ],
+		        "aoColumns": [
+							{ "mDataProp": "first_name" },
+							{ "mDataProp": "last_name" },
+							{ "mDataProp": "position" },
+							{ "mDataProp": "office" },
+							{ "mDataProp": "extn" },
+							{ "mDataProp": "salary" }
+		                ]
+		} ).makeEditable({
+		    sUpdateURL: url,
+		    fnOnEdited: function (status, sOldValue, sNewValue, sNewCellDisplayValue) {
+		        oTable.fnReloadAjax(url + "&objectid=" + objectid);
+		    },
+		    "aoColumns": [null, {
+                type: 'textarea',
+                submit: '提交'
+            	}, null, null,null,null]/*可编辑的列*/
+			});
+		  $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallback, bStandingRedraw) {
+		        if (typeof sNewSource != 'undefined' && sNewSource != null) {
+		            oSettings.sAjaxSource = sNewSource;
+		        }
+		        this.oApi._fnProcessingDisplay(oSettings, true);
+		        var that = this;
+		        var iStart = oSettings._iDisplayStart;
+		        var aData = [];
+
+		        this.oApi._fnServerParams(oSettings, aData);
+
+		        oSettings.fnServerData(oSettings.sAjaxSource, aData, function (json) {
+		            /* Clear the old information from the table */
+		            that.oApi._fnClearTable(oSettings);
+
+		            /* Got the data - add it to the table */
+		            var aData = (oSettings.sAjaxDataProp !== "") ? that.oApi._fnGetObjectDataFn(oSettings.sAjaxDataProp)(
+								json) : json;
+
+		            for (var i = 0; i < aData.length; i++) {
+		                that.oApi._fnAddData(oSettings, aData[i]);
+		            }
+
+		            oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+		            that.fnDraw();
+
+		            if (typeof bStandingRedraw != 'undefined' && bStandingRedraw === true) {
+		                oSettings._iDisplayStart = iStart;
+		                that.fnDraw(false);
+		            }
+
+		            that.oApi._fnProcessingDisplay(oSettings, false);
+
+		            /* Callback user function - for event handlers etc */
+		            if (typeof fnCallback == 'function' && fnCallback != null) {
+		                fnCallback(oSettings);
+		            }
+		        }, oSettings);
+		    };		
+		
+		validateForm();
+		$(".datepicker").datepicker({
+			language : "zh-CN",
+			autoclose : true,//选中之后自动隐藏日期选择框
+			clearBtn : true,//清除按钮
+			todayBtn : true,//今日按钮
+			format : "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
+		});
 
 //提交
 function validateForm(){

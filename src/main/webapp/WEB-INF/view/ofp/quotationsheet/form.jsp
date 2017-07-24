@@ -3,25 +3,22 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="ctx" value="${pageContext.request.contextPath }" />
 <link rel="stylesheet"
+	href="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.min.css" />
+<link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/js/datepicker/css/bootstrap-datepicker3.standalone.min.css" />
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/resources/js/datepicker/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/resources/js/datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
 <script type="text/javascript"
+	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.bootstrap.js"></script>
+   <script type="text/javascript" src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.jeditable.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.editable.js"></script>
+
+<script type="text/javascript"
 	src="${ctx }/resources/js/ofp/quotationsheet/form.js"></script>
-<script type="text/javascript">
-	$(function() {
-		validateForm();
-		 $(".datepicker").datepicker({
-	            language: "zh-CN",
-	            autoclose: true,//选中之后自动隐藏日期选择框
-	            clearBtn: true,//清除按钮
-	            todayBtn: true,//今日按钮
-	            format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
-	        });
-	});
-</script>
 <div class="page-header">
 	<h1>
 		<c:if test="${empty userEntity}">
@@ -46,7 +43,6 @@
 				<input type="hidden" id="orderByType" name="orderByType"
 					value="${page.orderByType }">
 				<input type="hidden" name="id" id="userId" value="${userEntity.id }">
-				<input type="hidden" name="userInfo.id" value="${userEntity.id }">
 			</c:if>
 			<div class="form-group">
 				<div class="row">
@@ -54,9 +50,9 @@
 						for="CUSTOMER_NAME">客户名称:</label>
 					<div class="col-sm-3">
 						<div>
-							<input class="form-control" name="CUSTOMER_NAME" id="CUSTOMER_NAME"
-								type="text" value="${userEntity.accountName }"
-								placeholder="客户名称..." />
+							<input class="form-control" name="CUSTOMER_NAME"
+								id="CUSTOMER_NAME" type="text"
+								value="${userEntity.accountName }" placeholder="客户名称..." />
 						</div>
 					</div>
 
@@ -70,7 +66,8 @@
 								placeholder="工厂编码..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right" for="TELEPHONE">联系电话:</label>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="TELEPHONE">联系电话:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
@@ -85,16 +82,16 @@
 					<label class="col-sm-1 control-label no-padding-right"
 						for="QUOTATION_SHEET_CODE">报价单号:</label>
 					<div class="col-sm-3">
-					<!-- 自动生成 -->
-					<input readonly
-								class="form-control" name="QUOTATION_SHEET_CODE" id="QUOTATION_SHEET_CODE" type="text"
-								value="${userEntity.accountName }" placeholder="报价单号..." />
+						<!-- 自动生成 -->
+						<input readonly class="form-control" name="QUOTATION_SHEET_CODE"
+							id="QUOTATION_SHEET_CODE" type="text"
+							value="${userEntity.accountName }" placeholder="报价单号..." />
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="QUOTATION_DATE">报价日期:</label>
 					<div class="col-sm-3">
-						<input type="text" id="QUOTATION_DATE" class="datepicker col-sm-12"
-							placeholder="报价日期" />
+						<input type="text" id="QUOTATION_DATE"
+							class="datepicker col-sm-12" placeholder="报价日期" />
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="PRICE_TERMS">价格术语:</label>
@@ -115,9 +112,8 @@
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="COUNTRY" id="COUNTRY"
-								type="text" value="${userEntity.accountName }"
-								placeholder="国家..." />
+								class="form-control" name="COUNTRY" id="COUNTRY" type="text"
+								value="${userEntity.accountName }" placeholder="国家..." />
 						</div>
 					</div>
 
@@ -135,8 +131,9 @@
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="EXCHANGE_RATE" id="EXCHANGE_RATE" type="number"
-								value="${userEntity.accountName }" placeholder="汇率..." />
+								class="form-control" name="EXCHANGE_RATE" id="EXCHANGE_RATE"
+								type="number" value="${userEntity.accountName }"
+								placeholder="汇率..." />
 						</div>
 					</div>
 				</div>
@@ -157,12 +154,12 @@
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="PAY_MODE" id="PAY_MODE"
-								type="text" value="${userEntity.accountName }"
-								placeholder="付款方式..." />
+								class="form-control" name="PAY_MODE" id="PAY_MODE" type="text"
+								value="${userEntity.accountName }" placeholder="付款方式..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right" for="RESOURCE">起运地:</label>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="RESOURCE">起运地:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
@@ -183,19 +180,21 @@
 						</div>
 					</div>
 
-					<label class="col-sm-1 control-label no-padding-right" for="DELIVERY_DATE">交货期限:</label>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="DELIVERY_DATE">交货期限:</label>
 					<div class="col-sm-3">
 						<div>
-							<input type="text" id="DELIVERY_DATE" class="datepicker col-sm-12"
-								placeholder="交货期限..." />
+							<input type="text" id="DELIVERY_DATE"
+								class="datepicker col-sm-12" placeholder="交货期限..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right" for="INSURANCE_COST">保险费:</label>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="INSURANCE_COST">保险费:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="INSURANCE_COST" id="INSURANCE_COST" type="number"
-								value="${userEntity.accountName }"
+								class="form-control" name="INSURANCE_COST" id="INSURANCE_COST"
+								type="number" value="${userEntity.accountName }"
 								placeholder="保险费..." />
 						</div>
 					</div>
@@ -203,21 +202,25 @@
 			</div>
 			<div class="form-group">
 				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right" for="FOREIGN_GREIGHT">国外运费:</label>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="FOREIGN_GREIGHT">国外运费:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="FOREIGN_GREIGHT" id="FOREIGN_GREIGHT" type="number"
-								value="${userEntity.accountName }" placeholder="国外运费..." />
+								class="form-control" name="FOREIGN_GREIGHT" id="FOREIGN_GREIGHT"
+								type="number" value="${userEntity.accountName }"
+								placeholder="国外运费..." />
 						</div>
 					</div>
 
-					<label class="col-sm-1 control-label no-padding-right" for="HOME_GREIGHT">国内运费:</label>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="HOME_GREIGHT">国内运费:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="HOME_GREIGHT" id="HOME_GREIGHT" type="number"
-								value="${userEntity.accountName }" placeholder="国内运费..." />
+								class="form-control" name="HOME_GREIGHT" id="HOME_GREIGHT"
+								type="number" value="${userEntity.accountName }"
+								placeholder="国内运费..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
@@ -234,23 +237,23 @@
 			</div>
 			<div class="form-group">
 				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right" for="COMMISSION">佣金:</label>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="COMMISSION">佣金:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="COMMISSION" id="COMMISSION" type="number"
-								value="${userEntity.accountName }" placeholder="佣金..." />
+								class="form-control" name="COMMISSION" id="COMMISSION"
+								type="number" value="${userEntity.accountName }"
+								placeholder="佣金..." />
 						</div>
 					</div>
 
-					<label class="col-sm-1 control-label no-padding-right"
-						for="REBATE">折扣:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="REBATE">折扣:</label>
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="REBATE" id="REBATE"
-								type="number" value="${userEntity.accountName }"
-								placeholder="折扣..." />
+								class="form-control" name="REBATE" id="REBATE" type="number"
+								value="${userEntity.accountName }" placeholder="折扣..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
@@ -281,8 +284,9 @@
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="SWAP_RATE" id="SWAP_RATE" type="number"
-								value="${userEntity.accountName }" placeholder="换汇率..." />
+								class="form-control" name="SWAP_RATE" id="SWAP_RATE"
+								type="number" value="${userEntity.accountName }"
+								placeholder="换汇率..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
@@ -290,8 +294,9 @@
 					<div class="col-sm-3">
 						<div>
 							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="INTEREST_MONTH" id="INTEREST_MONTH" type="number"
-								value="${userEntity.accountName }" placeholder="计息月..." />
+								class="form-control" name="INTEREST_MONTH" id="INTEREST_MONTH"
+								type="number" value="${userEntity.accountName }"
+								placeholder="计息月..." />
 						</div>
 					</div>
 				</div>
@@ -300,6 +305,18 @@
 		<div class="hr hr-dotted"></div>
 	</div>
 </div>
+<table id="example" class="display" cellspacing="0" width="100%">
+	<thead>
+		<tr>
+			<th>First_name</th>
+			<th>Last_name</th>
+			<th>Position</th>
+			<th>Office</th>
+			<th>Extn</th>
+			<th>Salary</th>
+		</tr>
+	</thead>
+</table>
 <div class="center">
 	<button id="btnAdd" type="button"
 		onclick="javascript:$('#productForm').submit();"

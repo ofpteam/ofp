@@ -1,5 +1,8 @@
 package com.webside.ofp.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.druid.sql.visitor.functions.Now;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -22,6 +27,7 @@ import com.webside.base.basecontroller.BaseController;
 import com.webside.common.Common;
 import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
+import com.webside.ofp.model.QuotationSubSheet;
 import com.webside.user.model.UserEntity;
 import com.webside.user.service.UserService;
 import com.webside.util.PageUtil;
@@ -168,4 +174,39 @@ public class QuotationSheetController extends BaseController {
 		}
 		return map;
 	}
+	
+	
+	
+	/**
+	 * ajax获取报价单明星
+	 * 
+	 * @param dt
+	 *            Pager对象
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "getSubSheet.html")
+	@ResponseBody
+	public Object getSubSheet(String gridPager, HttpServletResponse response) throws Exception {
+		Map<String, Object> jsonMap = new HashMap<>();
+		jsonMap.put("iTotalRecords", 57); 	
+		jsonMap.put("iTotalDisplayRecords", 57); 	
+		List<QuotationSubSheet> datas=new ArrayList<>();
+		QuotationSubSheet model = null;
+		for (int i = 0; i < 57; i++) {
+			model = new QuotationSubSheet();
+			model.setExtn("extn");
+			model.setFirst_name("first_name");
+			model.setLast_name("last_name");
+			model.setOffice("office");
+			model.setPosition("position");
+			model.setSalary(i);
+			datas.add(model);
+		}
+		jsonMap.put("aaData", datas);
+	/*	String obj=JSON.toJSONString(jsonMap);
+		logger.info(obj);*/
+		return jsonMap;
+	}
+	
+	
 }

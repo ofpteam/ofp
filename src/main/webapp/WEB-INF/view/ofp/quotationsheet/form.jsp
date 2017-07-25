@@ -14,9 +14,12 @@
 	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.min.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.bootstrap.js"></script>
-   <script type="text/javascript" src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.jeditable.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.editable.js"></script>
-
+<script type="text/javascript"
+	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.jeditable.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.editable.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath }/resources/js/ace/tree.min.js"></script>
 <script type="text/javascript"
 	src="${ctx }/resources/js/ofp/quotationsheet/form.js"></script>
 <div class="page-header">
@@ -305,15 +308,55 @@
 		<div class="hr hr-dotted"></div>
 	</div>
 </div>
+<!-- 按钮触发模态框 -->
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">添加商品
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               选择商品
+            </h4>
+         </div>
+         <div class="modal-body">
+          <div id="searchTree"></div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" 
+               data-dismiss="modal">关闭
+            </button>
+            <button type="button" class="btn btn-primary" id="btn">
+               确认
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+</div>
 <table id="example" class="display" cellspacing="0" width="100%">
 	<thead>
 		<tr>
-			<th>First_name</th>
-			<th>Last_name</th>
-			<th>Position</th>
-			<th>Office</th>
-			<th>Extn</th>
-			<th>Salary</th>
+			<th>产品编码</th>
+			<th>收购单价</th>
+			<th>美金单价</th>
+			<th>单位</th>
+			<th>Top(cm)</th>
+			<th>Bottom(cm)</th>
+			<th>Height(cm)</th>
+			<th>Weight(g)</th>
+			<th>Volume(ml)</th>
+			<th>Packing(cm)</th>
+			<th>装箱率</th>
+			<th>数量</th>
+			<th>箱数</th>
+			<th>TOTALCBM</th>
+			<th>总毛重</th>
 		</tr>
 	</thead>
 </table>

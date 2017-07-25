@@ -1,5 +1,12 @@
 package com.webside.ofp;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,8 +14,11 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import com.webside.base.BaseJunit;
+import com.webside.ofp.common.util.QRCodeUtil;
 import com.webside.ofp.model.ProductEntity;
+import com.webside.ofp.model.ProductEntityWithBLOBs;
 import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.ofp.service.ProductService;
 import com.webside.ofp.service.ProductTypeService;
@@ -26,9 +36,9 @@ public class ProductTest extends BaseJunit {
 		
 		ProductTypeEntity productTypeEntity = new ProductTypeEntity();
 		productTypeEntity.setProductTypeId(10);
-		ProductEntity productEntity = new ProductEntity();
+		ProductEntityWithBLOBs productEntity = new ProductEntityWithBLOBs();
 		productEntity.setProductType(productTypeEntity);
-		productEntity.setProductCode("20170720002");
+		productEntity.setProductCode("20170726004");
 		productEntity.setUnit("SET");
 		productEntity.setCustomsCode("70133700");
 		productEntity.setUsdPrice(0.65);
@@ -50,11 +60,28 @@ public class ProductTest extends BaseJunit {
 		productEntity.setCbm(0.053);
 		productEntity.setPacking("6 pos window box,12 sets/ctn");
 		productEntity.setCreateUser(4);
-		int size = productService.insert(productEntity);
+		ByteOutputStream output = new ByteOutputStream();
+		try {
+			String content = productEntity.getProductCode() + "|" + productEntity.getTop() + "|" + productEntity.getBottom() + 
+					productEntity.getWeight() + "|" + productEntity.getVolume() + "|" + productEntity.getPackingRate() + "|" + 
+					productEntity.getCbm();
+			QRCodeUtil.encode(content, output);
+//			byte[] rqCodeByteStr = new byte[40960];
+			productEntity.setQrCodePic(output.getBytes());
+			int size = productService.insert(productEntity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				output.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		System.out.println("插入数据id：" + productEntity.getProductId());
-    }
+    }*/
 	
-	@Test
+	/*@Test
 	public void testUpdate(){
 		ProductTypeEntity productTypeEntity = new ProductTypeEntity();
 		productTypeEntity.setProductTypeId(1);
@@ -69,14 +96,6 @@ public class ProductTest extends BaseJunit {
 	}
 	
 	@Test
-	public void testFindById(){
-		Long id = 1l;
-		ProductTypeEntity productTypeEntity = productTypeService.findById(id);
-		System.out.println("id为1的产品为：" + productTypeEntity.getCnName());
-	}
-	
-	
-	@Test
 	public void testDeleteById(){
 		Long id = 1l;
 		int size = productTypeService.deleteById(id);
@@ -84,6 +103,46 @@ public class ProductTest extends BaseJunit {
 	}*/
 	
 	@Test
+	public void testFindByIdWithBlobs(){
+		String id = "9";
+		ProductEntityWithBLOBs productEntity  = productService.findByIdWithBLOBS(id);
+		System.out.println("分页查询返回对象：" + productEntity.toString());
+		if(productEntity.getQrCodePic() != null){
+			byte[] data = productEntity.getQrCodePic();
+			InputStream in = new ByteArrayInputStream(data);
+			String targetPath = "E:/" + productEntity.getProductCode() + ".jpg";
+			File file = new File(targetPath);
+			String path = targetPath.substring(0, targetPath.lastIndexOf("/"));
+			if(!file.exists()){
+				new File(path).mkdir();
+			}
+			OutputStream fos = null;
+			try {
+				fos = new FileOutputStream(file);
+				int len = 0;
+				byte[] buf = new byte[1024];
+				while ((len = in.read(buf)) != -1) {
+					fos.write(buf, 0, len);
+				}
+				fos.flush();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (Exception e){
+				e.printStackTrace();
+			} finally{
+				try {
+					in.close();
+					fos.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	
+	/*@Test
 	public void testQueryListByPage(){
 		Map<String, Object> parameters = new HashMap<String,Object>();
 		parameters.put("start",0);
@@ -103,5 +162,5 @@ public class ProductTest extends BaseJunit {
 		for(ProductEntity productEntity:list){
 			System.out.println("查询返回对象：" + productEntity.toString());
 		}
-	}
+	}*/
 }

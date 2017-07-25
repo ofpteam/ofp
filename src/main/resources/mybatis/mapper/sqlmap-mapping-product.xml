@@ -47,6 +47,11 @@
 	    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
     </association>
   </resultMap>
+  <resultMap extends="productMap" id="productMapWithBLOBs" type="com.webside.ofp.model.ProductEntityWithBLOBs">
+    <result column="THUMBNAIL" jdbcType="LONGVARBINARY" property="thumbnail" />
+    <result column="QR_CODE_PIC" jdbcType="LONGVARBINARY" property="qrCodePic" />
+  </resultMap>
+  
   
   <sql id="product_column_List">
     p.PRODUCT_ID, p.PRODUCT_TYPE_ID, p.PRODUCT_CODE, p.FACTORY_CODE, p.UNIT, p.CUSTOMS_CODE, p.USD_PRICE, 
@@ -136,6 +141,17 @@
 		where p.is_delete = 0 and p.product_id = #{id}
   </select>
   
+  <select id="findByIdWithBLOBS" parameterType="String"  resultMap="productMapWithBLOBs" flushCache="true" useCache="true">
+    	SELECT 
+		p.PRODUCT_ID, p.PRODUCT_TYPE_ID, p.PRODUCT_CODE, p.FACTORY_CODE, p.UNIT, p.CUSTOMS_CODE, p.USD_PRICE, 
+    	p.CN_NAME, p.EN_NAME, p.VAT_RATE, p.BUY_PRICE, p.WEIGHT, p.VOLUME, p.TOP, p.BOTTOM, p.HEIGHT, p.LENGTH, 
+    	p.WIDTH, p.PACK_HEIGHT, p.GW, p.PACKING_RATE, p.TAX_REBATE_RATE, p.CBM, p.PACKING, p.HD_MAP_URL, 
+    	p.IS_DELETE, p.CREATE_TIME, p.MODIFY_TIME, p.CREATE_USER, p.MODIFY_USER, p.DESCRIPTION,p.THUMBNAIL,p.QR_CODE_PIC,
+		<include refid="product_type_column_list" />
+		from product p left join product_type pt on p.PRODUCT_TYPE_ID = pt.PRODUCT_TYPE_ID 
+		where p.is_delete = 0 and p.product_id = #{id}
+  </select>
+  
   <select id="findByTypeId" parameterType="long"  resultMap="productMap" flushCache="true" useCache="true">
     	SELECT 
 		p.PRODUCT_ID, p.PRODUCT_TYPE_ID, p.PRODUCT_CODE, p.FACTORY_CODE, p.UNIT, p.CUSTOMS_CODE, p.USD_PRICE, 
@@ -159,7 +175,7 @@
 	</foreach>
   </delete>
   
-  <insert id="insert" parameterType="com.webside.ofp.model.ProductEntity" useGeneratedKeys="true" keyProperty="productId">
+  <insert id="insert" parameterType="com.webside.ofp.model.ProductEntityWithBLOBs" useGeneratedKeys="true" keyProperty="productId">
   	insert into product (PRODUCT_TYPE_ID, PRODUCT_CODE, 
       FACTORY_CODE, UNIT, CUSTOMS_CODE, 
       USD_PRICE, CN_NAME, EN_NAME, 
@@ -169,7 +185,7 @@
       PACK_HEIGHT, GW, PACKING_RATE, 
       TAX_REBATE_RATE, CBM, PACKING, 
       HD_MAP_URL, IS_DELETE, CREATE_TIME, 
-      CREATE_USER,DESCRIPTION
+      CREATE_USER,DESCRIPTION,THUMBNAIL, QR_CODE_PIC
       )
     values (#{productType.productTypeId,jdbcType=INTEGER}, #{productCode,jdbcType=VARCHAR}, 
       #{factoryCode,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{customsCode,jdbcType=VARCHAR}, 
@@ -180,7 +196,8 @@
       #{packHeight,jdbcType=DECIMAL}, #{gw,jdbcType=DECIMAL}, #{packingRate,jdbcType=DECIMAL}, 
       #{taxRebateRate,jdbcType=DECIMAL}, #{cbm,jdbcType=DECIMAL}, #{packing,jdbcType=VARCHAR}, 
       #{hdMapUrl,jdbcType=VARCHAR}, 0, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUser,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}
+      #{createUser,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR},
+      #{thumbnail,jdbcType=LONGVARBINARY},#{qrCodePic,jdbcType=LONGVARBINARY}
       )
   </insert>
   

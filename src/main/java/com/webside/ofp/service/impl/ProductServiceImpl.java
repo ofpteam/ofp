@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.webside.base.baseservice.impl.AbstractService;
 import com.webside.ofp.mapper.ProductMapper;
 import com.webside.ofp.model.ProductEntity;
+import com.webside.ofp.model.ProductEntityWithBLOBs;
 import com.webside.ofp.service.ProductService;
 
 @Service("productService")
@@ -24,5 +25,8 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long> imp
 		return productMapper.findByTypeId(id);
 	}
 	
+	public ProductEntityWithBLOBs findByIdWithBLOBS(String id){
+		return productMapper.findByIdWithBLOBS(id);
+	}
 
 }

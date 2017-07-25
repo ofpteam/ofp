@@ -2,6 +2,7 @@ package com.webside.ofp.service;
 
 import com.webside.base.baseservice.BaseService;
 import com.webside.ofp.model.ProductEntity;
+import com.webside.ofp.model.ProductEntityWithBLOBs;
 
 public interface ProductService extends BaseService<ProductEntity, Long>{
 	/**
@@ -10,5 +11,7 @@ public interface ProductService extends BaseService<ProductEntity, Long>{
 	 * @return
 	 */
 	public ProductEntity findByTypeId(String id);
+	
+	public ProductEntityWithBLOBs findByIdWithBLOBS(String id);
 	
 }

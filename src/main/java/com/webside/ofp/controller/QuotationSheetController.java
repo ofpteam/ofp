@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.druid.sql.visitor.functions.Now;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -27,7 +26,7 @@ import com.webside.base.basecontroller.BaseController;
 import com.webside.common.Common;
 import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
-import com.webside.ofp.model.QuotationSubSheet;
+import com.webside.ofp.model.QuotationSubSheetEntity;
 import com.webside.user.model.UserEntity;
 import com.webside.user.service.UserService;
 import com.webside.util.PageUtil;
@@ -190,16 +189,27 @@ public class QuotationSheetController extends BaseController {
 		Map<String, Object> jsonMap = new HashMap<>();
 		jsonMap.put("iTotalRecords", 57); 	
 		jsonMap.put("iTotalDisplayRecords", 57); 	
-		List<QuotationSubSheet> datas=new ArrayList<>();
-		QuotationSubSheet model = null;
+		List<QuotationSubSheetEntity> datas=new ArrayList<>();
+		QuotationSubSheetEntity model = null;
 		for (int i = 0; i < 57; i++) {
-			model = new QuotationSubSheet();
-			model.setExtn("extn");
-			model.setFirst_name("first_name");
-			model.setLast_name("last_name");
-			model.setOffice("office");
-			model.setPosition("position");
-			model.setSalary(i);
+			model = new QuotationSubSheetEntity();
+			model.setProductId(i);
+			model.setBuyPrice((double) 2);
+			model.setUsdPrice((double) 20);
+			model.setUnit("件");
+			model.setTop((long) 22);
+			model.setBottom((long) 123);
+			model.setHeight((long) 33);
+			model.setWeight(18);
+			model.setVolume(7);
+			model.setPacking("packing");
+			model.setPackingRate((double) 51);
+			model.setNumber(2);
+			model.setPackNum(2);
+			model.setTotalcbm((double) 90);
+		/*	model.setGw((double) 2);*/
+			model.setTotalGw((double) 56);
+		
 			datas.add(model);
 		}
 		jsonMap.put("aaData", datas);

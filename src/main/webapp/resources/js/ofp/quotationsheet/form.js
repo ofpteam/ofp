@@ -1,22 +1,159 @@
+var tree = [ {
+	text : "杯子",
+	id : 1,
+	// state : {
+	// checked: true,
+	// disabled: true,
+	// expanded: false,
+	// selected: true
+	// },
+	nodes : [ {
+		id : 11,
+		text : "压杯",
+		tags: ['3']
+	}, {
+		id : 12,
+		text : "吹杯",
+		tags: ['1']
+	}, {
+		id : 13,
+		text : "啤酒杯",
+		tags: ['3']
+	}, {
+		id : 14,
+		text : "小把杯"
+	} ]
+}, {
+	// state : {
+	// checked: true,
+	// disabled: true,
+	// expanded: false,
+	// selected: true
+	// },
+	text : "服装",
+	id : 2,
+	nodes : [ {
+		id : 21,
+		text : "压瓶"
+	}, {
+		id : 22,
+		text : "吹瓶"
+	}, {
+		id : 23,
+		text : "啤酒瓶"
+	}, {
+		id : 24,
+		text : "小把瓶"
+	} ]
+} ];
+$('#searchTree').treeview({
+	data : tree,
+	levels : 1,// 只展开1级
+/*	onNodeSelected : function(event, data) {
+		selectId = data['id'];// 获取选中node的id
+	},*/
+	showCheckbox:true,  
+	onNodeChecked:nodeChecked ,  
+    onNodeUnchecked:nodeUnchecked,
+    showTags: true
+
+});
+var nodeCheckedSilent = false;
+function nodeChecked (event, node){
+	debugger;
+    if(nodeCheckedSilent){
+        return;
+    }
+    nodeCheckedSilent = true;
+    checkAllParent(node);
+    checkAllSon(node);
+    nodeCheckedSilent = false;
+}
+
+var nodeUncheckedSilent = false;
+function nodeUnchecked  (event, node){
+	debugger;
+    if(nodeUncheckedSilent)
+        return;
+    nodeUncheckedSilent = true;
+    uncheckAllParent(node);
+    uncheckAllSon(node);
+    nodeUncheckedSilent = false;
+}
+
+//选中全部父节点
+function checkAllParent(node){
+    $('#searchTree').treeview('checkNode',node.nodeId,{silent:true});
+    var parentNode = $('#searchTree').treeview('getParent',node.nodeId);
+    if(!("nodeId" in parentNode)){
+        return;
+    }else{
+        checkAllParent(parentNode);
+    }
+}
+//取消全部父节点
+function uncheckAllParent(node){
+    $('#searchTree').treeview('uncheckNode',node.nodeId,{silent:true});
+    var siblings = $('#searchTree').treeview('getSiblings', node.nodeId);
+    var parentNode = $('#searchTree').treeview('getParent',node.nodeId);
+    if(!("nodeId" in parentNode)) {
+        return;
+    }
+    var isAllUnchecked = true;  //是否全部没选中
+    for(var i in siblings){
+        if(siblings[i].state.checked){
+            isAllUnchecked=false;
+            break;
+        }
+    }
+    if(isAllUnchecked){
+        uncheckAllParent(parentNode);
+    }
+
+}
+
+//级联选中所有子节点
+function checkAllSon(node){
+    $('#searchTree').treeview('checkNode',node.nodeId,{silent:true});
+    if(node.nodes!=null&&node.nodes.length>0){
+        for(var i in node.nodes){
+            checkAllSon(node.nodes[i]);
+        }
+    }
+}
+//级联取消所有子节点
+function uncheckAllSon(node){
+    $('#searchTree').treeview('uncheckNode',node.nodeId,{silent:true});
+    if(node.nodes!=null&&node.nodes.length>0){
+        for(var i in node.nodes){
+            uncheckAllSon(node.nodes[i]);
+        }
+    }
+}
+
+
+
 var url= sys.rootPath+"/quotationsheet/getSubSheet.html";
 		 oTable = $('#example').dataTable( {
 			  	"sScrollY": "400px",
-			    "sScrollX": "100%", //横向滚动条       
+			    "sScrollX": "140%", //横向滚动条       
 			    "bScrollCollapse": true,
 			    "bProcessing": true, // 显示是否加载
 			    "bStateSave": true,
-			    "bJQueryUI": true, //jqueryUI样式
 			    "bSort": true,
 			    "bServerSide": false,
 			    "sAjaxSource": url , //后台地址
 			    "bAutoWidth": true,
+			    "bPaginate": true, //翻页功能  
+			    "iDisplayLength":5,
+			    "iDisplayStart":0,
+			    "aLengthMenu": [5,20],
 				"fnServerData": function (sSource, aoData, fnCallback, oSettings) {
 			        oSettings.jqXHR = $.ajax({
 			            "dataType": 'json',
 			            "contentType": "application/json; charset=utf-8",
 			            "url": sSource,
 			            "success": function (modellist) {
-			            	debugger;
 			                fnCallback(modellist); //string to json
 			            },
 			            "error": function (resp) {
@@ -27,12 +164,21 @@ var url= sys.rootPath+"/quotationsheet/getSubSheet.html";
 				                         { "bVisible": false, "aTargets": [0] }/*第一列隐藏*/
 			                               ],
 		        "aoColumns": [
-							{ "mDataProp": "first_name" },
-							{ "mDataProp": "last_name" },
-							{ "mDataProp": "position" },
-							{ "mDataProp": "office" },
-							{ "mDataProp": "extn" },
-							{ "mDataProp": "salary" }
+							{ "mDataProp": "productId" },
+							{ "mDataProp": "buyPrice" },
+							{ "mDataProp": "usdPrice" },
+							{ "mDataProp": "unit" },
+							{ "mDataProp": "top" },
+							{ "mDataProp": "bottom" },
+							{ "mDataProp": "height" },
+							{ "mDataProp": "weight" },
+							{ "mDataProp": "volume" },
+							{ "mDataProp": "packing" },
+							{ "mDataProp": "packingRate" },
+							{ "mDataProp": "number" },
+							{ "mDataProp": "packNum" },
+							{ "mDataProp": "totalcbm" },
+							{ "mDataProp": "totalGw" }
 		                ]
 		} ).makeEditable({
 		    sUpdateURL: url,

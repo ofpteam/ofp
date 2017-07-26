@@ -1,6 +1,7 @@
 package com.webside.ofp.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
 import com.webside.ofp.model.CustomerEntity;
 import com.webside.ofp.service.CustomerService;
+import com.webside.role.model.RoleEntity;
+import com.webside.shiro.ShiroAuthenticationManager;
 import com.webside.user.model.UserEntity;
 import com.webside.user.service.UserService;
 import com.webside.util.PageUtil;
@@ -38,7 +41,6 @@ public class CustomerController extends BaseController {
 
 	@Autowired
 	private CustomerService customerService;
-
 
 	@RequestMapping("listUI.html")
 	public String listUI(Model model, HttpServletRequest request) {
@@ -116,10 +118,10 @@ public class CustomerController extends BaseController {
 
 	@RequestMapping("add.html")
 	@ResponseBody
-	public Object add(UserEntity userEntity) throws AjaxException {
+	public Object add(CustomerEntity customerEntity) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			int result = 1;
+			int result = customerService.insert(customerEntity);
 			if (result == 1) {
 				map.put("success", Boolean.TRUE);
 				map.put("data", null);
@@ -138,12 +140,14 @@ public class CustomerController extends BaseController {
 	@RequestMapping("editUI.html")
 	public String editUI(Model model, HttpServletRequest request, Long id) {
 		try {
+			CustomerEntity customerEntity = customerService.findById(id);
 			PageUtil page = new PageUtil();
 			page.setPageNum(Integer.valueOf(request.getParameter("page")));
 			page.setPageSize(Integer.valueOf(request.getParameter("rows")));
 			page.setOrderByColumn(request.getParameter("sidx"));
 			page.setOrderByType(request.getParameter("sord"));
 			model.addAttribute("page", page);
+			model.addAttribute("customerEntity", customerEntity);
 			return Common.BACKGROUND_PATH + "/ofp/customer/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
@@ -152,11 +156,13 @@ public class CustomerController extends BaseController {
 
 	@RequestMapping("edit.html")
 	@ResponseBody
-	public Object update(UserEntity userEntity) throws AjaxException {
+	public Object update(CustomerEntity customerEntity) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			// 设置创建者姓名
-			int result = 1;
+			customerEntity.setModifyUser(ShiroAuthenticationManager.getUserId().intValue());
+			customerEntity.setModifyTime(new Date());
+			int result = customerService.update(customerEntity);
 			if (result == 1) {
 				map.put("success", Boolean.TRUE);
 				map.put("data", null);
@@ -171,32 +177,28 @@ public class CustomerController extends BaseController {
 		}
 		return map;
 	}
-	
+
 	@RequestMapping("deleteBatch.html")
 	@ResponseBody
-	public Object deleteBatch(String ids){
+	public Object deleteBatch(String ids) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		try
-		{
+		try {
 			String[] customerIds = ids.split(",");
 			List<Long> list = new ArrayList<Long>();
 			for (String string : customerIds) {
 				list.add(Long.valueOf(string));
 			}
 			int cnt = customerService.deleteBatchById(list);
-			if(cnt == list.size())
-			{
+			if (cnt == list.size()) {
 				result.put("success", true);
 				result.put("data", null);
 				result.put("message", "删除成功");
-			}else
-			{
+			} else {
 				result.put("success", false);
 				result.put("data", null);
 				result.put("message", "删除失败");
 			}
-		}catch(Exception e)
-		{
+		} catch (Exception e) {
 			throw new AjaxException(e);
 		}
 		return result;

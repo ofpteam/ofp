@@ -58,6 +58,29 @@ $(function() {
 	};
 
 });
+//编辑
+function editCustomer(nav){
+	 //当前页码
+	 var nowPage = grid.pager.nowPage;
+	// 获取每页显示的记录数(即: select框中的10,20,30)
+	var pageSize = grid.pager.pageSize;
+	// 获取排序字段
+	var columnId = grid.sortParameter.columnId;
+	// 获取排序方式 [0-不排序，1-正序，2-倒序]
+	var sortType = grid.sortParameter.sortType;
+	// 获取选择的行
+	var rows = grid.getCheckedRecords();
+	if (rows.length == 1) {
+		webside.common.loadPage(nav + '?id=' + rows[0].customerId + "&page="
+				+ nowPage + "&rows=" + pageSize + "&sidx=" + columnId
+				+ "&sord=" + sortType);
+	} else {
+		layer.msg("你没有选择行或选择了多行数据", {
+			icon : 0
+		});
+	}
+}
+// 批量删除
 function delCustomer(nav, callback) {
 	debugger;
 	var rows = grid.getCheckedRecords();

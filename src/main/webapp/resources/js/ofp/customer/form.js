@@ -41,14 +41,14 @@ $('#customerForm').validate({
             error.insertAfter(element.parent());
     },
     submitHandler : function(form) {
-        var userId = $("#CUSTOMER_ID").val();
+        var userId = $("#customerId").val();
         var url = "";
         if (userId != undefined) {
             url = '/ocustomer/edit.html';
         } else {
             url = '/ocustomer/add.html';
         }
-        webside.common.commit('ocustomerForm', url, '/ocustomer/listUI.html');
+        webside.common.commit('customerForm', url, '/ocustomer/listUI.html');
     }
 });
 }

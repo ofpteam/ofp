@@ -47,6 +47,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- Plugin的属性定义 -->
 		<jdk.version>1.8</jdk.version>
+		<!-- google二维码工具类版本 -->
+		<zxing.version>3.1.0</zxing.version>
 
 	</properties>
 
@@ -454,6 +456,18 @@
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
+		
+		<!-- google二维码工具类 -->
+		<dependency>
+	        <groupId>com.google.zxing</groupId>
+	        <artifactId>core</artifactId>
+	        <version>${zxing.version}</version>
+    	</dependency>
+	    <dependency>
+	        <groupId>com.google.zxing</groupId>
+	        <artifactId>javase</artifactId>
+	        <version>${zxing.version}</version>
+	    </dependency>
 	</dependencies>
 	<build>
 		<finalName>webside</finalName>

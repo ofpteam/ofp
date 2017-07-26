@@ -8,6 +8,13 @@
 		  	<i class="fa fa-user-plus"></i>&nbsp;添加
 		</button>
 	</shiro:hasPermission>
+	<shiro:hasPermission name="ocustomer:deleteBatch">
+		<button id="btnDel" type="button"
+			onclick="delCustomer('/ocustomer/deleteBatch.html', customSearch)"
+			class="btn btn-danger btn-sm">
+			<i class="fa fa-trash-o"></i>&nbsp;删除
+		</button>
+	</shiro:hasPermission>
 	<shiro:hasPermission name="ocustomer:editUI">
 		<button id="btnEdit" type="button" onclick="webside.common.editModel('/ocustomer/editUI.html')" class="btn btn-success btn-sm">
 			 <i class="fa fa-pencil-square-o"></i>&nbsp;编辑

@@ -18,25 +18,27 @@
 	</resultMap>
 
 	<sql id="customer_column_List">
-		CUSTOMER_ID, CUSTOMER_NAME, TELEPHONE, COUNTRY, IS_DELETE, CREATE_TIME,
+		CUSTOMER_ID, CUSTOMER_NAME, TELEPHONE, COUNTRY, IS_DELETE,
+		CREATE_TIME,
 		MODIFY_TIME,
 		CREATE_USER, MODIFY_USER, DESCRIPTION
 	</sql>
 
 	<sql id="customer_column_List_without_id">
-		CUSTOMER_NAME, TELEPHONE, COUNTRY, IS_DELETE, CREATE_TIME, MODIFY_TIME,
+		CUSTOMER_NAME, TELEPHONE, COUNTRY, IS_DELETE, CREATE_TIME,
+		MODIFY_TIME,
 		CREATE_USER, MODIFY_USER, DESCRIPTION
 	</sql>
 
 	<sql id="where_clause">
 		<if test="customerId != null and customerId != 0">
-			and CUSTOMER_ID = #{customerId} 
+			and CUSTOMER_ID = #{customerId}
 		</if>
 		<if test="customerName != null and customerName != ''">
-			and CUSTOMER_NAME like CONCAT(#{customerName},'%') 
+			and CUSTOMER_NAME like CONCAT(#{customerName},'%')
 		</if>
 		<if test="telephone != null and telephone != ''">
-			and TELEPHONE like CONCAT(#{telephone},'%') 
+			and TELEPHONE like CONCAT(#{telephone},'%')
 		</if>
 	</sql>
 
@@ -44,19 +46,20 @@
 		flushCache="true" useCache="true">
 		SELECT
 		<include refid="customer_column_List" />
-		from customer where is_delete = 0
-		<include refid="where_clause" /> 
-		and CUSTOMER_ID >= (
-		select CUSTOMER_ID from customer order by CUSTOMER_ID limit ${start},1
-		)
-		limit ${pageNumber}  
+		from customer  
+		<where>
+				is_delete = 0
+			<if test="CUSTOMER_NAME !=null and CUSTOMER_NAME != ''">
+				and CUSTOMER_NAME like concat(concat('%',#{CUSTOMER_NAME}),'%')
+			</if>
+		</where>
 	</select>
-	
+
 	<select id="queryListAll" parameterType="map" resultMap="customerMap"
 		flushCache="true" useCache="true">
 		SELECT
 		<include refid="customer_column_List" />
-		from customer where is_delete = 0 
+		from customer where is_delete = 0
 		<include refid="where_clause" />
 		order by CUSTOMER_ID desc
 	</select>
@@ -126,6 +129,7 @@
 	</delete>
 
 	<delete id="deleteById" parameterType="int">
-		update customer set IS_DELETE = 1 where CUSTOMER_ID = ${id}
+		update customer set
+		IS_DELETE = 1 where CUSTOMER_ID = ${id}
 	</delete>
 </mapper>

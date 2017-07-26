@@ -1,5 +1,6 @@
 package com.webside.ofp.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,8 @@ import com.webside.base.basecontroller.BaseController;
 import com.webside.common.Common;
 import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
+import com.webside.ofp.model.CustomerEntity;
+import com.webside.ofp.service.CustomerService;
 import com.webside.user.model.UserEntity;
 import com.webside.user.service.UserService;
 import com.webside.util.PageUtil;
@@ -34,7 +37,7 @@ import com.webside.dtgrid.util.ExportUtils;
 public class CustomerController extends BaseController {
 
 	@Autowired
-	private UserService userService;
+	private CustomerService customerService;
 
 
 	@RequestMapping("listUI.html")
@@ -76,7 +79,7 @@ public class CustomerController extends BaseController {
 		if (pager.getIsExport()) {
 			if (pager.getExportAllData()) {
 				// 3.1、导出全部数据
-				List<UserEntity> list = userService.queryListByPage(parameters);
+				List<CustomerEntity> list = customerService.queryListByPage(parameters);
 				ExportUtils.exportAll(response, pager, list);
 				return null;
 			} else {
@@ -87,7 +90,7 @@ public class CustomerController extends BaseController {
 		} else {
 			// 设置分页，page里面包含了分页信息
 			Page<Object> page = PageHelper.startPage(pager.getNowPage(), pager.getPageSize(), true);
-			List<UserEntity> list = userService.queryListByPage(parameters);
+			List<CustomerEntity> list = customerService.queryListByPage(parameters);
 			parameters.clear();
 			parameters.put("isSuccess", Boolean.TRUE);
 			parameters.put("nowPage", pager.getNowPage());
@@ -167,5 +170,35 @@ public class CustomerController extends BaseController {
 			throw new AjaxException(e);
 		}
 		return map;
+	}
+	
+	@RequestMapping("deleteBatch.html")
+	@ResponseBody
+	public Object deleteBatch(String ids){
+		Map<String, Object> result = new HashMap<String, Object>();
+		try
+		{
+			String[] customerIds = ids.split(",");
+			List<Long> list = new ArrayList<Long>();
+			for (String string : customerIds) {
+				list.add(Long.valueOf(string));
+			}
+			int cnt = customerService.deleteBatchById(list);
+			if(cnt == list.size())
+			{
+				result.put("success", true);
+				result.put("data", null);
+				result.put("message", "删除成功");
+			}else
+			{
+				result.put("success", false);
+				result.put("data", null);
+				result.put("message", "删除失败");
+			}
+		}catch(Exception e)
+		{
+			throw new AjaxException(e);
+		}
+		return result;
 	}
 }

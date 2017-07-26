@@ -1,30 +1,30 @@
 var dtGridColumns = [ {
-	id : 'CUSTOMER_ID',
+	id : 'customerId',
 	title : '编号',
 	type : 'number',
 	columnClass : 'text-center',
 	hideType : 'xs',
 	headerClass : 'dlshouwen-grid-header'
 }, {
-	id : 'CUSTOMER_NAME',
+	id : 'customerName',
 	title : '客户姓名',
 	type : 'string',
 	columnClass : 'text-center',
 	headerClass : 'dlshouwen-grid-header'
 }, {
-	id : 'TELEPHONE',
+	id : 'telephone',
 	title : '电话',
 	type : 'string',
 	columnClass : 'text-center',
 	headerClass : 'dlshouwen-grid-header'
 }, {
-	id : 'COUNTRY',
+	id : 'country',
 	title : '国家',
 	type : 'string',
 	columnClass : 'text-center',
 	headerClass : 'dlshouwen-grid-header'
 }, {
-	id : 'DESCRIPTION',
+	id : 'description',
 	title : '描述',
 	type : 'string',
 	columnClass : 'text-center',
@@ -58,7 +58,54 @@ $(function() {
 	};
 
 });
-
+function delCustomer(nav, callback) {
+	debugger;
+	var rows = grid.getCheckedRecords();
+	if (rows.length >= 1) {
+		layer.confirm('确认删除吗？', {
+			icon : 3,
+			title : '删除提示'
+		}, function(index, layero) {
+			var delete_ids = [];
+            $.each(rows, function(index, value) {
+            	delete_ids.push(this.customerId);
+            });
+            
+			$.ajax({
+				type : "POST",
+				url : sys.rootPath + nav,
+				data : {
+					"ids" : delete_ids.join(',')
+				},
+				dataType : "json",
+				success : function(resultdata) {
+					if (resultdata.success) {
+						layer.msg(resultdata.message, {
+							icon : 1
+						});
+						if (callback) {
+							callback();
+						}
+					} else {
+						layer.msg(resultdata.message, {
+							icon : 5
+						});
+					}
+				},
+				error : function(errorMsg) {
+					layer.msg('服务器未响应,请稍后再试', {
+						icon : 3
+					});
+				}
+			});
+			layer.close(index);
+		});
+	} else {
+		layer.msg("你没有选择行或选择了多行数据", {
+			icon : 0
+		});
+	}
+}
 // 自定义查询
 function customSearch() {
 	grid.parameters = new Object();

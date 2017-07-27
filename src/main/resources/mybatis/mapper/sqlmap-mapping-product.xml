@@ -238,4 +238,9 @@
       DESCRIPTION = #{description,jdbcType=VARCHAR}
     where PRODUCT_ID = #{productId,jdbcType=INTEGER}
   </update>
+  
+  	<select id="count" parameterType="map" resultType="int" useCache="false">
+		SELECT count(*) FROM product p where p.is_delete = 0 
+		<include refid="where_clause" /> 
+	</select>
 </mapper>

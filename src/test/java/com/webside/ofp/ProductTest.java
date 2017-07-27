@@ -1,6 +1,7 @@
 package com.webside.ofp;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,11 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.stream.FileImageInputStream;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import com.webside.base.BaseJunit;
+import com.webside.ofp.common.util.ImageUtils;
 import com.webside.ofp.common.util.QRCodeUtil;
 import com.webside.ofp.model.ProductEntity;
 import com.webside.ofp.model.ProductEntityWithBLOBs;
@@ -38,7 +42,7 @@ public class ProductTest extends BaseJunit {
 		productTypeEntity.setProductTypeId(10);
 		ProductEntityWithBLOBs productEntity = new ProductEntityWithBLOBs();
 		productEntity.setProductType(productTypeEntity);
-		productEntity.setProductCode("20170726004");
+		productEntity.setProductCode("20170727002");
 		productEntity.setUnit("SET");
 		productEntity.setCustomsCode("70133700");
 		productEntity.setUsdPrice(0.65);
@@ -60,19 +64,45 @@ public class ProductTest extends BaseJunit {
 		productEntity.setCbm(0.053);
 		productEntity.setPacking("6 pos window box,12 sets/ctn");
 		productEntity.setCreateUser(4);
+		productEntity.setHdMapUrl("D:\\IMG_20141012_130853.jpg");;
 		ByteOutputStream output = new ByteOutputStream();
+		FileImageInputStream input = null;
+		ByteOutputStream output2 = null;
 		try {
-			String content = productEntity.getProductCode() + "|" + productEntity.getTop() + "|" + productEntity.getBottom() + 
-					productEntity.getWeight() + "|" + productEntity.getVolume() + "|" + productEntity.getPackingRate() + "|" + 
-					productEntity.getCbm();
+			//二维码
+			String content = "code:" + productEntity.getProductCode() + "| top:" + productEntity.getTop() + "| bottom:" + 
+					productEntity.getBottom() + "| weight:" + productEntity.getWeight() + "| volume:" + productEntity.getVolume() + 
+					"| packing:" + productEntity.getPackingRate() + "| cbm:" + productEntity.getCbm();
 			QRCodeUtil.encode(content, output);
 //			byte[] rqCodeByteStr = new byte[40960];
 			productEntity.setQrCodePic(output.getBytes());
-			int size = productService.insert(productEntity);
+			
+			//缩略图
+			String hdMapUrl = productEntity.getHdMapUrl();
+			String prefix = hdMapUrl.substring(0,hdMapUrl.lastIndexOf("."));
+			String endfix = hdMapUrl.substring(hdMapUrl.lastIndexOf(".") + 1);
+			String thumbnailUrl = prefix + "_thumbnail." + endfix;
+			ImageUtils.scaleWithHeight(productEntity.getHdMapUrl(), thumbnailUrl, 100);
+			input = new FileImageInputStream(new File(thumbnailUrl));
+		    output2 = new ByteOutputStream();
+	    	byte[] buf = new byte[1024];
+	      	int numBytesRead = 0;
+	      	while ((numBytesRead = input.read(buf)) != -1) {
+	      		output2.write(buf, 0, numBytesRead);
+	      	}
+		    byte[] data =  output2.getBytes();
+		    productEntity.setThumbnail(data);
+		    int size = productService.insert(productEntity);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally{
 			try {
+				if(input != null){
+					input.close();
+				}
+				if(output2 != null){
+					output2.close();
+				}
 				output.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -104,38 +134,41 @@ public class ProductTest extends BaseJunit {
 	
 	@Test
 	public void testFindByIdWithBlobs(){
-		String id = "9";
+		String id = "17";
 		ProductEntityWithBLOBs productEntity  = productService.findByIdWithBLOBS(id);
 		System.out.println("分页查询返回对象：" + productEntity.toString());
 		if(productEntity.getQrCodePic() != null){
-			byte[] data = productEntity.getQrCodePic();
-			InputStream in = new ByteArrayInputStream(data);
-			String targetPath = "E:/" + productEntity.getProductCode() + ".jpg";
-			File file = new File(targetPath);
-			String path = targetPath.substring(0, targetPath.lastIndexOf("/"));
-			if(!file.exists()){
-				new File(path).mkdir();
-			}
-			OutputStream fos = null;
-			try {
-				fos = new FileOutputStream(file);
-				int len = 0;
-				byte[] buf = new byte[1024];
-				while ((len = in.read(buf)) != -1) {
-					fos.write(buf, 0, len);
+//			byte[] data = productEntity.getQrCodePic();
+			byte[] data = productEntity.getThumbnail();
+			if(data != null){
+				InputStream in = new ByteArrayInputStream(data);
+				String targetPath = "D:/" + productEntity.getProductCode() + "_thumbnail.jpg";
+				File file = new File(targetPath);
+				String path = targetPath.substring(0, targetPath.lastIndexOf("/"));
+				if(!file.exists()){
+					new File(path).mkdir();
 				}
-				fos.flush();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (Exception e){
-				e.printStackTrace();
-			} finally{
+				OutputStream fos = null;
 				try {
-					in.close();
-					fos.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					fos = new FileOutputStream(file);
+					int len = 0;
+					byte[] buf = new byte[1024];
+					while ((len = in.read(buf)) != -1) {
+						fos.write(buf, 0, len);
+					}
+					fos.flush();
+				} catch (FileNotFoundException e) {
 					e.printStackTrace();
+				} catch (Exception e){
+					e.printStackTrace();
+				} finally{
+					try {
+						in.close();
+						fos.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}

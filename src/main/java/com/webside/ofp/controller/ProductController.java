@@ -1,7 +1,5 @@
 package com.webside.ofp.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,19 +22,11 @@ import com.webside.base.basecontroller.BaseController;
 import com.webside.common.Common;
 import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
-import com.webside.exception.SystemException;
-import com.webside.loginfo.model.LogInfoEntity;
-import com.webside.loginfo.service.LogInfoService;
-import com.webside.ofp.model.ItemTypeEntity;
-import com.webside.ofp.service.ItemTypeService;
-import com.webside.role.model.RoleEntity;
-import com.webside.role.service.RoleService;
-import com.webside.shiro.ShiroAuthenticationManager;
-import com.webside.user.model.UserEntity;
-import com.webside.user.model.UserInfoEntity;
-import com.webside.user.service.UserService;
+import com.webside.ofp.model.ProductEntity;
+import com.webside.ofp.model.ProductTypeEntity;
+import com.webside.ofp.service.ProductService;
+import com.webside.ofp.service.ProductTypeService;
 import com.webside.util.PageUtil;
-import com.webside.util.crypto.EndecryptUtils;
 import com.webside.dtgrid.model.Pager;
 import com.webside.dtgrid.util.ExportUtils;
 
@@ -47,10 +36,9 @@ import com.webside.dtgrid.util.ExportUtils;
 public class ProductController extends BaseController {
 
 	@Autowired
-	private UserService userService;
-
+	private ProductService productService;
 	@Autowired
-	private RoleService roleService;
+	private ProductTypeService productTypeService;
 
 	@RequestMapping("listUI.html")
 	public String listUI(Model model, HttpServletRequest request) {
@@ -91,7 +79,7 @@ public class ProductController extends BaseController {
 		if (pager.getIsExport()) {
 			if (pager.getExportAllData()) {
 				// 3.1、导出全部数据
-				List<UserEntity> list = userService.queryListByPage(parameters);
+				List<ProductEntity> list = productService.queryListByPage(parameters);
 				ExportUtils.exportAll(response, pager, list);
 				return null;
 			} else {
@@ -101,8 +89,9 @@ public class ProductController extends BaseController {
 			}
 		} else {
 			// 设置分页，page里面包含了分页信息
+			Map<String, Object> map=new HashMap<>();
 			Page<Object> page = PageHelper.startPage(pager.getNowPage(), pager.getPageSize(), true);
-			List<UserEntity> list = userService.queryListByPage(parameters);
+			List<ProductEntity> list = productService.queryListByPage(parameters);
 			parameters.clear();
 			parameters.put("isSuccess", Boolean.TRUE);
 			parameters.put("nowPage", pager.getNowPage());
@@ -119,8 +108,7 @@ public class ProductController extends BaseController {
 	@RequestMapping("addUI.html")
 	public String addUI(Model model) {
 		try {
-			List<RoleEntity> list = roleService.queryListByPage(new HashMap<String, Object>());
-			model.addAttribute("roleList", list);
+			List<ProductEntity> list = productService.queryListByPage(new HashMap<String, Object>());
 			return Common.BACKGROUND_PATH + "/ofp/product/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
@@ -130,7 +118,7 @@ public class ProductController extends BaseController {
 
 	@RequestMapping("add.html")
 	@ResponseBody
-	public Object add(UserEntity userEntity) throws AjaxException {
+	public Object add(ProductEntity productEntity) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			int result = 1;
@@ -152,23 +140,61 @@ public class ProductController extends BaseController {
 	@RequestMapping("editUI.html")
 	public String editUI(Model model, HttpServletRequest request, Long id) {
 		try {
-			UserEntity userEntity = userService.findById(id);
+			ProductEntity productEntity = productService.findById(id);
+			Map<String, Object> parameter = new HashMap<>();
+			parameter.put("level", 0);
+			//查询一级目录
+			List<ProductTypeEntity> productTypeList = productTypeService.queryListAll(parameter);
+			if (productTypeList != null && productTypeList.size() > 0) {
+				model.addAttribute("productTypeList", productTypeList);
+				parameter.clear();
+				
+			}
 			PageUtil page = new PageUtil();
 			page.setPageNum(Integer.valueOf(request.getParameter("page")));
 			page.setPageSize(Integer.valueOf(request.getParameter("rows")));
 			page.setOrderByColumn(request.getParameter("sidx"));
 			page.setOrderByType(request.getParameter("sord"));
 			model.addAttribute("page", page);
-			model.addAttribute("userEntity", userEntity);
+			model.addAttribute("productEntity", productEntity);
 			return Common.BACKGROUND_PATH + "/ofp/product/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
 		}
 	}
 
+
+	/**
+	 * 一级目录选中后变动二级目录
+	 * @param productEntity
+	 * @return
+	 * @throws AjaxException
+	 */
+	@RequestMapping("getProductTypeChildrenList.html")
+	@ResponseBody
+	public Object getProductTypeChildrenList(ProductTypeEntity productTypeEntity) throws AjaxException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			map.put("parentId", productTypeEntity.getProductTypeId());
+			List<ProductTypeEntity> productTypeChildrenList = productTypeService.queryListAll(map);
+			map.clear();
+			if (productTypeChildrenList != null && productTypeChildrenList.size() > 0) {
+				map.put("success", Boolean.TRUE);
+				map.put("data", productTypeChildrenList);
+				map.put("message", "二级目录获取成功");
+			} else {
+				map.put("success", Boolean.FALSE);
+				map.put("data", null);
+				map.put("message", "获取二级目录失败或者二级目录为空");
+			}
+		} catch (Exception e) {
+			throw new AjaxException(e);
+		}
+		return map;
+	}
 	@RequestMapping("edit.html")
 	@ResponseBody
-	public Object update(UserEntity userEntity) throws AjaxException {
+	public Object update(ProductEntity productEntity) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			// 设置创建者姓名

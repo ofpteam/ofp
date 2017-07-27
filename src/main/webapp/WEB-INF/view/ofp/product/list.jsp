@@ -9,7 +9,7 @@
 		</button>
 	</shiro:hasPermission>
 	<shiro:hasPermission name="product:editUI">
-		<button id="btnEdit" type="button" onclick="webside.common.editModel('/product/editUI.html')" class="btn btn-success btn-sm">
+		<button id="btnEdit" type="button" onclick="editProduct('/product/editUI.html')" class="btn btn-success btn-sm">
 			 <i class="fa fa-pencil-square-o"></i>&nbsp;编辑
 		</button>
 	</shiro:hasPermission>
@@ -50,8 +50,6 @@
 			</div>
 		</div>
 	</div>
-	
-	
 </div>
 
 

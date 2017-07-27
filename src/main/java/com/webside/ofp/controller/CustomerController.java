@@ -121,15 +121,27 @@ public class CustomerController extends BaseController {
 	public Object add(CustomerEntity customerEntity) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			int result = customerService.insert(customerEntity);
-			if (result == 1) {
-				map.put("success", Boolean.TRUE);
-				map.put("data", null);
-				map.put("message", "添加成功");
-			} else {
+			if (customerEntity.getCustomerName() == null || customerEntity.getCustomerName() == "") {
 				map.put("success", Boolean.FALSE);
 				map.put("data", null);
-				map.put("message", "添加失败");
+				map.put("message", "客户 名不能为空");
+			} else {
+				if (customerEntity.getTelephone() == null || customerEntity.getTelephone() == "") {
+					map.put("success", Boolean.FALSE);
+					map.put("data", null);
+					map.put("message", "电话号码不能为空");
+				} else {
+					int result = customerService.insert(customerEntity);
+					if (result == 1) {
+						map.put("success", Boolean.TRUE);
+						map.put("data", null);
+						map.put("message", "添加成功");
+					} else {
+						map.put("success", Boolean.FALSE);
+						map.put("data", null);
+						map.put("message", "添加失败");
+					}
+				}
 			}
 		} catch (ServiceException e) {
 			throw new AjaxException(e);

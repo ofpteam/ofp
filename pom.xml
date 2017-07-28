@@ -456,32 +456,37 @@
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
-		
+
 		<!-- google二维码工具类 -->
 		<dependency>
-	        <groupId>com.google.zxing</groupId>
-	        <artifactId>core</artifactId>
-	        <version>${zxing.version}</version>
-    	</dependency>
-	    <dependency>
-	        <groupId>com.google.zxing</groupId>
-	        <artifactId>javase</artifactId>
-	        <version>${zxing.version}</version>
-	    </dependency>
-	    <dependency>
-		    <groupId>com.alibaba</groupId>
-		    <artifactId>simpleimage</artifactId>
-		    <version>${simpleimage.version}</version>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${zxing.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>${zxing.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>simpleimage</artifactId>
+			<version>${simpleimage.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun</groupId>
 			<artifactId>jai_core</artifactId>
 			<version>1.1.3</version>
-		</dependency> 
+		</dependency>
 		<dependency>
 			<groupId>com.sun</groupId>
 			<artifactId>jai_codec</artifactId>
 			<version>1.1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -543,27 +548,12 @@
 
 			<!-- generate a javadoc -->
 
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<javadocDirectory>target/javadoc</javadocDirectory>
-					<reportOutputDirectory>target/javadoc</reportOutputDirectory>
-					<charset>UTF-8</charset>
-					<encoding>UTF-8</encoding>
-					<docencoding>UTF-8</docencoding>
-					<show>private</show>
-				</configuration>
-			</plugin> -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
+				<version>2.10.3</version> <executions> <execution> <id>attach-javadocs</id> 
+				<goals> <goal>jar</goal> </goals> </execution> </executions> <configuration> 
+				<javadocDirectory>target/javadoc</javadocDirectory> <reportOutputDirectory>target/javadoc</reportOutputDirectory> 
+				<charset>UTF-8</charset> <encoding>UTF-8</encoding> <docencoding>UTF-8</docencoding> 
+				<show>private</show> </configuration> </plugin> -->
 
 			<!-- mybatis-generator代码生成 -->
 			<plugin>
@@ -582,11 +572,7 @@
 					<overwrite>true</overwrite>
 				</configuration>
 			</plugin>
-			<!-- 
-			注意：
-			A、在热部署编译前，必须先启动tomcat服务，否则会报错；
-			B、配置文件中的maven的settings.xml中的<id>tomcat7</id>，必须与pom.xml中的<server>tomcat7</server>值相同
-			 -->
+			<!-- 注意： A、在热部署编译前，必须先启动tomcat服务，否则会报错； B、配置文件中的maven的settings.xml中的<id>tomcat7</id>，必须与pom.xml中的<server>tomcat7</server>值相同 -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
@@ -594,7 +580,7 @@
 				<configuration>
 					<url>http://localhost:8080/manager/text</url> <!-- tomcat管理路径 -->
 					<server>tomcat7</server> <!-- 与settings.xml文件中Server的id相同 -->
-					<path>/webapps</path> <!-- 应用的部署位置-->
+					<path>/webapps</path> <!-- 应用的部署位置 -->
 				</configuration>
 			</plugin>
 

@@ -13,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
@@ -89,9 +91,9 @@ public class ProductController extends BaseController {
 			}
 		} else {
 			// 设置分页，page里面包含了分页信息
-			Map<String, Object> map=new HashMap<>();
+			Map<String, Object> map = new HashMap<>();
 			Page<Object> page = PageHelper.startPage(pager.getNowPage(), pager.getPageSize(), true);
-			List<ProductEntity> list = productService.queryListByPage(parameters);
+			List<Map<String, Object>> list = productService.selectByPage(parameters);
 			parameters.clear();
 			parameters.put("isSuccess", Boolean.TRUE);
 			parameters.put("nowPage", pager.getNowPage());
@@ -109,6 +111,19 @@ public class ProductController extends BaseController {
 	public String addUI(Model model) {
 		try {
 			List<ProductEntity> list = productService.queryListByPage(new HashMap<String, Object>());
+			Map<String, Object> parameter = new HashMap<>();
+			parameter.put("level", 1);
+			// 查询一级目录
+			List<ProductTypeEntity> productTypeList = productTypeService.queryListAll(parameter);
+			if (!productTypeList.isEmpty()) {
+				parameter.clear();
+				model.addAttribute("productTypeList", productTypeList);
+				parameter.put("parentId", productTypeList.get(0).getProductTypeId());
+				List<ProductTypeEntity> productTypeChildrenList = productTypeService.queryListAll(parameter);
+				if (!productTypeChildrenList.isEmpty()) {
+					model.addAttribute("productTypeChildrenList", productTypeChildrenList);
+				}
+			}
 			return Common.BACKGROUND_PATH + "/ofp/product/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
@@ -143,12 +158,12 @@ public class ProductController extends BaseController {
 			ProductEntity productEntity = productService.findById(id);
 			Map<String, Object> parameter = new HashMap<>();
 			parameter.put("level", 0);
-			//查询一级目录
+			// 查询一级目录
 			List<ProductTypeEntity> productTypeList = productTypeService.queryListAll(parameter);
 			if (productTypeList != null && productTypeList.size() > 0) {
 				model.addAttribute("productTypeList", productTypeList);
 				parameter.clear();
-				
+
 			}
 			PageUtil page = new PageUtil();
 			page.setPageNum(Integer.valueOf(request.getParameter("page")));
@@ -163,9 +178,9 @@ public class ProductController extends BaseController {
 		}
 	}
 
-
 	/**
 	 * 一级目录选中后变动二级目录
+	 * 
 	 * @param productEntity
 	 * @return
 	 * @throws AjaxException
@@ -192,6 +207,7 @@ public class ProductController extends BaseController {
 		}
 		return map;
 	}
+
 	@RequestMapping("edit.html")
 	@ResponseBody
 	public Object update(ProductEntity productEntity) throws AjaxException {
@@ -213,4 +229,18 @@ public class ProductController extends BaseController {
 		}
 		return map;
 	}
+
+	/**
+	 * 附件上传
+	 * @param file
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/upload.html", method = RequestMethod.POST)
+    @ResponseBody
+    public String uploadBackupFile(@RequestParam MultipartFile file) {
+        //downloadUploadService.uploadBackupFile(serial, file);
+        return "success";
+    }
 }

@@ -12,7 +12,7 @@ var dtGridColumns = [{
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
 }, {
-    id : 'productType.cnName',
+    id : 'typecn_name',
     title : '产品类型',
     type : 'string',
     columnClass : 'text-center',

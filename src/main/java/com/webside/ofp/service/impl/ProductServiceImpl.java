@@ -1,6 +1,8 @@
 package com.webside.ofp.service.impl;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 import javax.imageio.stream.FileImageInputStream;
 
@@ -85,6 +87,12 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long> imp
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet) {
+		// TODO Auto-generated method stub
+		return productMapper.selectByPage(paramet);
 	}
 	
 }

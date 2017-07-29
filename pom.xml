@@ -594,7 +594,9 @@
 				<configuration>
 					<url>http://localhost:8080/manager/text</url> <!-- tomcat管理路径 -->
 					<server>tomcat7</server> <!-- 与settings.xml文件中Server的id相同 -->
-					<path>/webapps</path> <!-- 应用的部署位置-->
+					<path>/webside</path> <!-- 应用的部署位置 -->
+					<username>tomcat</username>  
+                    <password>tomcat</password>
 				</configuration>
 			</plugin>
 

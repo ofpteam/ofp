@@ -33,18 +33,18 @@
     <result column="MODIFY_USER" jdbcType="INTEGER" property="modifyUser" />
     <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
     <association property="productType" column="PRODUCT_TYPE_ID" javaType="com.webside.ofp.model.ProductTypeEntity">
-    	<id column="PRODUCT_TYPE_ID" jdbcType="INTEGER" property="productTypeId" />
-	    <result column="CN_NAME" jdbcType="VARCHAR" property="cnName" />
-	    <result column="EN_NAME" jdbcType="VARCHAR" property="enName" />
+    	<id column="Type_PRODUCT_TYPE_ID" jdbcType="INTEGER" property="productTypeId" />
+	    <result column="Type_CN_NAME" jdbcType="VARCHAR" property="cnName" />
+	    <result column="Type_EN_NAME" jdbcType="VARCHAR" property="enName" />
 	    <result column="PARENT_ID" jdbcType="INTEGER" property="parentId" />
 	    <result column="LEVEL" jdbcType="INTEGER" property="level" />
 	    <result column="ORDERBY" jdbcType="INTEGER" property="orderby" />
-	    <result column="IS_DELETE" jdbcType="INTEGER" property="isDelete" />
-	    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
-	    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
-	    <result column="CREATE_USER" jdbcType="INTEGER" property="createUser" />
-	    <result column="MODIFY_USER" jdbcType="INTEGER" property="modifyUser" />
-	    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+	    <result column="Type_IS_DELETE" jdbcType="INTEGER" property="isDelete" />
+	    <result column="Type_CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+	    <result column="Type_MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+	    <result column="Type_CREATE_USER" jdbcType="INTEGER" property="createUser" />
+	    <result column="Type_MODIFY_USER" jdbcType="INTEGER" property="modifyUser" />
+	    <result column="Type_DESCRIPTION" jdbcType="VARCHAR" property="description" />
     </association>
   </resultMap>
   <resultMap extends="productMap" id="productMapWithBLOBs" type="com.webside.ofp.model.ProductEntityWithBLOBs">
@@ -61,8 +61,8 @@
   </sql>
   
   <sql id="product_type_column_list">
-    pt.PRODUCT_TYPE_ID, pt.CN_NAME, pt.EN_NAME, pt.PARENT_ID, pt.LEVEL, pt.ORDERBY, pt.IS_DELETE, pt.CREATE_TIME, 
-    pt.MODIFY_TIME, pt.CREATE_USER, pt.MODIFY_USER, pt.DESCRIPTION
+    pt.PRODUCT_TYPE_ID Type_PRODUCT_TYPE_ID, pt.CN_NAME Type_CN_NAME , pt.EN_NAME Type_EN_NAM, pt.PARENT_ID, pt.LEVEL, pt.ORDERBY, pt.IS_DELETE Type_IS_DELETE, pt.CREATE_TIME Type_CREATE_TIME, 
+    pt.MODIFY_TIME Type_MODIFY_TIME, pt.CREATE_USER Type_CREATE_USER, pt.MODIFY_USER Type_MODIFY_USER, pt.DESCRIPTION Type_DESCRIPTION
   </sql>
   
   <sql id="Blob_Column_List">
@@ -96,12 +96,13 @@
     	p.IS_DELETE, p.CREATE_TIME, p.MODIFY_TIME, p.CREATE_USER, p.MODIFY_USER, p.DESCRIPTION,
 		<include refid="product_type_column_list" />
 		from product p left join product_type pt on p.PRODUCT_TYPE_ID = pt.PRODUCT_TYPE_ID 
-		where p.is_delete = 0 
-		<include refid="where_clause" /> 
-		and p.PRODUCT_ID >= (
-			select PRODUCT_ID from product order by PRODUCT_ID limit ${start},1
-		)
-		limit ${pageNumber}
+		<where>
+			p.is_delete = 0 
+			<if test="creatorName !=null and creatorName != ''">
+				and u.u_creator_name = #{creatorName}
+			</if>
+		</where>
+		order by p.PRODUCT_ID desc
   </select>
   
   <select id="queryListAll" parameterType="map" resultMap="productMap"
@@ -242,4 +243,21 @@
 		SELECT count(*) FROM product p where p.is_delete = 0 
 		<include refid="where_clause" /> 
 	</select>
+	<select id="selectByPage" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		a.PRODUCT_ID productId,
+		a.PRODUCT_CODE productCode,
+		a.CN_NAME cnName,
+		b.CN_NAME AS typecn_name
+		FROM product a
+		LEFT JOIN product_type b ON a.PRODUCT_TYPE_ID = b.PRODUCT_TYPE_ID
+		<where>
+			a.IS_DELETE = 0 AND b.IS_DELETE = 0 
+			<if test="CN_NAME !=null and CN_NAME != ''">
+				and a.CN_NAME like  CONCAT(#{CN_NAME},'%') 
+			</if>
+		</where>
+	</select>
+	
+	
 </mapper>

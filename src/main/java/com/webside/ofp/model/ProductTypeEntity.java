@@ -427,9 +427,14 @@ public class ProductTypeEntity {
     public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
     }
+
+	@Override
+	public String toString() {
+		return "ProductTypeEntity [productTypeId=" + productTypeId + ", cnName=" + cnName + ", enName=" + enName
+				+ ", parentId=" + parentId + ", level=" + level + ", orderby=" + orderby + ", isDelete=" + isDelete
+				+ ", createTime=" + createTime + ", modifyTime=" + modifyTime + ", createUser=" + createUser
+				+ ", modifyUser=" + modifyUser + ", description=" + description + "]";
+	}
     
-    public String toString(){
-    	return "id:"+this.productTypeId + ",cnname:" + this.cnName + ",enname:" + this.enName + ",parent:" + this.parentId 
-    			+ ",level:" + this.level + ",orderby:" + this.orderby;
-    }
+   
 }

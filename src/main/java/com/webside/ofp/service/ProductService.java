@@ -1,5 +1,8 @@
 package com.webside.ofp.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.webside.base.baseservice.BaseService;
 import com.webside.ofp.model.ProductEntity;
 import com.webside.ofp.model.ProductEntityWithBLOBs;
@@ -15,5 +18,7 @@ public interface ProductService extends BaseService<ProductEntity, Long>{
 	public ProductEntityWithBLOBs findByIdWithBLOBS(String id);
 	
 	public int insertWithBlobs(ProductEntityWithBLOBs productEntityWithBLOBs);
+	
+	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet);
 	
 }

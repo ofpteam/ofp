@@ -4,35 +4,96 @@ function validateForm(){
 $('#productForm').validate({
     errorElement : 'div',
     errorClass : 'help-block',
-    focusInvalid : false,
-    ignore : "",
+ /*   focusInvalid : false,
+    ignore : "",*/
     rules : {
-    	PRODUCT_CODE : {
+    	productCode : {
             required : true
-        },FACTORY_CODE:{
+        },factoryCode:{
         	  required : true
-        },UNIT:{
+        },unit:{
         	  required : true
+        },usdPrice:{
+        	 required : true,
+        	 number:true
+        },cnName:{
+        	required : true,
+        	maxlength:100
+        },vatRate:{
+        	required : true,
+        	number:true
+        },buyPrice:{
+        	required : true,
+        	number:true
+        },weight:{
+        	required : true,
+        	number:true
+        },volume:{
+        	required : true,
+        	number:true
+        },top:{
+        	required : true,
+        	number:true
+        },bottom:{
+        	required : true,
+        	number:true
+        },height:{
+        	required : true,
+        	number:true
+        },length:{
+        	required : true,
+        	number:true
+        },width:{
+        	required : true,
+        	number:true
+        },packHeight:{
+        	required : true,
+        	number:true
+        },gw:{
+        	required : true,
+        	number:true
+        },packingRate:{
+        	required : true,
+        	number:true
+        },taxRebateRate:{
+        	required : true,
+        	number:true
+        },cbm:{
+        	required : true,
+        	number:true
         }
     },
     messages : {
-    	PRODUCT_CODE : {
+    	/*productCode : {
             required : "请填写商品编码",
-        },FACTORY_CODE:{
+        },factoryCode:{
         	 required : "请填写工厂编码",
-        },UNIT:{
+        },unit:{
         	 required : "请填写单位",
-        }
+        },usdPrice:{
+        	 required : "请填写美金单价",
+        },cnName:{
+        	 required : "请填写中文名称",
+        },vatRate:{
+        	 required : "请填写增值税率",
+        },buyPrice:{
+        	 required : "请填写收购单价",
+        },weight:{
+        	 required : "请填写重量",
+        },volume:{
+        	 required : "请填写容量",
+        }*/
         
     },
     highlight : function(e) {
-        $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+        $(e).removeClass('has-info').addClass('has-error');
     },
     success : function(e) {
-        $(e).closest('.form-group').removeClass('has-error').addClass('has-success');
+        $(e).removeClass('has-error').addClass('has-success');
         $(e).remove();
     },
     errorPlacement : function(error, element) {
+    	debugger;
         if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
             var controls = element.closest('div[class*="col-"]');
             if (controls.find(':checkbox,:radio').length > 1)

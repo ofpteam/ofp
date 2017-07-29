@@ -16,7 +16,7 @@
 		</button>
 	</shiro:hasPermission>
 	<shiro:hasPermission name="ocustomer:editUI">
-		<button id="btnEdit" type="button" onclick="webside.common.editModel('/ocustomer/editUI.html')" class="btn btn-success btn-sm">
+		<button id="btnEdit" type="button" onclick="editCustomer('/ocustomer/editUI.html')" class="btn btn-success btn-sm">
 			 <i class="fa fa-pencil-square-o"></i>&nbsp;编辑
 		</button>
 	</shiro:hasPermission>

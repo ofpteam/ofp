@@ -1,3 +1,19 @@
+//商品大类一级选中后重新绑定二级目录
+$('#productTypefather').change(function(){
+	jQuery.ajax({  
+        type:"post",  
+        url:sys.rootPath + '/product/getProductTypeChildrenList.html',  
+        dataType:"json",  
+        data:{productTypeId:$(this).children('option:selected').val()},
+        success: function (result) {  
+        	 $("#productType").empty();//清空
+        	for(var i=0; i<result.data.length; i++){  //重新绑定
+                $("#productType").append($("<option value=\""+result.data[i].productTypeId+"\">"+result.data[i].cnName+"</option>"));  
+            }  
+        }
+	});
+	
+});
 
 //提交
 function validateForm(){
@@ -93,7 +109,6 @@ $('#productForm').validate({
         $(e).remove();
     },
     errorPlacement : function(error, element) {
-    	debugger;
         if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
             var controls = element.closest('div[class*="col-"]');
             if (controls.find(':checkbox,:radio').length > 1)
@@ -108,9 +123,9 @@ $('#productForm').validate({
             error.insertAfter(element.parent());
     },
     submitHandler : function(form) {
-        var userId = $("#userId").val();
+        var productId = $("#productId").val();
         var url = "";
-        if (userId != undefined) {
+        if (productId != undefined) {
             url = '/product/edit.html';
         } else {
             url = '/product/add.html';

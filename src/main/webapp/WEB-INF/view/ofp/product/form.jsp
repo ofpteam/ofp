@@ -44,7 +44,8 @@
 					value="${page.orderByColumn }">
 				<input type="hidden" id="orderByType" name="orderByType"
 					value="${page.orderByType }">
-				<input type="hidden" name="id" id="userId" value="${productEntity.id }">
+				<input type="hidden" name="productId" id="productId"
+					value="${productEntity.productId }">
 			</c:if>
 			<div class="form-group">
 				<div class="row">
@@ -62,8 +63,7 @@
 						for="factoryCode">工厂编码:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
-								class="form-control" name="factoryCode" id="factoryCode"
+							<input class="form-control" name="factoryCode" id="factoryCode"
 								type="text" value="${productEntity.factoryCode }"
 								placeholder="工厂编码..." />
 						</div>
@@ -71,8 +71,7 @@
 					<label class="col-sm-1 control-label no-padding-right" for="unit">单位:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
-								class="form-control" name="unit" id="unit" type="text"
+							<input class="form-control" name="unit" id="unit" type="text"
 								value="${productEntity.unit }" placeholder="单位..." />
 						</div>
 					</div>
@@ -83,19 +82,33 @@
 					<label class="col-sm-1 control-label no-padding-right"
 						for="PRODUCT_TYPE_ID_1">商品大类(一级):</label>
 					<div class="col-sm-3">
-						<select class="form-control" id="PRODUCT_TYPE_ID_1">
-							<c:forEach var="productType" items="${productTypeList }">
-								<option value='${productType.productTypeId}'>
-									${productType.cnName}</option>
+						<select class="form-control" id="productTypefather"
+							name="productTypefather">
+							<c:forEach var="productTypefather" items="${productTypeList }">
+								<c:choose>
+									<c:when
+										test="${ productEntity!=null and
+									productTypefather.productTypeId==productEntity.productType.parentId}">
+										<option value='${productTypefather.productTypeId}'
+											selected="selected">${productTypefather.cnName}</option>
+									</c:when>
+									<c:otherwise>
+										<option value='${productTypefather.productTypeId}'>
+											${productTypefather.cnName}</option>
+									</c:otherwise>
+								</c:choose>
+								<c:if test="${empty productEntity}">
+								<option value='${productTypefather.productTypeId}'>
+								 ${productTypefather.cnName}</option>
+								</c:if>
 							</c:forEach>
 						</select>
 					</div>
-
 					<label class="col-sm-1 control-label no-padding-right"
-						for="PRODUCT_TYPE_ID_2">商品大类(二级):</label>
+						for="productType">商品大类(二级):</label>
 					<div class="col-sm-3">
-						<select class="form-control" id="PRODUCT_TYPE_ID_2">
-						<c:forEach var="productType" items="${productTypeChildrenList }">
+						<select class="form-control" id="productType" name="productTypeId">
+							<c:forEach var="productType" items="${productTypeChildrenList }">
 								<option value='${productType.productTypeId}'>
 									${productType.cnName}</option>
 							</c:forEach>
@@ -105,9 +118,9 @@
 						for="customsCode">海关编码:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="customsCode" id="customsCode"
-								type="text" value="${productEntity.accountName }"
+								type="text" value="${productEntity.customsCode }"
 								placeholder="海关编码..." />
 						</div>
 					</div>
@@ -119,27 +132,24 @@
 						for="usdPrice">美金单价:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
-								class="form-control" name="usdPrice" id="usdPrice"
-								type="number" value="${productEntity.usdPrice }"
-								placeholder="美金单价..." />
+							<input 
+								class="form-control" name="usdPrice" id="usdPrice" type="number"
+								value="${productEntity.usdPrice }" placeholder="美金单价..." />
 						</div>
 					</div>
 
-					<label class="col-sm-1 control-label no-padding-right"
-						for="cnName">中文名称:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="cnName">中文名称:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="cnName" id="cnName" type="text"
 								value="${productEntity.cnName }" placeholder="中文名称..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right"
-						for="enName">英文名称:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="enName">英文名称:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="enName" id="enName" type="text"
 								value="${productEntity.enName }" placeholder="英文名称..." />
 						</div>
@@ -152,7 +162,7 @@
 						for="vatRate">增值税率:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="vatRate" id="vatRate" type="number"
 								value="${productEntity.vatRate }" placeholder="增值税率..." />
 						</div>
@@ -162,16 +172,15 @@
 						for="buyPrice">收购单价:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
-								class="form-control" name="buyPrice" id="buyPrice"
-								type="number" value="${productEntity.buyPrice }"
-								placeholder="收购单价..." />
+							<input 
+								class="form-control" name="buyPrice" id="buyPrice" type="number"
+								value="${productEntity.buyPrice }" placeholder="收购单价..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right" for="weight">单品重量:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="weight" id="weight" type="number"
 								value="${productEntity.weight }" placeholder="单品重量（g）..." />
 						</div>
@@ -183,7 +192,7 @@
 					<label class="col-sm-1 control-label no-padding-right" for="volume">容量:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="volume" id="volume" type="number"
 								value="${productEntity.volume }" placeholder="容量（ml）..." />
 						</div>
@@ -192,7 +201,7 @@
 					<label class="col-sm-1 control-label no-padding-right" for="top">Top:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="top" id="top" type="number"
 								value="${productEntity.top }" placeholder="口TopΦ(mm)..." />
 						</div>
@@ -200,7 +209,7 @@
 					<label class="col-sm-1 control-label no-padding-right" for="bottom">底:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="bottom" id="bottom" type="number"
 								value="${productEntity.bottom }" placeholder="底BottomΦ(mm)..." />
 						</div>
@@ -212,7 +221,7 @@
 					<label class="col-sm-1 control-label no-padding-right" for="height">高:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="height" id="height" type="number"
 								value="${productEntity.height }" placeholder="高Height(mm)..." />
 						</div>
@@ -221,7 +230,7 @@
 					<label class="col-sm-1 control-label no-padding-right" for="length">外包装长度:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input
 								class="form-control" name="length" id="length" type="number"
 								value="${productEntity.length }" placeholder="外包装长度（单位:cm）..." />
 						</div>
@@ -230,7 +239,7 @@
 					<label class="col-sm-1 control-label no-padding-right" for="width">外包装宽度:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="width" id="width" type="number"
 								value="${productEntity.width }" placeholder="外包装宽度（单位：cm）..." />
 						</div>
@@ -243,7 +252,7 @@
 						for="packHeight">外包装高度:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input
 								class="form-control" name="packHeight" id="packHeight"
 								type="number" value="${productEntity.packHeight }"
 								placeholder="外包装高度（单位：cm）..." />
@@ -253,7 +262,7 @@
 					<label class="col-sm-1 control-label no-padding-right" for="gw">G.W:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input
 								class="form-control" name="gw" id="gw" type="number"
 								value="${productEntity.gw }" placeholder="G.W..." />
 						</div>
@@ -263,9 +272,9 @@
 						for="packingRate">装箱率:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input
 								class="form-control" name="packingRate" id="packingRate"
-								type="text" value="${productEntity.packingRate }"
+								type="number" value="${productEntity.packingRate }"
 								placeholder="装箱率..." />
 						</div>
 					</div>
@@ -277,7 +286,7 @@
 						for="taxRebateRate">退税率:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input 
 								class="form-control" name="taxRebateRate" id="taxRebateRate"
 								type="number" value="${productEntity.taxRebateRate }"
 								placeholder="退税率..." />
@@ -286,7 +295,7 @@
 					<label class="col-sm-1 control-label no-padding-right" for="cbm">CBM:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty productEntity}">readonly</c:if>
+							<input
 								class="form-control" name="cbm" id="cbm" type="number"
 								value="${productEntity.cbm }" placeholder="CBM..." />
 						</div>
@@ -301,10 +310,9 @@
 						for="packing">PACKING:</label>
 					<div class="col-sm-7">
 						<div>
-							<textarea <c:if test="${!empty productEntity}">readonly</c:if>
-								class="form-control" name="packing" id="packing" 
-								placeholder="Description and Packing...">
-								${productEntity.packing }</textarea>
+							<textarea 
+								class="form-control" name="packing" id="packing"
+								placeholder="Description and Packing...">${productEntity.packing }</textarea>
 						</div>
 					</div>
 				</div>
@@ -312,13 +320,13 @@
 		</form>
 		<div class="form-group">
 			<div class="row">
-				  <div id="uploader-demo">
-        <!--用来存放item-->
-        <div id="fileList" class="uploader-list"></div>
-        <div id="upInfo" ></div>
-        <div id="filePicker">选择文件</div>
-    </div>
-    <input type="button" id="btn" value="开始上传">
+				<div id="uploader-demo">
+					<!--用来存放item-->
+					<div id="fileList" class="uploader-list"></div>
+					<div id="upInfo"></div>
+					<div id="filePicker">选择文件</div>
+				</div>
+				<input type="button" id="btn" value="开始上传">
 			</div>
 		</div>
 		<div class="hr hr-dotted"></div>

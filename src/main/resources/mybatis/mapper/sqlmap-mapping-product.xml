@@ -142,7 +142,7 @@
 		where p.is_delete = 0 and p.product_id = #{id}
   </select>
   
-  <select id="findByIdWithBLOBS" parameterType="String"  resultMap="productMapWithBLOBs" flushCache="true" useCache="true">
+  <select id="findByIdWithBLOBS" parameterType="long"  resultMap="productMapWithBLOBs" flushCache="true" useCache="true">
     	SELECT 
 		p.PRODUCT_ID, p.PRODUCT_TYPE_ID, p.PRODUCT_CODE, p.FACTORY_CODE, p.UNIT, p.CUSTOMS_CODE, p.USD_PRICE, 
     	p.CN_NAME, p.EN_NAME, p.VAT_RATE, p.BUY_PRICE, p.WEIGHT, p.VOLUME, p.TOP, p.BOTTOM, p.HEIGHT, p.LENGTH, 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductMapper extends BaseMapper<ProductEntity, Long>{
 	public ProductEntity findByTypeId(String id);
 	
-	public ProductEntityWithBLOBs findByIdWithBLOBS(String id);
+	public ProductEntityWithBLOBs findByIdWithBLOBS(long id);
 	
 	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet);
 }

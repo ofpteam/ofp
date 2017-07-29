@@ -72,17 +72,17 @@ public class ProductTypeTest extends BaseJunit {
 		for(ProductTypeEntity productTypeEntity:list){
 			System.out.println("分页查询返回对象：" + productTypeEntity.toString());
 		}
-	}
+	}*/
 	
 	@Test
 	public void testQueryListAll(){
 		Map<String, Object> parameters = new HashMap<String,Object>();
-		parameters.put("parentId","0");
+		parameters.put("level","0");
 		List<ProductTypeEntity> list = productTypeService.queryListAll(parameters);
 		for(ProductTypeEntity productTypeEntity:list){
 			System.out.println("查询返回对象：" + productTypeEntity.toString());
 		}
-	}*/
+	}
 	
 	@Test
 	public void testFindAllProductTypeTreeJsonString(){

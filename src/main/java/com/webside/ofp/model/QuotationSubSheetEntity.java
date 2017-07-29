@@ -29,8 +29,21 @@ public class QuotationSubSheetEntity {
      * @mbg.generated Tue Jul 18 00:02:59 CST 2017
      */
     private Integer productId;
-
+   
     /**
+     * 产品信息，包含blob类型
+     */
+    private ProductEntityWithBLOBs product;
+
+    public ProductEntityWithBLOBs getProduct() {
+		return product;
+	}
+
+	public void setProduct(ProductEntityWithBLOBs product) {
+		this.product = product;
+	}
+
+	/**
      * Database Column Remarks:
      *   报价单ID,外键
      *

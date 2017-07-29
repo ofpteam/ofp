@@ -25,12 +25,53 @@
     <result column="TOTALCBM" jdbcType="DECIMAL" property="totalcbm" />
     <result column="GW" jdbcType="DECIMAL" property="gw" />
     <result column="TOTAL_GW" jdbcType="DECIMAL" property="totalGw" />
+    <association property="product" column="PRODUCT_ID" javaType="com.webside.ofp.model.ProductEntityWithBLOBs">
+    	<id column="PRODUCT_ID" jdbcType="INTEGER" property="productId" />
+	    <result column="PRODUCT_CODE" jdbcType="VARCHAR" property="productCode" />
+	    <result column="FACTORY_CODE" jdbcType="VARCHAR" property="factoryCode" />
+	    <result column="UNIT" jdbcType="VARCHAR" property="unit" />
+	    <result column="CUSTOMS_CODE" jdbcType="VARCHAR" property="customsCode" />
+	    <result column="USD_PRICE" jdbcType="DECIMAL" property="usdPrice" />
+	    <result column="CN_NAME" jdbcType="VARCHAR" property="cnName" />
+	    <result column="EN_NAME" jdbcType="VARCHAR" property="enName" />
+	    <result column="VAT_RATE" jdbcType="DECIMAL" property="vatRate" />
+	    <result column="BUY_PRICE" jdbcType="DECIMAL" property="buyPrice" />
+	    <result column="WEIGHT" jdbcType="INTEGER" property="weight" />
+	    <result column="VOLUME" jdbcType="INTEGER" property="volume" />
+	    <result column="TOP" jdbcType="DECIMAL" property="top" />
+	    <result column="BOTTOM" jdbcType="DECIMAL" property="bottom" />
+	    <result column="HEIGHT" jdbcType="DECIMAL" property="height" />
+	    <result column="LENGTH" jdbcType="DECIMAL" property="length" />
+	    <result column="WIDTH" jdbcType="DECIMAL" property="width" />
+	    <result column="PACK_HEIGHT" jdbcType="DECIMAL" property="packHeight" />
+	    <result column="GW" jdbcType="DECIMAL" property="gw" />
+	    <result column="PACKING_RATE" jdbcType="DECIMAL" property="packingRate" />
+	    <result column="TAX_REBATE_RATE" jdbcType="DECIMAL" property="taxRebateRate" />
+	    <result column="CBM" jdbcType="DECIMAL" property="cbm" />
+	    <result column="PACKING" jdbcType="VARCHAR" property="packing" />
+	    <result column="HD_MAP_URL" jdbcType="VARCHAR" property="hdMapUrl" />
+	    <result column="IS_DELETE" jdbcType="INTEGER" property="isDelete" />
+	    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+	    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+	    <result column="CREATE_USER" jdbcType="INTEGER" property="createUser" />
+	    <result column="MODIFY_USER" jdbcType="INTEGER" property="modifyUser" />
+	    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+	    <result column="THUMBNAIL" jdbcType="LONGVARBINARY" property="thumbnail" />
+    	<result column="QR_CODE_PIC" jdbcType="LONGVARBINARY" property="qrCodePic" />
+    </association>
   </resultMap>
   
   <sql id="quotation_sub_sheet_column_list">
     QUOTATION_SUB_SHEET_ID, PRODUCT_ID, QUOTATION_SHEET_ID, USD_PRICE, BUY_PRICE, UNIT, 
     WEIGHT, VOLUME, TOP, BOTTOM, HEIGHT, PACKING, PACKING_RATE, NUMBER, PACK_NUM, TOTALCBM, 
     GW, TOTAL_GW
+  </sql>
+  
+ <sql id="product_column_List">
+    p.PRODUCT_ID, p.PRODUCT_TYPE_ID, p.PRODUCT_CODE, p.FACTORY_CODE, p.UNIT, p.CUSTOMS_CODE, p.USD_PRICE, 
+    p.CN_NAME, p.EN_NAME, p.VAT_RATE, p.BUY_PRICE, p.WEIGHT, p.VOLUME, p.TOP, p.BOTTOM, p.HEIGHT, p.LENGTH, 
+    p.WIDTH, p.PACK_HEIGHT, p.GW, p.PACKING_RATE, p.TAX_REBATE_RATE, p.CBM, p.PACKING, p.HD_MAP_URL, 
+    p.IS_DELETE, p.CREATE_TIME, p.MODIFY_TIME, p.CREATE_USER, p.MODIFY_USER, p.DESCRIPTION
   </sql>
   
   <select id="queryListByPage" parameterType="map" resultMap="quotationSubSheetMap"

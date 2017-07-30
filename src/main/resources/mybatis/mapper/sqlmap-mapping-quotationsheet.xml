@@ -92,7 +92,7 @@
  	 	<if test="quotationSheetId != null and quotationSheetId != 0">
 			and qs.QUOTATION_SHEET_ID = #{quotationSheetId} 
 		</if>
-		<if test="customer.customerId != null and customer.customerId != ''">
+		<if test="customer != null and customer.customerId != null and customer.customerId != ''">
 			and qs.CUSTOMER_ID = #{customerId} 
 		</if>
 		<if test="quotationSheetCode != null and quotationSheetCode != ''">

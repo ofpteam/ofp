@@ -30,7 +30,21 @@ public class CustomerEntity {
      */
     private String customerName;
 
+    
     /**
+     * 联系人
+     */
+    private String contacts;
+    
+    public String getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(String contacts) {
+		this.contacts = contacts;
+	}
+
+	/**
      * Database Column Remarks:
      *   电话
      *

@@ -1,6 +1,8 @@
 package com.webside.ofp.common.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
 public class OfpExportUtils extends ExportUtils{
+	//报价单excel模板名称
 	private static final String QUOTATION_SHEET_TEMPLATE_PATH = "\\template\\quotation_sheet.xls";
 	
 	
@@ -50,22 +53,44 @@ public class OfpExportUtils extends ExportUtils{
 		if(ExportType.EXCEL.name().equalsIgnoreCase(exportType)){
 			exportQuotationSheetExcel(response,QuotationSheet,basePath);
 		}else if(ExportType.PDF.name().equalsIgnoreCase(exportType)){
-			
+			exportQuotationSheetPdf(response,QuotationSheet,basePath);
 		}
 	}
 	
 	public static void exportQuotationSheetExcel(HttpServletResponse response,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
+		
 		// 设置响应头
 		response.setContentType("application/vnd.ms-excel");
 		// 执行文件写入
 		response.setHeader("Content-Disposition", "attachment;filename="
-				+ quotationSheet.getQuotationSheetCode() + ".xls");
+				+ (quotationSheet.getQuotationSheetCode()+System.currentTimeMillis()) + ".xls");
 		// 获取输出流
 		OutputStream outputStream = response.getOutputStream();
 		exportQuotationSheetExcel(outputStream,quotationSheet,basePath);
 	}
-	
-	public static void exportQuotationSheetPdf(HttpServletResponse response,QuotationSheetEntity QuotationSheet) throws Exception {
+	 
+	/**
+	 * 导出pdf，这里先导出excel，然后使用jacob 把excel转为pdf
+	 * @param response
+	 * @param quotationSheet
+	 * @param basePath
+	 * @throws Exception
+	 */
+	public static void exportQuotationSheetPdf(HttpServletResponse response,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
+		String fileName = quotationSheet.getQuotationSheetCode()+System.currentTimeMillis();
+		// 设置响应头
+		response.setContentType("application/pdf");
+		// 执行文件写入
+		response.setHeader("Content-Disposition", "attachment;filename="
+				+ fileName + ".pdf");
+		// 获取输出流
+//		OutputStream outputStream = response.getOutputStream();
+		
+		//导出excel到指定路径
+		OutputStream outputStream = new FileOutputStream(new File("D:\\"+fileName+".xls"));
+		exportQuotationSheetExcel(outputStream,quotationSheet,basePath);
+		
+		FileInputStream fis = new FileInputStream(new File("D:\\"+fileName+".xls"));
 		
 	}
 	

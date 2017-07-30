@@ -6,6 +6,7 @@
 			MyBatis Generator, do not modify. This element was generated on Tue Jul 18 
 			00:02:59 CST 2017. -->
 		<id column="CUSTOMER_ID" jdbcType="INTEGER" property="customerId" />
+		<result column="CONTACTS" jdbcType="VARCHAR" property="contacts" />
 		<result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName" />
 		<result column="TELEPHONE" jdbcType="VARCHAR" property="telephone" />
 		<result column="COUNTRY" jdbcType="VARCHAR" property="country" />
@@ -18,14 +19,13 @@
 	</resultMap>
 
 	<sql id="customer_column_List">
-		CUSTOMER_ID, CUSTOMER_NAME, TELEPHONE, COUNTRY, IS_DELETE,
-		CREATE_TIME,
-		MODIFY_TIME,
+		CUSTOMER_ID,CONTACTS,CUSTOMER_NAME, TELEPHONE, COUNTRY, IS_DELETE,
+		CREATE_TIME,MODIFY_TIME,
 		CREATE_USER, MODIFY_USER, DESCRIPTION
 	</sql>
 
 	<sql id="customer_column_List_without_id">
-		CUSTOMER_NAME, TELEPHONE, COUNTRY, IS_DELETE, CREATE_TIME,
+		CONTACTS,CUSTOMER_NAME,TELEPHONE, COUNTRY, IS_DELETE, CREATE_TIME,
 		MODIFY_TIME,
 		CREATE_USER, MODIFY_USER, DESCRIPTION
 	</sql>
@@ -75,10 +75,11 @@
 	<insert id="insert" parameterType="com.webside.ofp.model.CustomerEntity"
 		useGeneratedKeys="true" keyProperty="customerId">
 		insert ignore into customer (
-		CUSTOMER_NAME, TELEPHONE, COUNTRY, IS_DELETE, CREATE_TIME,
+		CONTACTS,CUSTOMER_NAME, TELEPHONE, COUNTRY, IS_DELETE, CREATE_TIME,
 		CREATE_USER, DESCRIPTION
 		)
 		values (
+		#{contacts},
 		#{customerName},
 		#{telephone},
 		#{country},
@@ -102,6 +103,9 @@
 		flushCache="true">
 		update customer
 		<set>
+			<if test="contacts != null and contacts != ''">
+				CONTACTS = #{contacts},
+			</if>
 			<if test="customerName != null and customerName != ''">
 				CUSTOMER_NAME = #{customerName},
 			</if>

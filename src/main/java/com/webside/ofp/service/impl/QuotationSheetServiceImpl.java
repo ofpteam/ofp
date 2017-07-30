@@ -68,7 +68,7 @@ public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEnt
 		List<QuotationSubSheetEntity> subList = quotationSheetEntity.getSubSheetList();
 		for(QuotationSubSheetEntity quotationSubSheetEntity : subList){
 			if(quotationSubSheetEntity.getProductId() != null){
-				ProductEntityWithBLOBs product = productService.findByIdWithBLOBS(quotationSubSheetEntity.getProductId()+"");
+				ProductEntityWithBLOBs product = productService.findByIdWithBLOBS(quotationSubSheetEntity.getProductId());
 				quotationSubSheetEntity.setProduct(product);
 			}
 		}

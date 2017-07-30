@@ -168,7 +168,7 @@ public class ProductTest extends BaseJunit {
 	
 	/*@Test
 	public void testFindByIdWithBlobs(){
-		String id = "17";
+		Integer id = 17;
 		ProductEntityWithBLOBs productEntity  = productService.findByIdWithBLOBS(id);
 		System.out.println("分页查询返回对象：" + productEntity.toString());
 		if(productEntity.getQrCodePic() != null){

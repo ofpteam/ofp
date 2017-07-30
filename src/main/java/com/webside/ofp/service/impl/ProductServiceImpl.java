@@ -36,7 +36,7 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long> imp
 		return productMapper.findByTypeId(id);
 	}
 	
-	public ProductEntityWithBLOBs findByIdWithBLOBS(String id){
+	public ProductEntityWithBLOBs findByIdWithBLOBS(long id){
 		return productMapper.findByIdWithBLOBS(id);
 	}
 

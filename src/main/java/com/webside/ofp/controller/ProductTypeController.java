@@ -25,9 +25,13 @@ import com.webside.exception.AjaxException;
 import com.webside.exception.SystemException;
 import com.webside.loginfo.model.LogInfoEntity;
 import com.webside.loginfo.service.LogInfoService;
+import com.webside.ofp.common.util.StrUtil;
 import com.webside.ofp.model.ItemTypeEntity;
+import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.ofp.service.ItemTypeService;
+import com.webside.ofp.service.ProductTypeService;
 import com.webside.role.model.RoleEntity;
+import com.webside.shiro.ShiroAuthenticationManager;
 import com.webside.util.PageUtil;
 import com.webside.dtgrid.model.Pager;
 
@@ -35,6 +39,8 @@ import com.webside.dtgrid.model.Pager;
 @Scope("prototype")
 @RequestMapping(value = "/producttype/")
 public class ProductTypeController extends BaseController {
+	@Autowired
+	private ProductTypeService productTypeService;
 
 	@RequestMapping("index.html")
 	public String listUI() {
@@ -55,58 +61,52 @@ public class ProductTypeController extends BaseController {
 	@RequestMapping(value = "/list.html", method = RequestMethod.POST)
 	@ResponseBody
 	public Object list(String gridPager) throws Exception {
-		Map<String, Object> parameters = null;
-		return parameters;
-
+		return productTypeService.findAllProductTypeTreeJsonString();
 	}
 
 	@RequestMapping("addUI.html")
 	public String addUI(Model model, HttpServletRequest request, Long id) {
 		// 获取大类
-		List<Map<String, Object>> list = new ArrayList<>();
-		Map<String, Object> map = new HashMap<>();
-		map.put("id", "1");
-		map.put("name", "杯子");
-		list.add(map);
-		model.addAttribute("producttype", list);
+		Map<String, Object> parameter = new HashMap<>();
+		parameter.put("level", 1);
+		List<ProductTypeEntity> list = productTypeService.queryListAll(parameter);
+		model.addAttribute("productTypeList", list);
 		return Common.BACKGROUND_PATH + "/ofp/producttype/form";
 	}
 
 	@RequestMapping("add.html")
 	@ResponseBody
-	public Object add(RoleEntity roleEntity) {
+	public Object add(ProductTypeEntity productTypeEntity) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-//			roleEntity.setCreateTime(new Date(System.currentTimeMillis()));
-//			roleEntity.setStatus(0);
-//			int result = roleService.insert(roleEntity);
-//			if (result > 0) {
-//				map.put("success", Boolean.TRUE);
-//				map.put("data", null);
-//				map.put("message", "添加成功");
-//			} else {
-//				map.put("success", Boolean.FALSE);
-//				map.put("data", null);
-//				map.put("message", "添加失败");
-//			}
+			productTypeEntity.setIsDelete(0);
+			productTypeEntity.setOrderby(1);
+			productTypeEntity.setParentId(productTypeEntity.getProductTypeId());
+			productTypeEntity.setCreateTime(new Date());
+			productTypeEntity.setCreateUser(ShiroAuthenticationManager.getUserId().intValue());
+			int result = productTypeService.insert(productTypeEntity);
+			if (result == 1) {
+				map.put("success", Boolean.TRUE);
+				map.put("data", null);
+				map.put("message", "添加成功");
+			} else {
+				map.put("success", Boolean.FALSE);
+				map.put("data", null);
+				map.put("message", "添加失败");
+			}
 		} catch (Exception e) {
 			throw new AjaxException(e);
 		}
 		return map;
 	}
 
-	@RequestMapping("editUI.html")
+	@RequestMapping(value = "/editUI.html", method = RequestMethod.GET)
 	public String editUI(Model model, HttpServletRequest request, Long id) {
 		try {
-			/*RoleEntity roleEntity = roleService.findById(id);
-			PageUtil page = new PageUtil();
-			page.setPageNum(Integer.valueOf(request.getParameter("page")));
-			page.setPageSize(Integer.valueOf(request.getParameter("rows")));
-			page.setOrderByColumn(request.getParameter("sidx"));
-			page.setOrderByType(request.getParameter("sord"));
-			model.addAttribute("page", page);
-			model.addAttribute("roleEntity", roleEntity);*/
-			return Common.BACKGROUND_PATH + "/producttype/form";
+			// 获取大类
+			ProductTypeEntity productTypeEntity = productTypeService.findById(id);
+			model.addAttribute("productTypeEntity", productTypeEntity);
+			return Common.BACKGROUND_PATH + "/ofp/producttype/form";
 		} catch (Exception e) {
 			throw new SystemException(e);
 		}
@@ -114,19 +114,29 @@ public class ProductTypeController extends BaseController {
 
 	@RequestMapping("edit.html")
 	@ResponseBody
-	public Object update(RoleEntity roleEntity) {
+	public Object update(ProductTypeEntity productTypeEntity) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			/*int result = roleService.update(roleEntity);
-			if (result > 0) {
-				map.put("success", Boolean.TRUE);
-				map.put("data", null);
-				map.put("message", "编辑成功");
-			} else {
+			if (StrUtil.noVal(productTypeEntity.getCnName())) {
 				map.put("success", Boolean.FALSE);
 				map.put("data", null);
-				map.put("message", "编辑失败");
-			}*/
+				map.put("message", "中文名称不能为空");
+			} else {
+				productTypeEntity.setIsDelete(0);
+				productTypeEntity.setOrderby(1);
+				productTypeEntity.setModifyTime(new Date());
+				productTypeEntity.setModifyUser(ShiroAuthenticationManager.getUserId().intValue());
+				int result = productTypeService.update(productTypeEntity);
+				if (result == 1) {
+					map.put("success", Boolean.TRUE);
+					map.put("data", null);
+					map.put("message", "添加成功");
+				} else {
+					map.put("success", Boolean.FALSE);
+					map.put("data", null);
+					map.put("message", "添加失败");
+				}
+			}
 		} catch (Exception e) {
 			throw new AjaxException(e);
 		}

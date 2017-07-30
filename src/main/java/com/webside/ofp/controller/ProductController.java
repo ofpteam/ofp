@@ -1,5 +1,7 @@
 package com.webside.ofp.controller;
 
+import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,14 +23,18 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.webside.base.basecontroller.BaseController;
 import com.webside.common.Common;
 import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
+import com.webside.ofp.common.util.StrUtil;
 import com.webside.ofp.model.ProductEntity;
+import com.webside.ofp.model.ProductEntityWithBLOBs;
 import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.ofp.service.ProductService;
 import com.webside.ofp.service.ProductTypeService;
+import com.webside.shiro.ShiroAuthenticationManager;
 import com.webside.util.PageUtil;
 import com.webside.dtgrid.model.Pager;
 import com.webside.dtgrid.util.ExportUtils;
@@ -133,18 +140,30 @@ public class ProductController extends BaseController {
 
 	@RequestMapping("add.html")
 	@ResponseBody
-	public Object add(ProductEntity productEntity) throws AjaxException {
+	public Object add(ProductEntityWithBLOBs productEntityWithBLOBs, ProductTypeEntity productTypeEntity)
+			throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			int result = 1;
-			if (result == 1) {
-				map.put("success", Boolean.TRUE);
-				map.put("data", null);
-				map.put("message", "添加成功");
-			} else {
+			StringBuilder sb = this.validateSubmitVal(productEntityWithBLOBs, productTypeEntity);
+			if (sb.length() == 0) {// 校验通过
+				productEntityWithBLOBs.setProductType(productTypeEntity);
+				productEntityWithBLOBs.setIsDelete(0);
+				productEntityWithBLOBs.setCreateTime(new Date());
+				productEntityWithBLOBs.setCreateUser(ShiroAuthenticationManager.getUserId().intValue());
+				int result = productService.insert(productEntityWithBLOBs);
+				if (result == 1) {
+					map.put("success", Boolean.TRUE);
+					map.put("data", null);
+					map.put("message", "添加成功");
+				} else {
+					map.put("success", Boolean.FALSE);
+					map.put("data", null);
+					map.put("message", "添加失败");
+				}
+			} else {// 校验错误
 				map.put("success", Boolean.FALSE);
 				map.put("data", null);
-				map.put("message", "添加失败");
+				map.put("message", "添加失败" + sb.toString());
 			}
 		} catch (ServiceException e) {
 			throw new AjaxException(e);
@@ -152,18 +171,95 @@ public class ProductController extends BaseController {
 		return map;
 	}
 
+	/**
+	 * 校验提交的数据
+	 * 
+	 * @param productEntityWithBLOBs
+	 * @param productTypeEntity
+	 * @return
+	 */
+	private StringBuilder validateSubmitVal(ProductEntityWithBLOBs productEntityWithBLOBs,
+			ProductTypeEntity productTypeEntity) {
+		StringBuilder sb = new StringBuilder();
+		if (productTypeEntity.getProductTypeId() == null) {
+			sb.append("商品类型不能为空,");
+		}
+		if (StrUtil.noVal(productEntityWithBLOBs.getProductCode())) {
+			sb.append("商品编码不能为空,");
+		}
+		if (StrUtil.noVal(productEntityWithBLOBs.getProductCode())) {
+			sb.append("工厂编码不能为空,");
+		}
+		if (StrUtil.noVal(productEntityWithBLOBs.getUnit())) {
+			sb.append("单位不能为空,");
+		}
+		if (productEntityWithBLOBs.getUsdPrice() == null || productEntityWithBLOBs.getUsdPrice() <= 0) {
+			sb.append("美金单价不能为空或者美金单价小于0,");
+		}
+		if (StrUtil.noVal(productEntityWithBLOBs.getCnName())) {
+			sb.append("中文名称不能为空,");
+		}
+		if (productEntityWithBLOBs.getVatRate() == null || productEntityWithBLOBs.getVatRate() <= 0) {
+			sb.append("增值税率不能为空或者增值税率小于0,");
+		}
+		if (productEntityWithBLOBs.getBuyPrice() == null || productEntityWithBLOBs.getBuyPrice() <= 0) {
+			sb.append("收购单价不能为空或者收购单价小于0,");
+		}
+		if (productEntityWithBLOBs.getWeight() == null || productEntityWithBLOBs.getWeight() <= 0) {
+			sb.append("重量不能为空或者重量小于0,");
+		}
+		if (productEntityWithBLOBs.getVolume() == null || productEntityWithBLOBs.getVolume() <= 0) {
+			sb.append("容量不能为空或者容量小于0,");
+		}
+		if (productEntityWithBLOBs.getTop() == null || productEntityWithBLOBs.getTop() <= 0) {
+			sb.append("TOP不能为空或者TOP小于0,");
+		}
+		if (productEntityWithBLOBs.getBottom() == null || productEntityWithBLOBs.getBottom() <= 0) {
+			sb.append("BOTTOM不能为空或者BOTTOM小于0,");
+		}
+		if (productEntityWithBLOBs.getHeight() == null || productEntityWithBLOBs.getHeight() <= 0) {
+			sb.append("HEIGHT不能为空或者HEIGHT小于0,");
+		}
+		if (productEntityWithBLOBs.getLength() == null || productEntityWithBLOBs.getLength() <= 0) {
+			sb.append("外包装长度不能为空或者外包装长度小于0,");
+		}
+		if (productEntityWithBLOBs.getWeight() == null || productEntityWithBLOBs.getWeight() <= 0) {
+			sb.append("外包装宽度不能为空或者外包装宽度小于0,");
+		}
+		if (productEntityWithBLOBs.getPackHeight() == null || productEntityWithBLOBs.getPackHeight() <= 0) {
+			sb.append("外包装高度不能为空或者外包装高度小于0,");
+		}
+		if (productEntityWithBLOBs.getGw() == null || productEntityWithBLOBs.getGw() <= 0) {
+			sb.append("GW不能为空或者GW小于0,");
+		}
+		if (productEntityWithBLOBs.getPackingRate() == null || productEntityWithBLOBs.getPackingRate() <= 0) {
+			sb.append("装箱率不能为空或者装箱率小于0,");
+		}
+		if (productEntityWithBLOBs.getTaxRebateRate() == null || productEntityWithBLOBs.getTaxRebateRate() <= 0) {
+			sb.append("退税率不能为空或者退税率小于0,");
+		}
+		if (productEntityWithBLOBs.getCbm() == null || productEntityWithBLOBs.getCbm() <= 0) {
+			sb.append("CBM不能为空或者CBM小于0,");
+		}
+		return sb;
+	}
+
 	@RequestMapping("editUI.html")
 	public String editUI(Model model, HttpServletRequest request, Long id) {
 		try {
-			ProductEntity productEntity = productService.findById(id);
+			ProductEntityWithBLOBs productEntityWithBLOBs = productService.findByIdWithBLOBS(id);
 			Map<String, Object> parameter = new HashMap<>();
-			parameter.put("level", 0);
+			parameter.put("level", 1);
 			// 查询一级目录
 			List<ProductTypeEntity> productTypeList = productTypeService.queryListAll(parameter);
-			if (productTypeList != null && productTypeList.size() > 0) {
-				model.addAttribute("productTypeList", productTypeList);
+			if (!productTypeList.isEmpty()) {
 				parameter.clear();
-
+				model.addAttribute("productTypeList", productTypeList);
+				parameter.put("parentId", productEntityWithBLOBs.getProductType().getParentId());
+				List<ProductTypeEntity> productTypeChildrenList = productTypeService.queryListAll(parameter);
+				if (!productTypeChildrenList.isEmpty()) {
+					model.addAttribute("productTypeChildrenList", productTypeChildrenList);
+				}
 			}
 			PageUtil page = new PageUtil();
 			page.setPageNum(Integer.valueOf(request.getParameter("page")));
@@ -171,7 +267,7 @@ public class ProductController extends BaseController {
 			page.setOrderByColumn(request.getParameter("sidx"));
 			page.setOrderByType(request.getParameter("sord"));
 			model.addAttribute("page", page);
-			model.addAttribute("productEntity", productEntity);
+			model.addAttribute("productEntity", productEntityWithBLOBs);
 			return Common.BACKGROUND_PATH + "/ofp/product/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
@@ -191,8 +287,8 @@ public class ProductController extends BaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			map.put("parentId", productTypeEntity.getProductTypeId());
-			List<ProductTypeEntity> productTypeChildrenList = productTypeService.queryListAll(map);
-			map.clear();
+			List<ProductTypeEntity> productTypeChildrenList = productTypeService
+					.queryListAll(map);
 			if (productTypeChildrenList != null && productTypeChildrenList.size() > 0) {
 				map.put("success", Boolean.TRUE);
 				map.put("data", productTypeChildrenList);
@@ -210,21 +306,30 @@ public class ProductController extends BaseController {
 
 	@RequestMapping("edit.html")
 	@ResponseBody
-	public Object update(ProductEntity productEntity) throws AjaxException {
+	public Object update(ProductEntityWithBLOBs productEntityWithBLOBs, ProductTypeEntity productTypeEntity) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			// 设置创建者姓名
-			int result = 1;
-			if (result == 1) {
-				map.put("success", Boolean.TRUE);
-				map.put("data", null);
-				map.put("message", "编辑成功");
-			} else {
+			StringBuilder sb = this.validateSubmitVal(productEntityWithBLOBs, productTypeEntity);
+			if (sb.length() == 0) {// 校验通过
+				productEntityWithBLOBs.setProductType(productTypeEntity);
+				productEntityWithBLOBs.setModifyTime(new Date());
+				productEntityWithBLOBs.setModifyUser(ShiroAuthenticationManager.getUserId().intValue());
+				int result = productService.update(productEntityWithBLOBs);
+				if (result == 1) {
+					map.put("success", Boolean.TRUE);
+					map.put("data", null);
+					map.put("message", "添加成功");
+				} else {
+					map.put("success", Boolean.FALSE);
+					map.put("data", null);
+					map.put("message", "添加失败");
+				}
+			} else {// 校验错误
 				map.put("success", Boolean.FALSE);
 				map.put("data", null);
-				map.put("message", "编辑失败");
+				map.put("message", "添加失败" + sb.toString());
 			}
-		} catch (Exception e) {
+		} catch (ServiceException e) {
 			throw new AjaxException(e);
 		}
 		return map;
@@ -232,15 +337,33 @@ public class ProductController extends BaseController {
 
 	/**
 	 * 附件上传
+	 * 
 	 * @param file
 	 * @param request
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/upload.html", method = RequestMethod.POST)
-    @ResponseBody
-    public String uploadBackupFile(@RequestParam MultipartFile file) {
-        //downloadUploadService.uploadBackupFile(serial, file);
-        return "success";
-    }
+	@RequestMapping(value = "/upload.html")
+	public String upload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request,
+			ModelMap model) {  
+        System.out.println("开始");  
+        String path = request.getSession().getServletContext().getRealPath("upload");  
+        String fileName = file.getOriginalFilename();  
+//        String fileName = new Date().getTime()+".jpg";  
+        System.out.println(path);  
+        File targetFile = new File(path, fileName);  
+        if(!targetFile.exists()){  
+            targetFile.mkdirs();  
+        }  
+  
+        //保存  
+        try {  
+            file.transferTo(targetFile);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+        model.addAttribute("fileUrl", request.getContextPath()+"/upload/"+fileName);  
+  
+        return "result";  
+    }  
 }

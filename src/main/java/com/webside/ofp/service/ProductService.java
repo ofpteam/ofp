@@ -15,7 +15,7 @@ public interface ProductService extends BaseService<ProductEntity, Long>{
 	 */
 	public ProductEntity findByTypeId(String id);
 	
-	public ProductEntityWithBLOBs findByIdWithBLOBS(String id);
+	public ProductEntityWithBLOBs findByIdWithBLOBS(long id);
 	
 	public int insertWithBlobs(ProductEntityWithBLOBs productEntityWithBLOBs,String basePath);
 	

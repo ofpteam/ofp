@@ -1,5 +1,6 @@
 package com.webside.ofp.controller;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -341,10 +343,27 @@ public class ProductController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/upload.html", method = RequestMethod.POST)
-	@ResponseBody
-	public String uploadBackupFile(@RequestParam MultipartFile file) {
-		// downloadUploadService.uploadBackupFile(serial, file);
-		return "success";
-	}
+	@RequestMapping(value = "/upload.html")
+	public String upload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request,
+			ModelMap model) {  
+        System.out.println("开始");  
+        String path = request.getSession().getServletContext().getRealPath("upload");  
+        String fileName = file.getOriginalFilename();  
+//        String fileName = new Date().getTime()+".jpg";  
+        System.out.println(path);  
+        File targetFile = new File(path, fileName);  
+        if(!targetFile.exists()){  
+            targetFile.mkdirs();  
+        }  
+  
+        //保存  
+        try {  
+            file.transferTo(targetFile);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+        model.addAttribute("fileUrl", request.getContextPath()+"/upload/"+fileName);  
+  
+        return "result";  
+    }  
 }

@@ -62,23 +62,25 @@
   </resultMap>
   
   <sql id="quotation_sub_sheet_column_list">
-    QUOTATION_SUB_SHEET_ID, PRODUCT_ID, QUOTATION_SHEET_ID, USD_PRICE, BUY_PRICE, UNIT, 
-    WEIGHT, VOLUME, TOP, BOTTOM, HEIGHT, PACKING, PACKING_RATE, NUMBER, PACK_NUM, TOTALCBM, 
-    GW, TOTAL_GW
+    q.QUOTATION_SUB_SHEET_ID, q.PRODUCT_ID, q.QUOTATION_SHEET_ID, q.USD_PRICE, q.BUY_PRICE, q.UNIT, 
+    q.WEIGHT, q.VOLUME, q.TOP, q.BOTTOM, q.HEIGHT, q.PACKING, q.PACKING_RATE, q.NUMBER, q.PACK_NUM, q.TOTALCBM, 
+    q.GW, q.TOTAL_GW
   </sql>
   
  <sql id="product_column_List">
     p.PRODUCT_ID, p.PRODUCT_TYPE_ID, p.PRODUCT_CODE, p.FACTORY_CODE, p.UNIT, p.CUSTOMS_CODE, p.USD_PRICE, 
     p.CN_NAME, p.EN_NAME, p.VAT_RATE, p.BUY_PRICE, p.WEIGHT, p.VOLUME, p.TOP, p.BOTTOM, p.HEIGHT, p.LENGTH, 
     p.WIDTH, p.PACK_HEIGHT, p.GW, p.PACKING_RATE, p.TAX_REBATE_RATE, p.CBM, p.PACKING, p.HD_MAP_URL, 
-    p.IS_DELETE, p.CREATE_TIME, p.MODIFY_TIME, p.CREATE_USER, p.MODIFY_USER, p.DESCRIPTION
+    p.IS_DELETE, p.CREATE_TIME, p.MODIFY_TIME, p.CREATE_USER, p.MODIFY_USER, p.DESCRIPTION 
   </sql>
   
   <select id="queryListByPage" parameterType="map" resultMap="quotationSubSheetMap"
 		flushCache="true" useCache="true">
 		SELECT 
 		<include refid="quotation_sub_sheet_column_list" />
-		from quotation_sub_sheet q
+		,
+		<include refid="product_column_List" />
+		from quotation_sub_sheet q left join product p on p.PRODUCT_ID = q.PRODUCT_ID 
 		where q.is_delete = 0 
 		and q.QUOTATION_SUB_SHEET_ID >= (
 			select QUOTATION_SUB_SHEET_ID from quotation_sub_sheet order by QUOTATION_SUB_SHEET_ID limit ${start},1
@@ -90,7 +92,9 @@
 		flushCache="true" useCache="true">
 		SELECT 
 		 <include refid="quotation_sub_sheet_column_list" />
-		from quotation_sub_sheet q 
+		 ,
+		<include refid="product_column_List" />
+		from quotation_sub_sheet q left join product p on p.PRODUCT_ID = q.PRODUCT_ID  
 		where q.is_delete = 0 
 		order by QUOTATION_SUB_SHEET_ID desc
   </select>
@@ -98,14 +102,18 @@
   <select id="findById" parameterType="long"  resultMap="quotationSubSheetMap" flushCache="true" useCache="true">
     select 
 	<include refid="quotation_sub_sheet_column_list" />
-    from quotation_sub_sheet q 
+	 ,
+	<include refid="product_column_List" />
+    from quotation_sub_sheet q left join product p on p.PRODUCT_ID = q.PRODUCT_ID 
     where q.is_delete = 0 and QUOTATION_SUB_SHEET_ID = #{id,jdbcType=INTEGER}
   </select>
   
   <select id="findBySheetId" parameterType="long"  resultMap="quotationSubSheetMap" flushCache="true" useCache="true">
     select 
 	<include refid="quotation_sub_sheet_column_list" />
-    from quotation_sub_sheet q 
+	 ,
+	<include refid="product_column_List" />
+    from quotation_sub_sheet q left join product p on p.PRODUCT_ID = q.PRODUCT_ID 
     where q.is_delete = 0 and q.QUOTATION_SHEET_ID = #{sheetId}
   </select>
   

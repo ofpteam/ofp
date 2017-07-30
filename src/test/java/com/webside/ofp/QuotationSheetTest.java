@@ -1,5 +1,8 @@
 package com.webside.ofp;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.webside.base.BaseJunit;
+import com.webside.ofp.common.util.OfpExportUtils;
 import com.webside.ofp.model.CustomerEntity;
 import com.webside.ofp.model.QuotationSheetEntity;
 import com.webside.ofp.model.QuotationSubSheetEntity;
@@ -30,7 +34,7 @@ public class QuotationSheetTest extends BaseJunit {
 		quotationSheetEntity.setInterestRateId(1);
 		quotationSheetEntity.setQuotationSheetCode("20170723001");
 		quotationSheetEntity.setQuotationDate(new Date());
-		quotationSheetEntity.setPriceTerms("");
+		quotationSheetEntity.setPriceTerms("decet");
 		quotationSheetEntity.setCurrency("USD");
 		quotationSheetEntity.setExchangeRate(6.766);
 		quotationSheetEntity.setExpirationDate(30);
@@ -94,7 +98,7 @@ public class QuotationSheetTest extends BaseJunit {
 		quotationSheetService.insertSheetWithSubSheet(quotationSheetEntity);
 	}*/
 	
-	@Test
+	/*@Test
 	public void testUpdate() {
 		QuotationSheetEntity quotationSheetEntity = new QuotationSheetEntity();
 		CustomerEntity customerEntity = new CustomerEntity();
@@ -168,5 +172,30 @@ public class QuotationSheetTest extends BaseJunit {
 //		quotationSheetService.insert(quotationSheetEntity);
 		
 		quotationSheetService.updateWithSubSheet(quotationSheetEntity);
+	}
+	
+	@Test
+	public void testFindById() {
+		QuotationSheetEntity quotationSheetEntity = quotationSheetService.findById(9l);
+		System.out.println("code:" + quotationSheetEntity.getQuotationSheetCode());
+	}
+	*/
+	@Test
+	public void testFindQuotationSheetWithProducts(){
+		long id = 11l;
+		String basePath = "C:\\Users\\Administrator\\git\\ofp\\src\\main\\resources";
+		QuotationSheetEntity quotationSheetEntity = quotationSheetService.findQuotationSheetWithProducts(id);
+		System.out.println("sss:" + quotationSheetEntity.getQuotationSheetCode());
+		FileOutputStream outPut;
+		try {
+			outPut = new FileOutputStream(new File("D:\\export.xls"));
+			OfpExportUtils.exportQuotationSheetExcel(outPut, quotationSheetEntity,basePath);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 }

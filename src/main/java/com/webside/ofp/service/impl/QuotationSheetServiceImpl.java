@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.webside.base.baseservice.impl.AbstractService;
+import com.webside.ofp.mapper.ProductMapper;
 import com.webside.ofp.mapper.QuotationSheetMapper;
 import com.webside.ofp.mapper.QuotationSubSheetMapper;
+import com.webside.ofp.model.ProductEntity;
+import com.webside.ofp.model.ProductEntityWithBLOBs;
 import com.webside.ofp.model.QuotationSheetEntity;
 import com.webside.ofp.model.QuotationSubSheetEntity;
+import com.webside.ofp.service.ProductService;
 import com.webside.ofp.service.QuotationSheetService;
 
 @Service("quotationSheetService")
@@ -26,6 +30,16 @@ public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEnt
 	
 	@Autowired
 	private QuotationSubSheetMapper quotationSubSheetMapper;
+	
+	@Autowired
+	private ProductMapper productMapper;
+	
+	@Autowired
+	private ProductService productService;
+	
+	public void setProductService(ProductService productService) {
+		this.productService = productService;
+	}
 
 	@Override
 	public List<QuotationSheetEntity> findByCustomerId(String id) {
@@ -46,6 +60,19 @@ public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEnt
 			quotationSubSheetEntity.setQuotationSheetId(quotationSheetEntity.getQuotationSheetId());
 		}
 		quotationSubSheetMapper.insertBatch(quotationSheetEntity.getSubSheetList());
+	}
+	
+	@Override
+	public QuotationSheetEntity findQuotationSheetWithProducts(long id){
+		QuotationSheetEntity quotationSheetEntity = quotationSheetMapper.findById(id);
+		List<QuotationSubSheetEntity> subList = quotationSheetEntity.getSubSheetList();
+		for(QuotationSubSheetEntity quotationSubSheetEntity : subList){
+			if(quotationSubSheetEntity.getProductId() != null){
+				ProductEntityWithBLOBs product = productService.findByIdWithBLOBS(quotationSubSheetEntity.getProductId()+"");
+				quotationSubSheetEntity.setProduct(product);
+			}
+		}
+		return quotationSheetEntity;
 	}
 
 }

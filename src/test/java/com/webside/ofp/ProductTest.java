@@ -111,6 +111,40 @@ public class ProductTest extends BaseJunit {
 		System.out.println("插入数据id：" + productEntity.getProductId());
     }*/
 	
+	@Test
+	public void testInsertWithBlobs() {
+		ProductTypeEntity productTypeEntity = new ProductTypeEntity();
+		productTypeEntity.setProductTypeId(10);
+		ProductEntityWithBLOBs productEntity = new ProductEntityWithBLOBs();
+		productEntity.setProductType(productTypeEntity);
+		productEntity.setProductCode("20170730003");
+		productEntity.setUnit("SET");
+		productEntity.setCustomsCode("70133700");
+		productEntity.setUsdPrice(0.65);
+		productEntity.setCnName("9按压杯");
+		productEntity.setEnName("GLASS CUP");
+		productEntity.setVatRate(17.21d);
+		productEntity.setBuyPrice(4.38);
+		productEntity.setWeight(250);
+		productEntity.setVolume(255);
+		productEntity.setTop(65l);
+		productEntity.setBottom(53l);
+		productEntity.setHeight(137l);
+		productEntity.setLength(47.3);
+		productEntity.setWidth(26d);
+		productEntity.setPackHeight(43.5);
+		productEntity.setGw(19.5);
+		productEntity.setPackingRate(12.3d);
+		productEntity.setTaxRebateRate(13.2d);
+		productEntity.setCbm(0.053);
+		productEntity.setPacking("6 pos window box,12 sets/ctn");
+		productEntity.setCreateUser(4);
+		productEntity.setHdMapUrl("D:\\IMG_20141012_130853.jpg");;
+		String basePath = "C:\\Users\\Administrator\\git\\ofp\\src\\main\\webapp";
+		productService.insertWithBlobs(productEntity, basePath);
+		System.out.println("插入数据id：" + productEntity.getProductId());
+    }
+	
 	/*@Test
 	public void testUpdate(){
 		ProductTypeEntity productTypeEntity = new ProductTypeEntity();
@@ -132,7 +166,7 @@ public class ProductTest extends BaseJunit {
 		System.out.println("删除id为1的产品：" + size);
 	}*/
 	
-	@Test
+	/*@Test
 	public void testFindByIdWithBlobs(){
 		String id = "17";
 		ProductEntityWithBLOBs productEntity  = productService.findByIdWithBLOBS(id);
@@ -172,7 +206,7 @@ public class ProductTest extends BaseJunit {
 				}
 			}
 		}
-	}
+	}*/
 	
 	
 	/*@Test

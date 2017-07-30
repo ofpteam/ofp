@@ -8,7 +8,6 @@
       This element was generated on Thu Jul 20 23:16:43 CST 2017.
     -->
     <id column="QUOTATION_SHEET_ID" jdbcType="INTEGER" property="quotationSheetId" />
-    <result column="CUSTOMER_ID" jdbcType="INTEGER" property="customerId" />
     <result column="INTEREST_RATE_ID" jdbcType="INTEGER" property="interestRateId" />
     <result column="QUOTATION_SHEET_CODE" jdbcType="VARCHAR" property="quotationSheetCode" />
     <result column="QUOTATION_DATE" jdbcType="DATE" property="quotationDate" />
@@ -49,7 +48,7 @@
 		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
     </association>
     <collection property="subSheetList" column="quotationSubSheetId" ofType="com.webside.ofp.model.QuotationSubSheetEntity">
-    	<id column="QUOTATION_SUB_SHEET" jdbcType="INTEGER" property="quotationSubSheet" />
+    	<id column="QUOTATION_SUB_SHEET_ID" jdbcType="INTEGER" property="quotationSubSheetId" />
 	    <result column="PRODUCT_ID" jdbcType="INTEGER" property="productId" />
 	    <result column="QUOTATION_SHEET_ID" jdbcType="INTEGER" property="quotationSheetId" />
 	    <result column="USD_PRICE" jdbcType="DECIMAL" property="usdPrice" />
@@ -71,7 +70,7 @@
   </resultMap>
   
   <sql id="quotation_sheet_column_list">
-    qs.QUOTATION_SHEET_ID, qs.CUSTOMER_ID, qs.INTEREST_RATE_ID, qs.QUOTATION_SHEET_CODE, qs.QUOTATION_DATE, 
+    qs.QUOTATION_SHEET_ID, qs.INTEREST_RATE_ID, qs.QUOTATION_SHEET_CODE, qs.QUOTATION_DATE, 
     qs.PRICE_TERMS, qs.CURRENCY, qs.EXCHANGE_RATE, qs.EXPIRATION_DATE, qs.PAY_MODE, qs.RESOURCE, DEST, 
     qs.DELIVERY_DATE, qs.INSURANCE_COST, qs.FOREIGN_GREIGHT, qs.HOME_GREIGHT, qs.OPERATION_COST, qs.COMMISSION, 
     qs.REBATE, qs.TOTAL_CBM, qs.PROFIT, qs.SWAP_RATE, qs.INTEREST_MONTH, qs.IS_DELETE, qs.CREATE_TIME, qs.MODIFY_TIME, 
@@ -79,7 +78,7 @@
   </sql>
   
   <sql id="quotation_sub_sheet_column_list">
-    qss.QUOTATION_SUB_SHEET, qss.PRODUCT_ID, qss.QUOTATION_SHEET_ID, qss.USD_PRICE, qss.BUY_PRICE, qss.UNIT, 
+    qss.QUOTATION_SUB_SHEET_ID, qss.PRODUCT_ID, qss.QUOTATION_SHEET_ID, qss.USD_PRICE, qss.BUY_PRICE, qss.UNIT, 
     qss.WEIGHT, qss.VOLUME, qss.TOP, qss.BOTTOM, qss.HEIGHT, qss.PACKING, qss.PACKING_RATE, qss.NUMBER, qss.PACK_NUM, qss.TOTALCBM, 
     qss.GW, qss.TOTAL_GW
   </sql>
@@ -93,7 +92,7 @@
  	 	<if test="quotationSheetId != null and quotationSheetId != 0">
 			and qs.QUOTATION_SHEET_ID = #{quotationSheetId} 
 		</if>
-		<if test="customerId != null and customerId != ''">
+		<if test="customer.customerId != null and customer.customerId != ''">
 			and qs.CUSTOMER_ID = #{customerId} 
 		</if>
 		<if test="quotationSheetCode != null and quotationSheetCode != ''">
@@ -143,7 +142,7 @@
 	<include refid="customer_column_List" /> 
     from quotation_sheet qs left join customer c on qs.customer_id = c.customer_id 
 	left join quotation_sub_sheet qss on qss.QUOTATION_SHEET_ID = qs.QUOTATION_SHEET_ID 
-    where qs.is_delete = 0 and QUOTATION_SHEET_ID = #{id,jdbcType=INTEGER}
+    where qs.is_delete = 0 and qs.QUOTATION_SHEET_ID = #{id}
   </select>
   
   <select id="findByCustomerId" parameterType="long"  resultMap="quotationSheetMap" flushCache="true" useCache="true">

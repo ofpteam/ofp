@@ -82,7 +82,7 @@ public class ImageUtils {
             if (StringUtils.isBlank(pImgeFlag) && imgeArray[i][0].equals(tmpName.toLowerCase())) {  
                 return true;  
             }  
-        }  
+        }
         return false;  
     }  
   
@@ -341,9 +341,65 @@ public class ImageUtils {
   
             }  
             PlanarImage planrImage = ImageScaleHelper.scale(imageWrapper.getAsPlanarImage(), scaleParam);  
-            imageWrapper = new ImageWrapper(planrImage);  
+            imageWrapper = new ImageWrapper(planrImage);
+            
             // 4.输出  
             outStream = new FileOutputStream(out);  
+            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);  
+            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), new WriteParameter());  
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        } catch (SimpleImageException e) {  
+        } finally {  
+            IOUtils.closeQuietly(inStream); // 图片文件输入输出流必须记得关闭  
+            IOUtils.closeQuietly(outStream);  
+  
+        }  
+  
+    }  
+    
+    /** 
+     * 缩放到指定高度，宽度自适应 
+     *  
+     * @param src 
+     * @param target 
+     * @param height 
+     */  
+    public final static void scaleWithHeightAndWaterMark(String src, String target, Integer height,String waterUrl) {  
+        File out = new File(target); // 目的图片  
+        FileOutputStream outStream = null;  
+        File in = new File(src); // 原图片  
+        FileInputStream inStream = null;  
+        try {  
+            inStream = new FileInputStream(in);  
+            ImageWrapper imageWrapper = ImageReadHelper.read(inStream);  
+  
+            int w = imageWrapper.getWidth();  
+            int h = imageWrapper.getHeight();  
+            // 1.缩放  
+            ScaleParameter scaleParam = new ScaleParameter(w, h, Algorithm.LANCZOS); // 缩放参数  
+            if (w < height) {// 如果图片宽和高都小于目标图片则不做缩放处理  
+                scaleParam = new ScaleParameter(w, h, Algorithm.LANCZOS);  
+  
+            } else {  
+                int newWidth = getWidth(w, h, height);  
+                scaleParam = new ScaleParameter(newWidth + 1, height, Algorithm.LANCZOS);  
+  
+            }  
+            PlanarImage planrImage = ImageScaleHelper.scale(imageWrapper.getAsPlanarImage(), scaleParam);  
+            imageWrapper = new ImageWrapper(planrImage);
+            
+            // 3.打水印  
+            BufferedImage waterImage = ImageIO.read(new File(waterUrl));  
+            ImageWrapper waterWrapper = new ImageWrapper(waterImage);  
+            Point p =calculate(imageWrapper.getWidth(),imageWrapper.getHeight(),  
+                    waterWrapper.getWidth(), waterWrapper.getHeight());  
+            WatermarkParameter param = new WatermarkParameter(waterWrapper, 0.4f,0,0);
+            BufferedImage bufferedImage = ImageDrawHelper.drawWatermark(imageWrapper.getAsBufferedImage(), param);  
+            imageWrapper = new ImageWrapper(bufferedImage);  
+            
+            // 4.输出  
+            outStream = new FileOutputStream(out);
             String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);  
             ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), new WriteParameter());  
         } catch (IOException e) {  

@@ -41,7 +41,7 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long> imp
 	}
 
 	@Override
-	public int insertWithBlobs(ProductEntityWithBLOBs productEntity) {
+	public int insertWithBlobs(ProductEntityWithBLOBs productEntity,String basePath) {
 		ByteOutputStream output = new ByteOutputStream();
 		FileImageInputStream input = null;
 		ByteOutputStream output2 = null;
@@ -59,8 +59,10 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long> imp
 			String endfix = hdMapUrl.substring(hdMapUrl.lastIndexOf(".") + 1);
 			String thumbnailUrl = prefix + "_thumbnail." + endfix;
 			//生成固定高度缩略图，默认为100
-			ImageUtils.scaleWithHeight(productEntity.getHdMapUrl(), thumbnailUrl, THUMBNAIL_DEFAULT_HEIGHT);
-			input = new FileImageInputStream(new File(thumbnailUrl));
+			String waterUrl = basePath + "\\resources\\images\\ofplogo.png";
+			ImageUtils.scaleWithHeightAndWaterMark(productEntity.getHdMapUrl(), thumbnailUrl, THUMBNAIL_DEFAULT_HEIGHT,waterUrl);
+			File file = new File(thumbnailUrl);
+			input = new FileImageInputStream(file);
 		    output2 = new ByteOutputStream();
 	    	byte[] buf = new byte[1024];
 	      	int numBytesRead = 0;

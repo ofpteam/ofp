@@ -26,6 +26,8 @@ import com.webside.base.basecontroller.BaseController;
 import com.webside.common.Common;
 import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
+import com.webside.ofp.model.ProductEntity;
+import com.webside.ofp.model.ProductEntityWithBLOBs;
 import com.webside.ofp.model.QuotationSubSheetEntity;
 import com.webside.user.model.UserEntity;
 import com.webside.user.service.UserService;
@@ -193,7 +195,9 @@ public class QuotationSheetController extends BaseController {
 		QuotationSubSheetEntity model = null;
 		for (int i = 0; i < 57; i++) {
 			model = new QuotationSubSheetEntity();
-			model.setProductId(i);
+			ProductEntityWithBLOBs product = new ProductEntityWithBLOBs();
+			product.setProductId(i);
+			model.setProduct(product);
 			model.setBuyPrice((double) 2);
 			model.setUsdPrice((double) 20);
 			model.setUnit("件");
@@ -217,6 +221,5 @@ public class QuotationSheetController extends BaseController {
 		logger.info(obj);*/
 		return jsonMap;
 	}
-	
 	
 }

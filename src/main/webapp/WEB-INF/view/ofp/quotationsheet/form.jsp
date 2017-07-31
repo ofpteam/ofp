@@ -3,6 +3,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="ctx" value="${pageContext.request.contextPath }" />
 <link rel="stylesheet"
+	href="${pageContext.request.contextPath }/resources/js/chosen/chosen.css" />
+<link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.min.css" />
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/js/datepicker/css/bootstrap-datepicker3.standalone.min.css" />
@@ -21,22 +23,30 @@
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/resources/js/ace/tree.min.js"></script>
 <script type="text/javascript"
+	src="${ctx }/resources/js/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript"
 	src="${ctx }/resources/js/ofp/quotationsheet/form.js"></script>
+<script type="text/javascript">
+	$(function() {
+		validateForm();
+
+	});
+</script>
 <div class="page-header">
 	<h1>
-		<c:if test="${empty userEntity}">
+		<c:if test="${empty quotationSheetEntity}">
 		新增报价单
 		</c:if>
-		<c:if test="${!empty userEntity}">
+		<c:if test="${!empty quotationSheetEntity}">
 		保存报价单
 		</c:if>
 	</h1>
 </div>
 <div class="row" style="margin-top: 5px;">
 	<div class="col-xs-12">
-		<form id="productForm" name="userForm" class="form-horizontal"
-			role="form" method="post">
-			<c:if test="${!empty userEntity}">
+		<form id="quotationsheetForm" name="quotationsheetForm"
+			class="form-horizontal" role="form" method="post">
+			<c:if test="${!empty quotationSheetEntity}">
 				<input type="hidden" id="pageNum" name="pageNum"
 					value="${page.pageNum }">
 				<input type="hidden" id="pageSize" name="pageSize"
@@ -45,37 +55,40 @@
 					value="${page.orderByColumn }">
 				<input type="hidden" id="orderByType" name="orderByType"
 					value="${page.orderByType }">
-				<input type="hidden" name="id" id="userId" value="${userEntity.id }">
+				<input type="hidden" name="quotationSheetId" id="quotationSheetId"
+					value="${quotationSheetEntity.quotationSheetId }">
 			</c:if>
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="CUSTOMER_NAME">客户名称:</label>
+						for="customerName">客户名称:</label>
 					<div class="col-sm-3">
 						<div>
-							<input class="form-control" name="CUSTOMER_NAME"
-								id="CUSTOMER_NAME" type="text"
-								value="${userEntity.accountName }" placeholder="客户名称..." />
+							<select class="chosen-select" style="width: 100%"
+								data-placeholder="客户名称...">
+								<option value="">&nbsp;</option>
+							</select>
 						</div>
 					</div>
 
 					<label class="col-sm-1 control-label no-padding-right"
-						for="CUSTOMER_NAME">联系人:</label>
+						for="contacts">联系人:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="CUSTOMER_NAME" id="CUSTOMER_NAME"
-								type="text" value="${userEntity.accountName }"
-								placeholder="工厂编码..." />
+							<input readonly class="form-control" name="contacts"
+								id="contacts" type="text"
+								value="${quotationSheetEntity.customer.contacts }"
+								placeholder="联系人..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="TELEPHONE">联系电话:</label>
+						for="telephone">联系电话:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="TELEPHONE" id="TELEPHONE" type="text"
-								value="${userEntity.accountName }" placeholder="联系电话..." />
+							<input class="form-control" readonly name="telephone"
+								id="telephone" type="text"
+								value="${quotationSheetEntity.customer.telephone }"
+								placeholder="联系电话..." />
 						</div>
 					</div>
 				</div>
@@ -83,26 +96,26 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="QUOTATION_SHEET_CODE">报价单号:</label>
+						for="quotationSheetCode">报价单号:</label>
 					<div class="col-sm-3">
-						<!-- 自动生成 -->
-						<input readonly class="form-control" name="QUOTATION_SHEET_CODE"
-							id="QUOTATION_SHEET_CODE" type="text"
-							value="${userEntity.accountName }" placeholder="报价单号..." />
+						<!-- 自动生成(时间戳) -->
+						<input readonly class="form-control" name="quotationSheetCode"
+							id="quotationSheetCode" type="text"
+							value="${quotationSheetEntity.quotationSheetCode }"
+							placeholder="报价单号..." />
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="QUOTATION_DATE">报价日期:</label>
+						for="quotationDate">报价日期:</label>
 					<div class="col-sm-3">
-						<input type="text" id="QUOTATION_DATE"
+						<input type="text" id="quotationDate" name="quotationDate"
 							class="datepicker col-sm-12" placeholder="报价日期" />
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="PRICE_TERMS">价格术语:</label>
+						for="priceTerms">价格术语:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="PRICE_TERMS" id="PRICE_TERMS"
-								type="text" value="${userEntity.accountName }"
+							<input class="form-control" name="priceTerms" id="priceTerms"
+								type="text" value="${quotationSheetEntity.priceTerms }"
 								placeholder="价格术语..." />
 						</div>
 					</div>
@@ -111,31 +124,30 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="COUNTRY">国家:</label>
+						for="country">国家:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="COUNTRY" id="COUNTRY" type="text"
-								value="${userEntity.accountName }" placeholder="国家..." />
+							<input readonly class="form-control" name="country" id="country"
+								type="text" value="${quotationSheetEntity.country }"
+								placeholder="国家..." />
 						</div>
 					</div>
 
 					<label class="col-sm-1 control-label no-padding-right"
-						for="CN_NAME">币种:</label>
+						for="currency">币种:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="CURRENCY" id="CURRENCY" type="text"
-								value="${userEntity.accountName }" placeholder="币种..." />
+							<input class="form-control" name="currency" id="currency"
+								type="text" value="${quotationSheetEntity.currency }"
+								placeholder="币种..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="EXCHANGE_RATE">汇率:</label>
+						for="exchangeRate">汇率:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="EXCHANGE_RATE" id="EXCHANGE_RATE"
-								type="number" value="${userEntity.accountName }"
+							<input class="form-control" name="exchangeRate" id="exchangeRate"
+								type="number" value="${quotationSheetEntity.exchangeRate }"
 								placeholder="汇率..." />
 						</div>
 					</div>
@@ -144,60 +156,66 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="VAT_RATE">有效期限:</label>
+						for="expirationDate">有效期限:</label>
 					<div class="col-sm-3">
 						<div>
-							<input type="text" id="VAT_RATE" class="datepicker col-sm-12"
-								placeholder="有效期限" />
+							<input type="text" id="expirationDate" name="expirationDate"
+								value="${quotationSheetEntity.expirationDate }"
+								class="datepicker col-sm-12" placeholder="有效期限" />
 						</div>
 					</div>
 
 					<label class="col-sm-1 control-label no-padding-right"
-						for="PAY_MODE">付款方式:</label>
+						for="payMode">付款方式:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="PAY_MODE" id="PAY_MODE" type="text"
-								value="${userEntity.accountName }" placeholder="付款方式..." />
+							<input
+								class="form-control" name="payMode" id="payMode" type="text"
+								value="${quotationSheetEntity.payMode }"
+								placeholder="付款方式..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="RESOURCE">起运地:</label>
+						for="resource">起运地:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="RESOURCE" id="RESOURCE" type="text"
-								value="${userEntity.accountName }" placeholder="起运地..." />
+							<input
+								class="form-control" name="resource" id="resource" type="text"
+								value="${quotationSheetEntity.resource }"
+								placeholder="起运地..." />
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right" for="DEST">目的地:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="dest">目的地:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="DEST" id="DEST" type="text"
-								value="${userEntity.accountName }" placeholder="目的地..." />
+							<input
+								class="form-control" name="dest" id="dest" type="text"
+								value="${quotationSheetEntity.dest }"
+								placeholder="目的地..." />
 						</div>
 					</div>
 
 					<label class="col-sm-1 control-label no-padding-right"
-						for="DELIVERY_DATE">交货期限:</label>
+						for="deliveryDate">交货期限:</label>
 					<div class="col-sm-3">
 						<div>
-							<input type="text" id="DELIVERY_DATE"
+							<input type="number" id="deliveryDate" name="deliveryDate"
 								class="datepicker col-sm-12" placeholder="交货期限..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="INSURANCE_COST">保险费:</label>
+						for="insuranceCost">保险费:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="INSURANCE_COST" id="INSURANCE_COST"
-								type="number" value="${userEntity.accountName }"
+							<input
+								class="form-control" name="insuranceCost" id="insuranceCost"
+								type="number" 
+								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
+								"${quotationSheetEntity.insuranceCost }"
 								placeholder="保险费..." />
 						</div>
 					</div>
@@ -206,33 +224,33 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="FOREIGN_GREIGHT">国外运费:</label>
+						for="foreignGreight">国外运费:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="FOREIGN_GREIGHT" id="FOREIGN_GREIGHT"
-								type="number" value="${userEntity.accountName }"
+							<input
+								class="form-control" name="foreignGreight" id="foreignGreight"
+								type="number" value="${quotationSheetEntity.foreignGreight }"
 								placeholder="国外运费..." />
 						</div>
 					</div>
 
 					<label class="col-sm-1 control-label no-padding-right"
-						for="HOME_GREIGHT">国内运费:</label>
+						for="homeGreight">国内运费:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="HOME_GREIGHT" id="HOME_GREIGHT"
-								type="number" value="${userEntity.accountName }"
+							<input
+								class="form-control" name="homeGreight" id="homeGreight"
+								type="number" value="${quotationSheetEntity.homeGreight }"
 								placeholder="国内运费..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="OPERATION_COST">管理费:</label>
+						for="operationCost">管理费:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="OPERATION_COST" id="OPERATION_COST"
-								type="number" value="${userEntity.accountName }"
+							<input
+								class="form-control" name="operationCost" id="operationCost"
+								type="number" value="${quotationSheetEntity.operationCost }"
 								placeholder="管理费..." />
 						</div>
 					</div>
@@ -241,31 +259,32 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="COMMISSION">佣金:</label>
+						for="commission">佣金:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="COMMISSION" id="COMMISSION"
-								type="number" value="${userEntity.accountName }"
+							<input
+								class="form-control" name="commission" id="commission"
+								type="number" value="${quotationSheetEntity.commission }"
 								placeholder="佣金..." />
 						</div>
 					</div>
 
-					<label class="col-sm-1 control-label no-padding-right" for="REBATE">折扣:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="rebate">折扣:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="REBATE" id="REBATE" type="number"
-								value="${userEntity.accountName }" placeholder="折扣..." />
+							<input
+								class="form-control" name="rebate" id="rebate" type="number" 
+								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
+								"${quotationSheetEntity.rebate }" placeholder="折扣..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="TOTAL_CBM">CBM合计:</label>
+						for="totalCbm">CBM合计:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="TOTAL_CBM" id="TOTAL_CBM"
-								type="number" value="${userEntity.accountName }"
+							<input
+								class="form-control" name="totalCbm" id="totalCbm"
+								type="number" value="${quotationSheetEntity.totalCbm }"
 								placeholder="CBM合计..." />
 						</div>
 					</div>
@@ -273,32 +292,32 @@
 			</div>
 			<div class="form-group">
 				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right" for="PROFIT">利润:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="profit">利润:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="PROFIT" id="PROFIT" type="number"
-								value="${userEntity.accountName }" placeholder="利润..." />
+							<input
+								class="form-control" name="profit" id="profit" type="number" readonly
+								value="${quotationSheetEntity.profit }" placeholder="利润..." />
 						</div>
 					</div>
 
 					<label class="col-sm-1 control-label no-padding-right"
-						for="SWAP_RATE">换汇率:</label>
+						for="swapRate">换汇率:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="SWAP_RATE" id="SWAP_RATE"
-								type="number" value="${userEntity.accountName }"
+							<input
+								class="form-control" name="swapRate" id="swapRate" readonly
+								type="number" value="${quotationSheetEntity.swapRate }"
 								placeholder="换汇率..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="INTEREST_MONTH">计息月:</label>
+						for="interestMonth">计息月:</label>
 					<div class="col-sm-3">
 						<div>
-							<input <c:if test="${!empty userEntity}">readonly</c:if>
-								class="form-control" name="INTEREST_MONTH" id="INTEREST_MONTH"
-								type="number" value="${userEntity.accountName }"
+							<input
+								class="form-control" name="interestMonth" id="interestMonth"
+								type="number" value="${quotationSheetEntity.interestMonth }"
 								placeholder="计息月..." />
 						</div>
 					</div>
@@ -309,35 +328,30 @@
 	</div>
 </div>
 <!-- 按钮触发模态框 -->
-<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">添加商品
-</button>
+<button class="btn btn-primary btn-lg" data-toggle="modal"
+	data-target="#myModal">添加商品</button>
 <!-- 模态框（Modal） -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
-   aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" 
-               data-dismiss="modal" aria-hidden="true">
-                  &times;
-            </button>
-            <h4 class="modal-title" id="myModalLabel">
-               选择商品
-            </h4>
-         </div>
-         <div class="modal-body">
-          <div id="searchTree"></div>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-default" 
-               data-dismiss="modal">关闭
-            </button>
-            <button type="button" class="btn btn-primary" id="btn">
-               确认
-            </button>
-         </div>
-      </div><!-- /.modal-content -->
-</div><!-- /.modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">选择商品</h4>
+			</div>
+			<div class="modal-body">
+				<div id="searchTree"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary" id="btn">确认</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal -->
 </div>
 <table id="example" class="display" cellspacing="0" width="100%">
 	<thead>
@@ -362,18 +376,18 @@
 </table>
 <div class="center">
 	<button id="btnAdd" type="button"
-		onclick="javascript:$('#productForm').submit();"
+		onclick="javascript:$('#quotationsheetForm').submit();"
 		class="btn btn-success btn-sm">
 		<i class="fa fa-user-plus"></i>&nbsp;
-		<c:if test="${empty userEntity}">
+		<c:if test="${empty quotationSheetEntity}">
 		添加
 		</c:if>
-		<c:if test="${!empty userEntity}">
+		<c:if test="${!empty quotationSheetEntity}">
 		保存
 		</c:if>
 	</button>
 	<button id="btn" type="button"
-		onclick="webside.common.loadPage('/product/listUI.html<c:if test="${!empty userEntity}">?page=${page.pageNum }&rows=${page.pageSize }&sidx=${page.orderByColumn }&sord=${page.orderByType }</c:if>')"
+		onclick="webside.common.loadPage('/quotationsheet/listUI.html<c:if test="${!empty quotationSheetEntity}">?page=${page.pageNum }&rows=${page.pageSize }&sidx=${page.orderByColumn }&sord=${page.orderByType }</c:if>')"
 		class="btn btn-info btn-sm">
 		<i class="fa fa-undo"></i>&nbsp;返回
 	</button>

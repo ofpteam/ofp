@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.webside.base.BaseJunit;
+import com.webside.ofp.common.config.OfpConfig;
 import com.webside.ofp.common.util.OfpExportUtils;
 import com.webside.ofp.model.CustomerEntity;
 import com.webside.ofp.model.QuotationSheetEntity;
@@ -34,15 +35,15 @@ public class QuotationSheetTest extends BaseJunit {
 		customerEntity.setCustomerId(1);
 		quotationSheetEntity.setCustomer(customerEntity);
 		quotationSheetEntity.setInterestRateId(1);
-		quotationSheetEntity.setQuotationSheetCode("20170723001");
+		quotationSheetEntity.setQuotationSheetCode("20170802001");
 		quotationSheetEntity.setQuotationDate(new Date());
 		quotationSheetEntity.setPriceTerms("decet");
 		quotationSheetEntity.setCurrency("USD");
 		quotationSheetEntity.setExchangeRate(6.766);
 		quotationSheetEntity.setExpirationDate(30);
 		quotationSheetEntity.setPayMode("现金");
-		quotationSheetEntity.setResource("合肥");
-		quotationSheetEntity.setDest("埃塞俄比亚");
+		quotationSheetEntity.setResource("hefei");
+		quotationSheetEntity.setDest("calis");
 		quotationSheetEntity.setDeliveryDate(60);
 		quotationSheetEntity.setInsuranceCost(1.203);
 		quotationSheetEntity.setForeignGreight(125.23);
@@ -58,7 +59,7 @@ public class QuotationSheetTest extends BaseJunit {
 		quotationSheetEntity.setDescription("测试插入");
 		List<QuotationSubSheetEntity> subSheetList = new ArrayList<QuotationSubSheetEntity>();
 		QuotationSubSheetEntity quotationSubSheetEntity = new QuotationSubSheetEntity();
-		quotationSubSheetEntity.setProductId(1);
+		quotationSubSheetEntity.setProductId(23);
 		quotationSubSheetEntity.setBuyPrice(1d);
 		quotationSubSheetEntity.setUsdPrice(1.15);
 		quotationSubSheetEntity.setUnit("SET");
@@ -76,7 +77,7 @@ public class QuotationSheetTest extends BaseJunit {
 		quotationSubSheetEntity.setTotalGw(7187.5);
 		subSheetList.add(quotationSubSheetEntity);
 		QuotationSubSheetEntity quotationSubSheetEntity2 = new QuotationSubSheetEntity();
-		quotationSubSheetEntity2.setProductId(2);
+		quotationSubSheetEntity2.setProductId(22);
 		quotationSubSheetEntity2.setBuyPrice(5.85);
 		quotationSubSheetEntity2.setUsdPrice(1.15);
 		quotationSubSheetEntity2.setUnit("SET");
@@ -210,17 +211,42 @@ public class QuotationSheetTest extends BaseJunit {
 		System.out.println("size:" + quotationSheetEntitys.size());
 	}*/
 	
-	@Test
+	/*@Test
 	public void testExprotPdf(){
-		long id = 11l;
+		String tempPath = OfpConfig.exportTempPath;
+		System.out.println("tempPath:" + tempPath);
+		File file = new File(tempPath);
+		if(!file.exists()){
+			file.mkdirs();
+		}
+		long id = 12l;
 		String basePath = "C:\\Users\\Administrator\\git\\ofp\\src\\main\\resources";
 		QuotationSheetEntity quotationSheetEntity = quotationSheetService.findQuotationSheetWithProducts(id);
 		System.out.println("sss:" + quotationSheetEntity.getQuotationSheetCode());
 		FileOutputStream outPut;
 		try {
-			outPut = new FileOutputStream(new File("D:\\export.xls"));
+			outPut = new FileOutputStream(new File(tempPath+"\\export.xls"));
 			OfpExportUtils.exportQuotationSheetExcel(outPut, quotationSheetEntity,basePath);
-			OfpExportUtils.excel2Pdf("D:\\export.xls", "D:\\export.pdf");
+			OfpExportUtils.excel2Pdf(tempPath+"\\export.xls", tempPath+"\\export.pdf");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}*/
+	
+	@Test
+	public void testExportOldExcel(){
+		long id = 12l;
+		String basePath = "C:\\Users\\Administrator\\git\\ofp\\src\\main\\resources";
+		QuotationSheetEntity quotationSheetEntity = quotationSheetService.findQuotationSheetWithProducts(id);
+		System.out.println("sss:" + quotationSheetEntity.getQuotationSheetCode());
+		FileOutputStream outPut;
+		try {
+			outPut = new FileOutputStream(new File("D:\\export"+quotationSheetEntity.getQuotationSheetCode()+System.currentTimeMillis()+".xls"));
+			OfpExportUtils.exportOldQuotationSheetExcel(outPut, quotationSheetEntity,basePath);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

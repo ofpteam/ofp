@@ -13,7 +13,7 @@ public interface ProductService extends BaseService<ProductEntity, Long>{
 	 * @param id 产品类型id
 	 * @return
 	 */
-	public ProductEntity findByTypeId(String id);
+	public List<ProductEntity> findByTypeId(String id);
 	
 	public ProductEntityWithBLOBs findByIdWithBLOBS(long id);
 	

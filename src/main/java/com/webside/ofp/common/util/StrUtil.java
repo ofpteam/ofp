@@ -2,7 +2,10 @@ package com.webside.ofp.common.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class StrUtil {
 	/**
@@ -406,6 +409,22 @@ public class StrUtil {
 			return URLEncoder.encode(target, encodeType);
 		} catch (UnsupportedEncodingException e) {
 			return "";
+		}
+	}
+
+	/**
+	 * 判断时间格式 格式必须为“YYYY-MM-dd” 2004-2-30 是无效的 2003-2-29 是无效的
+	 * 
+	 * @param sDate
+	 * @return
+	 */
+	public boolean isValidDate(String str) {
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date date = (Date) formatter.parse(str);
+			return str.equals(formatter.format(date));
+		} catch (Exception e) {
+			return false;
 		}
 	}
 

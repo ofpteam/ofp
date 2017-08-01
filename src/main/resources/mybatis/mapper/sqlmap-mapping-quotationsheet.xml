@@ -40,17 +40,17 @@
 		<result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName" />
 		<result column="TELEPHONE" jdbcType="VARCHAR" property="telephone" />
 		<result column="COUNTRY" jdbcType="VARCHAR" property="country" />
-		<result column="IS_DELETE" jdbcType="INTEGER" property="isDelete" />
-		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+	<!-- 	<result column="IS_DELETE" jdbcType="INTEGER" property="isDelete" /> 
+		 <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
 		<result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
 		<result column="CREATE_USER" jdbcType="INTEGER" property="createUser" />
 		<result column="MDOIFY_USER" jdbcType="INTEGER" property="mdoifyUser" />
-		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" /> -->
     </association>
     <collection property="subSheetList" column="quotationSubSheetId" ofType="com.webside.ofp.model.QuotationSubSheetEntity">
     	<id column="QUOTATION_SUB_SHEET_ID" jdbcType="INTEGER" property="quotationSubSheetId" />
 	    <result column="PRODUCT_ID" jdbcType="INTEGER" property="productId" />
-	    <result column="QUOTATION_SHEET_ID" jdbcType="INTEGER" property="quotationSheetId" />
+	  <!--   <result column="QUOTATION_SHEET_ID" jdbcType="INTEGER" property="quotationSheetId" /> -->
 	    <result column="USD_PRICE" jdbcType="DECIMAL" property="usdPrice" />
 	    <result column="BUY_PRICE" jdbcType="DECIMAL" property="buyPrice" />
 	    <result column="UNIT" jdbcType="VARCHAR" property="unit" />
@@ -78,14 +78,14 @@
   </sql>
   
   <sql id="quotation_sub_sheet_column_list">
-    qss.QUOTATION_SUB_SHEET_ID, qss.PRODUCT_ID, qss.QUOTATION_SHEET_ID, qss.USD_PRICE, qss.BUY_PRICE, qss.UNIT, 
+    qss.QUOTATION_SUB_SHEET_ID, qss.PRODUCT_ID, <!-- qss.QUOTATION_SHEET_ID, --> qss.USD_PRICE, qss.BUY_PRICE, qss.UNIT, 
     qss.WEIGHT, qss.VOLUME, qss.TOP, qss.BOTTOM, qss.HEIGHT, qss.PACKING, qss.PACKING_RATE, qss.NUMBER, qss.PACK_NUM, qss.TOTALCBM, 
     qss.GW, qss.TOTAL_GW
   </sql>
   
   <sql id="customer_column_List">
-		c.CUSTOMER_ID, c.CUSTOMER_NAME, c.TELEPHONE, c.COUNTRY, c.IS_DELETE, c.CREATE_TIME,
-		c.MODIFY_TIME,c.CREATE_USER, c.MODIFY_USER, c.DESCRIPTION
+		c.CUSTOMER_ID, c.CUSTOMER_NAME, c.TELEPHONE, c.COUNTRY <!-- c.IS_DELETE,  c.CREATE_TIME,
+		c.MODIFY_TIME,c.CREATE_USER, c.MODIFY_USER, c.DESCRIPTION-->
   </sql>
   
   <sql id="where_clause">
@@ -112,10 +112,10 @@
 		left join quotation_sub_sheet qss on qss.QUOTATION_SHEET_ID = qs.QUOTATION_SHEET_ID 
 		where qs.is_delete = 0 
 		<include refid="where_clause" /> 
-		and qs.QUOTATION_SHEET_ID >= (
+	<!-- 	and qs.QUOTATION_SHEET_ID >= (
 			select QUOTATION_SHEET_ID from quotation_sheet order by QUOTATION_SHEET_ID limit ${start},1
 		)
-		limit ${pageNumber}
+		limit ${pageNumber} -->
   </select>
   
   <select id="queryListAll" parameterType="map" resultMap="quotationSheetMap"

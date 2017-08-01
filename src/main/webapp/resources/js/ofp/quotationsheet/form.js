@@ -1,62 +1,51 @@
-var tree = [ {
-	text : "杯子",
-	id : 1,
-	// state : {
-	// checked: true,
-	// disabled: true,
-	// expanded: false,
-	// selected: true
-	// },
-	nodes : [ {
-		id : 11,
-		text : "压杯",
-		tags: ['3']
-	}, {
-		id : 12,
-		text : "吹杯",
-		tags: ['1']
-	}, {
-		id : 13,
-		text : "啤酒杯",
-		tags: ['3']
-	}, {
-		id : 14,
-		text : "小把杯"
-	} ]
-}, {
-	// state : {
-	// checked: true,
-	// disabled: true,
-	// expanded: false,
-	// selected: true
-	// },
-	text : "服装",
-	id : 2,
-	nodes : [ {
-		id : 21,
-		text : "压瓶"
-	}, {
-		id : 22,
-		text : "吹瓶"
-	}, {
-		id : 23,
-		text : "啤酒瓶"
-	}, {
-		id : 24,
-		text : "小把瓶"
-	} ]
-} ];
-$('#searchTree').treeview({
-	data : tree,
-	levels : 1,// 只展开1级
-/*	onNodeSelected : function(event, data) {
-		selectId = data['id'];// 获取选中node的id
-	},*/
-	showCheckbox:true,  
-	onNodeChecked:nodeChecked ,  
-    onNodeUnchecked:nodeUnchecked,
-    showTags: true
+//绑定客户
+		$.post(sys.rootPath + "/quotationsheet/getCustomers.html", function(
+				resp) {//获取所有客户列表
+			customers = JSON.parse(resp).data;
+			if (customers != null) {
+				$.each(customers, function(index, value) {
+					$(".chosen-select").append(
+							'<option value='+value.customerId+'>'
+									+ value.customerName + '</option>')
+				});
+				$(".chosen-select").chosen().change(function(option) {
+					var selectCustomerId = $(".chosen-select").val();
+					 $.each(customers, function(index,v) {
+						 if (v.customerId == selectCustomerId) {
+							$('#contacts').val(v.contacts);
+							$('#telephone').val(v.telephone);
+							$('#country').val(v.country);
+							return false;
+						} 
+					}); 
+				});
+			}
 
+		});
+
+//绑定数据到tree
+var url = sys.rootPath + "/producttype/list.html";
+$.ajax({
+	type : "post",
+	url : url,
+	async : false,
+	dataType : "json",
+	success : function(data) {
+		$('#searchTree').treeview({
+			data : data,
+			levels : 1,// 只展开1级
+		/*	onNodeSelected : function(event, data) {
+				selectId = data['id'];// 获取选中node的id
+			},*/
+			showCheckbox:true,  
+			onNodeChecked:nodeChecked ,  
+		    onNodeUnchecked:nodeUnchecked,
+		    showTags: true
+		});
+	},
+	error : function(XMLHttpRequest, textStatus, errorThrown) {
+		alert("请求失败！");
+	}
 });
 var nodeCheckedSilent = false;
 function nodeChecked (event, node){
@@ -230,7 +219,6 @@ var url= sys.rootPath+"/quotationsheet/getSubSheet.html";
 		        }, oSettings);
 		    };		
 		
-		validateForm();
 		$(".datepicker").datepicker({
 			language : "zh-CN",
 			autoclose : true,//选中之后自动隐藏日期选择框
@@ -247,29 +235,62 @@ $('#quotationsheetForm').validate({
     focusInvalid : false,
     ignore : "",
     rules : {
-    	PRODUCT_CODE : {
-            required : true
-        },FACTORY_CODE:{
-        	  required : true
-        },UNIT:{
-        	  required : true
+    	quotationDate:{
+    		required : true
+        },currency:{
+        	required : true,
+        	maxlength:20
+        },exchangeRate:{
+        	required : true,
+        	digits:true
+        },expirationDate:{
+        	required : true,
+        	dateISO:true
+        },payMode:{
+        	required : true,
+        	maxlength:20
+        },resource:{
+        	required : true,
+        	maxlength:50
+        },dest:{
+        	required : true,
+        	maxlength:50
+        },deliveryDate:{
+        	required : true,
+        	dateISO:true
+        },insuranceCost:{
+        	required : true,
+        	digits:true
+        },foreignGreight:{
+        	required : true,
+        	digits:true
+        },homeGreight:{
+        	required : true,
+        	digits:true
+        },operationCost:{
+        	required : true,
+        	digits:true
+        },commission:{
+        	required : true,
+        	digits:true
+        },rebate:{
+        	required : true,
+        	digits:true
+        }/*,totalCbm:{计算的出来
+        	required : true,
+        	digits:true
+        }*/,interestMonth:{
+        	required : true,
+        	digits:true
         }
     },
     messages : {
-    	PRODUCT_CODE : {
-            required : "请填写商品编码",
-        },FACTORY_CODE:{
-        	 required : "请填写工厂编码",
-        },UNIT:{
-        	 required : "请填写单位",
-        }
-        
     },
     highlight : function(e) {
-        $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+        $(e).removeClass('has-info').addClass('has-error');
     },
     success : function(e) {
-        $(e).closest('.form-group').removeClass('has-error').addClass('has-success');
+        $(e).removeClass('has-error').addClass('has-success');
         $(e).remove();
     },
     errorPlacement : function(error, element) {

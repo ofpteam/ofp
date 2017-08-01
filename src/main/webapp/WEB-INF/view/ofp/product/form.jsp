@@ -329,6 +329,8 @@
 				<input type="button" id="btn" value="开始上传">
 			</div>
 		</div>
+		<form action="https://127.0.0.1:8443/webside/product/upload.html" method="post" enctype="multipart/form-data">  
+<input type="file" name="file" /> <input type="submit" value="Submit" /></form> 
 		<div class="hr hr-dotted"></div>
 	</div>
 </div>

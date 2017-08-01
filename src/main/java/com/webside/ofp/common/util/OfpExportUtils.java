@@ -1,8 +1,10 @@
 package com.webside.ofp.common.util;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,6 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.ComThread;
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
 import com.webside.dtgrid.model.Pager;
 import com.webside.dtgrid.util.ExportUtils;
 import com.webside.enums.ExportType;
@@ -68,31 +74,7 @@ public class OfpExportUtils extends ExportUtils{
 		OutputStream outputStream = response.getOutputStream();
 		exportQuotationSheetExcel(outputStream,quotationSheet,basePath);
 	}
-	 
-	/**
-	 * 导出pdf，这里先导出excel，然后使用jacob 把excel转为pdf
-	 * @param response
-	 * @param quotationSheet
-	 * @param basePath
-	 * @throws Exception
-	 */
-	public static void exportQuotationSheetPdf(HttpServletResponse response,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
-		String fileName = quotationSheet.getQuotationSheetCode()+System.currentTimeMillis();
-		// 设置响应头
-		response.setContentType("application/pdf");
-		// 执行文件写入
-		response.setHeader("Content-Disposition", "attachment;filename="
-				+ fileName + ".pdf");
-		// 获取输出流
-//		OutputStream outputStream = response.getOutputStream();
-		
-		//导出excel到指定路径
-		OutputStream outputStream = new FileOutputStream(new File("D:\\"+fileName+".xls"));
-		exportQuotationSheetExcel(outputStream,quotationSheet,basePath);
-		
-		FileInputStream fis = new FileInputStream(new File("D:\\"+fileName+".xls"));
-		
-	}
+	
 	
 	public static void exportQuotationSheetExcel(OutputStream outputStream,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
 		// 定义Excel对象
@@ -235,4 +217,93 @@ public class OfpExportUtils extends ExportUtils{
 		outputStream.close();
 		outputStream = null;
 	}
+	
+	
+	/**
+	 * 导出pdf，这里先导出excel，然后使用jacob 把excel转为pdf
+	 * @param response
+	 * @param quotationSheet
+	 * @param basePath
+	 * @throws Exception
+	 */
+	public static void exportQuotationSheetPdf(HttpServletResponse response,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
+		String fileName = quotationSheet.getQuotationSheetCode()+System.currentTimeMillis();
+		// 设置响应头
+		response.setContentType("application/pdf");
+		// 执行文件写入
+		response.setHeader("Content-Disposition", "attachment;filename="
+				+ fileName + ".pdf");
+		// 获取输出流
+		OutputStream outputStreamResponse = response.getOutputStream();
+		exportQuotationSheetPdf(outputStreamResponse,quotationSheet,basePath,fileName);
+	}
+	
+	/**
+	 * 导出pdf，这里先导出excel，然后使用jacob 把excel转为pdf
+	 * @param response
+	 * @param quotationSheet
+	 * @param basePath
+	 * @throws Exception
+	 */
+	public static void exportQuotationSheetPdf(OutputStream outputStream,QuotationSheetEntity quotationSheet,String basePath,String fileName) throws Exception {
+		String excelPath = "D:\\"+fileName+".xls";
+		String pdfPath = "D:\\"+fileName+".pdf";
+		//导出excel到指定路径
+		OutputStream os = new FileOutputStream(new File(excelPath));
+		exportQuotationSheetExcel(os,quotationSheet,basePath);
+		
+		excel2Pdf(excelPath,pdfPath);
+		
+		FileInputStream fis = new FileInputStream(new File(pdfPath));
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		byte[] buffer = new byte[1024];
+		int i = bis.read(buffer);
+		while (i != -1) {
+			outputStream.write(buffer, 0, i);
+			i = bis.read(buffer);
+		}
+		
+		bis.close();
+		fis.close();
+		os.close();
+		outputStream.close();
+	}
+	
+	public static void excel2Pdf(String excelPath,String pdfPath){
+		System.out.println("Starting excel...");    
+        ActiveXComponent ax = new ActiveXComponent("Excel.Application");   
+        try {    
+            ax.setProperty("Visible",new Variant(false));
+            ax.setProperty("AutomationSecurity", new Variant(3)); //禁用宏  
+            Dispatch excels=ax.getProperty("Workbooks").toDispatch();
+            
+            Dispatch excel=Dispatch.invoke(excels,"Open",Dispatch.Method,new Object[]{  
+            	excelPath,
+                new Variant(false),  
+                new Variant(false)
+            },  
+            new int[9]).toDispatch();
+            //转换格式  
+            Dispatch.invoke(excel,"ExportAsFixedFormat",Dispatch.Method,new Object[]{  
+                new Variant(0), //PDF格式=0  
+                pdfPath,  
+                new Variant(0)  //0=标准 (生成的PDF图片不会变模糊) 1=最小文件 (生成的PDF图片糊的一塌糊涂)  
+            },new int[1]);
+            
+            Dispatch.call(excel, "Close",new Variant(false));  
+            
+            if(ax!=null){  
+                ax.invoke("Quit",new Variant[]{});  
+                ax=null;  
+            }  
+            ComThread.Release();  
+        } catch (Exception e) {    
+            System.out.println("========Error:Operation fail:" + e.getMessage());    
+        }finally {    
+            if (ax != null){    
+                ax.invoke("Quit", new Variant[] {});
+            }    
+        }
+	}
+	
 }

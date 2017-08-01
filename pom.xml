@@ -49,7 +49,11 @@
 		<jdk.version>1.8</jdk.version>
 		<!-- google二维码工具类版本 -->
 		<zxing.version>3.1.0</zxing.version>
+		<!-- alibaba图片工具类 版本-->
 		<simpleimage.version>1.2.3</simpleimage.version>
+		
+		<!-- jacob版本,java 调用office接口excel转pdf-->
+		<jacob.version>1.18</jacob.version>
 	</properties>
 
 
@@ -487,6 +491,12 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
+		</dependency>
+		<!-- 使用该包需要把dll文件放到java_home/jre/bin目录下，其中32位java为jacob-1.18-x86.dll，64位为jacob-1.18-x64.dll -->
+		<dependency> 
+			<groupId>com.jacob</groupId>
+    		<artifactId>jacob</artifactId>
+    		<version>${jacob.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

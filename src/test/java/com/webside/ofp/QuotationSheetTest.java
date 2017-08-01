@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -179,7 +181,7 @@ public class QuotationSheetTest extends BaseJunit {
 		QuotationSheetEntity quotationSheetEntity = quotationSheetService.findById(9l);
 		System.out.println("code:" + quotationSheetEntity.getQuotationSheetCode());
 	}
-	*/
+	
 	@Test
 	public void testFindQuotationSheetWithProducts(){
 		long id = 11l;
@@ -190,6 +192,35 @@ public class QuotationSheetTest extends BaseJunit {
 		try {
 			outPut = new FileOutputStream(new File("D:\\export.xls"));
 			OfpExportUtils.exportQuotationSheetExcel(outPut, quotationSheetEntity,basePath);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+	
+	@Test
+	public void testQueryListByPage() {
+		Map<String, Object> parameters = new HashMap<String,Object>();
+		parameters.put("start",0);
+		parameters.put("pageNumber",10);
+		List<QuotationSheetEntity> quotationSheetEntitys = quotationSheetService.queryListByPage(parameters);
+		System.out.println("size:" + quotationSheetEntitys.size());
+	}*/
+	
+	@Test
+	public void testExprotPdf(){
+		long id = 11l;
+		String basePath = "C:\\Users\\Administrator\\git\\ofp\\src\\main\\resources";
+		QuotationSheetEntity quotationSheetEntity = quotationSheetService.findQuotationSheetWithProducts(id);
+		System.out.println("sss:" + quotationSheetEntity.getQuotationSheetCode());
+		FileOutputStream outPut;
+		try {
+			outPut = new FileOutputStream(new File("D:\\export.xls"));
+			OfpExportUtils.exportQuotationSheetExcel(outPut, quotationSheetEntity,basePath);
+			OfpExportUtils.excel2Pdf("D:\\export.xls", "D:\\export.pdf");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

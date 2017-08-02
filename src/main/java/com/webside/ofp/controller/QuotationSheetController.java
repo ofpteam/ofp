@@ -261,10 +261,10 @@ public class QuotationSheetController extends BaseController {
 	@ResponseBody
 	public Object getSubSheet(String gridPager, HttpServletResponse response) throws Exception {
 		Map<String, Object> jsonMap = new HashMap<>();
-		jsonMap.put("iTotalRecords", 57);
-		jsonMap.put("iTotalDisplayRecords", 57);
+		jsonMap.put("iTotalRecords", 0);
+		jsonMap.put("iTotalDisplayRecords", 0);
 		List<QuotationSubSheetEntity> datas = new ArrayList<>();
-		QuotationSubSheetEntity model = null;
+		/*QuotationSubSheetEntity model = null;
 		for (int i = 0; i < 57; i++) {
 			model = new QuotationSubSheetEntity();
 			ProductEntityWithBLOBs product = new ProductEntityWithBLOBs();
@@ -283,11 +283,11 @@ public class QuotationSheetController extends BaseController {
 			model.setNumber(2);
 			model.setPackNum(2);
 			model.setTotalcbm((double) 90);
-			/* model.setGw((double) 2); */
+			 model.setGw((double) 2); 
 			model.setTotalGw((double) 56);
 
 			datas.add(model);
-		}
+		}*/
 		jsonMap.put("aaData", datas);
 		/*
 		 * String obj=JSON.toJSONString(jsonMap); logger.info(obj);

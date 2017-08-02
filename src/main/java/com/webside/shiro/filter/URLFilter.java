@@ -1,6 +1,7 @@
 package com.webside.shiro.filter;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -13,6 +14,8 @@ import jodd.util.StringUtil;
 import org.apache.shiro.util.StringUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.fastjson.JSON;
 import com.webside.dtgrid.model.Pager;
@@ -26,60 +29,59 @@ import com.webside.dtgrid.model.Pager;
  * @data 2016年12月17日 上午12:48:01
  */
 public class URLFilter extends AccessControlFilter {
-	
-	@Override
-	protected boolean isAccessAllowed(ServletRequest request,
-			ServletResponse response, Object mappedValue) throws Exception {
 
-		HttpServletRequest httpRequest = (HttpServletRequest)request;
+	@Override
+	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
+			throws Exception {
+
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String uri = httpRequest.getRequestURI();
 		String contextPath = httpRequest.getContextPath();
-		if(null != contextPath)
-		{
+		if (null != contextPath) {
 			uri = uri.replace(contextPath, "");
-			if(uri.startsWith("/openapi/") || uri.equals("/") || uri.equals("/index.html") || uri.equals("login.html") || uri.equals("signin.html"))
-			{
+			if (uri.startsWith("/openapi/") || uri.equals("/") || uri.equals("/index.html") || uri.equals("login.html")
+					|| uri.equals("signin.html")) {
 				return Boolean.TRUE;
 			}
 		}
 		String uriParam = httpRequest.getParameter("baseUri");
-		if(uriParam != null)
-		{
+		if (uriParam != null) {
 			uriParam = uriParam.replace(contextPath, "");
-			if(uriParam.equals("/") || uriParam.equals("/index.html"))
+			if (uriParam.equals("/") || uriParam.equals("/index.html"))
 				return Boolean.TRUE;
 		}
-		String gridPager = httpRequest.getParameter("");
-		//导出时不做过滤
-		if(StringUtil.isNotBlank(gridPager))
-		{
+		String gridPager = httpRequest.getParameter("gridPager");
+		// 导出时不做过滤
+		if (StringUtil.isNotBlank(gridPager)) {
 			Pager pager = JSON.parseObject(gridPager, Pager.class);
-			if(pager.getIsExport())
-			{
+			if (pager.getIsExport()) {
 				return Boolean.TRUE;
 			}
 		}
-		
+		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
+				httpRequest.getSession().getServletContext());
+		// 判断 request 是否有文件上传,即多部分请求
+		if (multipartResolver.isMultipart(httpRequest)) {
+			return Boolean.TRUE;
+		}
 		return Boolean.FALSE;
 	}
 
 	@Override
-	protected boolean onAccessDenied(ServletRequest request,
-			ServletResponse response) throws Exception {
-    		if(ShiroUtils.isAjax(request)){
-    			Map<String, Object> result = new HashMap<String, Object>();
-    			result.put("status", "401");
-    			result.put("message", "非法操作");
-    			result.put("url", ShiroUtils.INDEX_URL);
-    			ShiroUtils.writeJson(response, result);
-    		}else
-    		{
-    			if (StringUtils.hasText(ShiroUtils.INDEX_URL)) {//如果有未授权页面跳转过去  
-	                WebUtils.issueRedirect(request, response, ShiroUtils.INDEX_URL);
-	            } else {//否则返回401未授权状态码
-	                WebUtils.toHttp(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);  
-	            } 
-    		}
+	protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+		if (ShiroUtils.isAjax(request)) {
+			Map<String, Object> result = new HashMap<String, Object>();
+			result.put("status", "401");
+			result.put("message", "非法操作");
+			result.put("url", ShiroUtils.INDEX_URL);
+			ShiroUtils.writeJson(response, result);
+		} else {
+			if (StringUtils.hasText(ShiroUtils.INDEX_URL)) {// 如果有未授权页面跳转过去
+				WebUtils.issueRedirect(request, response, ShiroUtils.INDEX_URL);
+			} else {// 否则返回401未授权状态码
+				WebUtils.toHttp(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			}
+		}
 		return Boolean.FALSE;
 	}
 

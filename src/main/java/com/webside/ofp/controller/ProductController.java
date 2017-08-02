@@ -1,24 +1,32 @@
 package com.webside.ofp.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
@@ -287,8 +295,7 @@ public class ProductController extends BaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			map.put("parentId", productTypeEntity.getProductTypeId());
-			List<ProductTypeEntity> productTypeChildrenList = productTypeService
-					.queryListAll(map);
+			List<ProductTypeEntity> productTypeChildrenList = productTypeService.queryListAll(map);
 			if (productTypeChildrenList != null && productTypeChildrenList.size() > 0) {
 				map.put("success", Boolean.TRUE);
 				map.put("data", productTypeChildrenList);
@@ -306,7 +313,8 @@ public class ProductController extends BaseController {
 
 	@RequestMapping("edit.html")
 	@ResponseBody
-	public Object update(ProductEntityWithBLOBs productEntityWithBLOBs, ProductTypeEntity productTypeEntity) throws AjaxException {
+	public Object update(ProductEntityWithBLOBs productEntityWithBLOBs, ProductTypeEntity productTypeEntity)
+			throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			StringBuilder sb = this.validateSubmitVal(productEntityWithBLOBs, productTypeEntity);
@@ -343,27 +351,50 @@ public class ProductController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/upload.html")
-	public String upload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request,
-			ModelMap model) {  
-        System.out.println("开始");  
-        String path = request.getSession().getServletContext().getRealPath("upload");  
-        String fileName = file.getOriginalFilename();  
-//        String fileName = new Date().getTime()+".jpg";  
-        System.out.println(path);  
-        File targetFile = new File(path, fileName);  
-        if(!targetFile.exists()){  
-            targetFile.mkdirs();  
-        }  
-  
-        //保存  
-        try {  
-            file.transferTo(targetFile);  
-        } catch (Exception e) {  
-            e.printStackTrace();  
-        }  
-        model.addAttribute("fileUrl", request.getContextPath()+"/upload/"+fileName);  
-  
-        return "result";  
-    }  
+	@RequestMapping(value = "uploadPicture.html")
+	@ResponseBody
+	public Object uploadPicture(HttpServletRequest request, ModelMap model) {
+		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
+				request.getSession().getServletContext());
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 判断 request 是否有文件上传,即多部分请求
+		if (multipartResolver.isMultipart(request)) {
+			try {
+				String path = System.getProperty("catalina.home") ;
+				// 转换成多部分request
+				MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+				// 取得request中的所有文件名
+				Iterator<String> iter = multiRequest.getFileNames();
+				while (iter.hasNext()) {
+					// 取得上传文件
+					MultipartFile file = multiRequest.getFile(iter.next());
+					if (file != null) {
+						// 取得当前上传文件的文件名称
+						String myFileName = UUID.randomUUID().toString() + file.getOriginalFilename();
+						map.put("data", myFileName);
+						// 如果名称不为“”,说明该文件存在，否则说明该文件不存在
+						if (myFileName.trim() != "") {
+							// 重命名上传后的文件名
+							String fileName = path + File.separator + myFileName;
+							File localFile = new File(fileName);
+							file.transferTo(localFile);
+							//productService.insertWithBlobs(productEntityWithBLOBs, basePath)
+						}
+					}
+				}
+				map.put("success", Boolean.TRUE);
+				map.put("message", "添加成功");
+				// 记录上传该文件后的时间
+			} catch (IllegalStateException | IOException e) {
+				map.put("success", Boolean.FALSE);
+				map.put("message", "添加是失败");
+				e.printStackTrace();
+			}
+		} else {
+			map.put("success", Boolean.FALSE);
+			map.put("message", "添加是失败,没有需要上传的附件信息");
+		}
+		return map;
+	}
+
 }

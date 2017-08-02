@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.webside.base.baseservice.impl.AbstractService;
 import com.webside.ofp.bean.OfpTreeBean;
+import com.webside.ofp.mapper.ProductMapper;
 import com.webside.ofp.mapper.ProductTypeMapper;
 import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.ofp.service.ProductTypeService;
@@ -19,6 +20,8 @@ import com.webside.ofp.service.ProductTypeService;
 public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, Long>implements ProductTypeService {
 	@Autowired
 	private ProductTypeMapper productTypeMapper;
+	@Autowired
+	private ProductMapper productMapper;
 
 	// 这句必须要加上。不然会报空指针异常，因为在实际调用的时候不是BaseMapper调用，而是具体的mapper
 	@Autowired
@@ -37,6 +40,9 @@ public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, L
 			OfpTreeBean subOfpTreeBean = new OfpTreeBean();
 			subOfpTreeBean.setText(productTypeEntity.getCnName());
 			subOfpTreeBean.setId(productTypeEntity.getProductTypeId());
+			/*parameter.clear();
+			parameter.put("productTypeId", productTypeEntity.getProductTypeId());
+			subOfpTreeBean.setProductEntities(productMapper.queryListAll(parameter));*/
 			// 递归查找大类下所有子类型
 			this.findProDuctTypeTreeByParentId(subOfpTreeBean);
 			allOfpTrees.add(subOfpTreeBean);

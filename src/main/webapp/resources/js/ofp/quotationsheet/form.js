@@ -22,8 +22,22 @@
 			}
 
 		});
-
-//绑定数据到tree
+//
+$('#btnAddRows').click(function(){
+	  var arr = new Array();  
+      var $tree = $('#searchTree');  
+      arr = $tree.treeview('getChecked', 0);  
+      
+      debugger;
+	$.each(arr,function(i,v){
+		$('#example').dataTable().fnAddData(
+				[ v.productTypeEntity.buyPrice, v.productTypeEntity.usdPrice,v.productTypeEntity.unit,v.productTypeEntity.top,
+				  v.productTypeEntity.bottom,v.productTypeEntity.height,v.productTypeEntity.weight,
+				  v.productTypeEntity.volume,v.productTypeEntity.packing,0,0,0,0,0,0 ]);
+	});
+	
+});
+// 绑定数据到tree
 var url = sys.rootPath + "/producttype/list.html";
 $.ajax({
 	type : "post",
@@ -31,8 +45,9 @@ $.ajax({
 	async : false,
 	dataType : "json",
 	success : function(data) {
+		debugger;
 		$('#searchTree').treeview({
-			data : data,
+			data :JSON.parse(data),
 			levels : 1,// 只展开1级
 		/*	onNodeSelected : function(event, data) {
 				selectId = data['id'];// 获取选中node的id
@@ -49,7 +64,6 @@ $.ajax({
 });
 var nodeCheckedSilent = false;
 function nodeChecked (event, node){
-	debugger;
     if(nodeCheckedSilent){
         return;
     }
@@ -61,7 +75,6 @@ function nodeChecked (event, node){
 
 var nodeUncheckedSilent = false;
 function nodeUnchecked  (event, node){
-	debugger;
     if(nodeUncheckedSilent)
         return;
     nodeUncheckedSilent = true;
@@ -152,6 +165,14 @@ var url= sys.rootPath+"/quotationsheet/getSubSheet.html";
 			    }, "aoColumnDefs" :[
 				                         { "bVisible": false, "aTargets": [0] }/*第一列隐藏*/
 			                               ],
+			      "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
+					/* Append the grade to the default row class name */
+					/*if (aData[4] == "A") {*/
+						$('td:eq(9)', nRow).html('<input type="number" value="'+aData.packingRate+'"></input>');
+						$('td:eq(10)', nRow).html('<input type="number" value="'+aData.number+'"></input>');
+						$('td:eq(11)', nRow).html('<input type="number" value="'+aData.packNum+'"></input>');
+					/*}*/
+				},                            
 		        "aoColumns": [
 							{ "mDataProp": "productId" },
 							{ "mDataProp": "buyPrice" },
@@ -169,16 +190,17 @@ var url= sys.rootPath+"/quotationsheet/getSubSheet.html";
 							{ "mDataProp": "totalcbm" },
 							{ "mDataProp": "totalGw" }
 		                ]
-		} ).makeEditable({
+		} )/*.makeEditable({
 		    sUpdateURL: url,
 		    fnOnEdited: function (status, sOldValue, sNewValue, sNewCellDisplayValue) {
-		        oTable.fnReloadAjax(url + "&objectid=" + objectid);
+		    	debugger;
+		        //oTable.fnReloadAjax(url + "&objectid=" + objectid);
 		    },
 		    "aoColumns": [null, {
                 type: 'textarea',
                 submit: '提交'
-            	}, null, null,null,null]/*可编辑的列*/
-			});
+            	}, null, null,null,null]可编辑的列
+			})*/;
 		  $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallback, bStandingRedraw) {
 		        if (typeof sNewSource != 'undefined' && sNewSource != null) {
 		            oSettings.sAjaxSource = sNewSource;

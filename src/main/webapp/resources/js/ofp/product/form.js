@@ -77,9 +77,14 @@ $('#productForm').validate({
         },cbm:{
         	required : true,
         	number:true
+        },hdMapUrl:{
+        	required : true
         }
     },
     messages : {
+    		hdMapUrl : {
+    			required : "请上传附件",
+    		}
     	/*productCode : {
             required : "请填写商品编码",
         },factoryCode:{

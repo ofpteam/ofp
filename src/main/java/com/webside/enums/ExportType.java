@@ -12,5 +12,6 @@ public enum ExportType {
 	EXCEL,
 	CSV,
 	PDF,
-	TXT	
+	TXT,
+	OLDEXCEL
 }

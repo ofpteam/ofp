@@ -1,8 +1,10 @@
 package com.webside.ofp.common.util;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,11 +13,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.ComThread;
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
 import com.webside.dtgrid.model.Pager;
 import com.webside.dtgrid.util.ExportUtils;
 import com.webside.enums.ExportType;
+import com.webside.ofp.common.config.OfpConfig;
 import com.webside.ofp.model.QuotationSheetEntity;
 import com.webside.ofp.model.QuotationSubSheetEntity;
 
@@ -39,6 +48,9 @@ public class OfpExportUtils extends ExportUtils{
 	//报价单excel模板名称
 	private static final String QUOTATION_SHEET_TEMPLATE_PATH = "\\template\\quotation_sheet.xls";
 	
+	//老的报价单excel模板名称
+	private static final String OLD_QUOTATION_SHEET_TEMPLATE_PATH = "\\template\\quotation_sheet2.xls";
+	
 	
 	/**
 	 * 导出
@@ -51,13 +63,15 @@ public class OfpExportUtils extends ExportUtils{
 	public static void exportQuotationSheet(HttpServletResponse response,QuotationSheetEntity QuotationSheet,String exportType,String basePath)
 			throws Exception {
 		if(ExportType.EXCEL.name().equalsIgnoreCase(exportType)){
-			exportQuotationSheetExcel(response,QuotationSheet,basePath);
+			exportQuotationSheetExcel(response,QuotationSheet,basePath,1);
 		}else if(ExportType.PDF.name().equalsIgnoreCase(exportType)){
 			exportQuotationSheetPdf(response,QuotationSheet,basePath);
+		}else if(ExportType.OLDEXCEL.name().equalsIgnoreCase(exportType)){
+			exportQuotationSheetExcel(response,QuotationSheet,basePath,2);
 		}
 	}
 	
-	public static void exportQuotationSheetExcel(HttpServletResponse response,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
+	public static void exportQuotationSheetExcel(HttpServletResponse response,QuotationSheetEntity quotationSheet,String basePath,int excelType) throws Exception {
 		
 		// 设置响应头
 		response.setContentType("application/vnd.ms-excel");
@@ -66,34 +80,190 @@ public class OfpExportUtils extends ExportUtils{
 				+ (quotationSheet.getQuotationSheetCode()+System.currentTimeMillis()) + ".xls");
 		// 获取输出流
 		OutputStream outputStream = response.getOutputStream();
-		exportQuotationSheetExcel(outputStream,quotationSheet,basePath);
+		if(excelType == 1){
+			exportQuotationSheetExcel(outputStream,quotationSheet,basePath);
+		}else{
+			exportOldQuotationSheetExcel(outputStream,quotationSheet,basePath);
+		}
 	}
-	 
+	
 	/**
-	 * 导出pdf，这里先导出excel，然后使用jacob 把excel转为pdf
-	 * @param response
+	 * 导出老的报价单格式
+	 * @param outputStream
 	 * @param quotationSheet
 	 * @param basePath
 	 * @throws Exception
 	 */
-	public static void exportQuotationSheetPdf(HttpServletResponse response,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
-		String fileName = quotationSheet.getQuotationSheetCode()+System.currentTimeMillis();
-		// 设置响应头
-		response.setContentType("application/pdf");
-		// 执行文件写入
-		response.setHeader("Content-Disposition", "attachment;filename="
-				+ fileName + ".pdf");
-		// 获取输出流
-//		OutputStream outputStream = response.getOutputStream();
+	public static void exportOldQuotationSheetExcel(OutputStream outputStream,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
+		// 定义Excel对象
+		Workbook book = Workbook.getWorkbook(new File(basePath+OLD_QUOTATION_SHEET_TEMPLATE_PATH));
+		WorkbookSettings settings = new WorkbookSettings();  
+		settings.setWriteAccess(null); 
+		// 定义Excel对象
+		WritableWorkbook wwb = Workbook.createWorkbook(outputStream,book,settings);
+		// 获取Sheet页
+		WritableSheet sheet = wwb.getSheet(0);
+		sheet.getSettings().setSelected(true);
 		
-		//导出excel到指定路径
-		OutputStream outputStream = new FileOutputStream(new File("D:\\"+fileName+".xls"));
-		exportQuotationSheetExcel(outputStream,quotationSheet,basePath);
+		// 定义表头字体样式、表格字体样式
+		WritableFont headerFont = new WritableFont(
+				WritableFont.createFont("Lucida Grande"), 9, WritableFont.BOLD);
+		WritableFont bodyFont = new WritableFont(
+				WritableFont.createFont("Lucida Grande"), 9,
+				WritableFont.NO_BOLD);
+		WritableCellFormat headerCellFormat = new WritableCellFormat(headerFont);
+		WritableCellFormat bodyCellFormat = new WritableCellFormat(bodyFont);
 		
-		FileInputStream fis = new FileInputStream(new File("D:\\"+fileName+".xls"));
+		WritableCellFormat headerCellFormat2 = new WritableCellFormat(bodyFont);
 		
+		// 设置表头样式：加边框、背景颜色为淡灰、居中样式
+		headerCellFormat.setBorder(Border.ALL, BorderLineStyle.THIN);
+		headerCellFormat.setBackground(Colour.PALE_BLUE);
+		headerCellFormat.setAlignment(Alignment.CENTRE);
+		headerCellFormat.setVerticalAlignment(VerticalAlignment.CENTRE);
+		
+		// 设置表头样式：加边框、居中样式
+		headerCellFormat2.setBorder(Border.ALL, BorderLineStyle.THIN);
+		headerCellFormat2.setAlignment(Alignment.CENTRE);
+		headerCellFormat2.setVerticalAlignment(VerticalAlignment.CENTRE);
+		
+		// 设置表格体样式：加边框、居中
+		bodyCellFormat.setBorder(Border.ALL, BorderLineStyle.THIN);
+		bodyCellFormat.setAlignment(Alignment.CENTRE);
+		bodyCellFormat.setVerticalAlignment(VerticalAlignment.CENTRE);
+		
+		//日期格式化
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		if(quotationSheet.getQuotationDate() != null){
+			String date = sdf.format(quotationSheet.getQuotationDate());
+			Label labelDate = new Label(2,2,date,headerCellFormat2);
+			sheet.addCell(labelDate);
+		}
+		
+		if(quotationSheet.getCustomer() != null){
+			Label labelCustomer = new Label(2,3,quotationSheet.getCustomer().getCustomerName(),headerCellFormat2);
+			sheet.addCell(labelCustomer);
+		}
+		
+		if(quotationSheet.getPriceTerms() != null){
+			Label labelPriceTerms = new Label(6,6,quotationSheet.getPriceTerms(),headerCellFormat2);
+			sheet.addCell(labelPriceTerms);
+		}
+		
+		if(quotationSheet.getDest() != null){
+			Label labelDest = new Label(6,7,quotationSheet.getDest(),headerCellFormat2);
+			sheet.addCell(labelDest);
+		}
+		
+		/*
+		if(quotationSheet.getPayMode() != null){
+			Label labelPayMode = new Label(4,4,quotationSheet.getPayMode(),headerCellFormat2);
+			sheet.addCell(labelPayMode);
+		}*/
+		
+		
+		List<QuotationSubSheetEntity> subList = quotationSheet.getSubSheetList();
+		int subStartRow = 12;
+		for(int i=0;i<subList.size();i++){
+			QuotationSubSheetEntity subSheet = subList.get(i);
+			int currentRow = subStartRow + i;
+			
+		    sheet.setRowView(currentRow, 1600, false); //设置行高
+		    
+			//产品编号
+			Label itemNoLabel = new Label(0,currentRow,subSheet.getProduct().getProductCode(),bodyCellFormat);
+			sheet.addCell(itemNoLabel);
+			
+			//缩略图
+			WritableImage image = new WritableImage(1,currentRow,1,1,subSheet.getProduct().getThumbnail());
+			sheet.addImage(image);
+			
+			//货描
+			/*Label descHLabel = new Label(2,subStartRow,"Description",headerCellFormat);
+			sheet.addCell(descHLabel);
+			Label descLabel = new Label(2,subStartRow+1,subSheet.getPacking(),bodyCellFormat);
+			sheet.addCell(descLabel);*/
+			
+			//美金单价
+			jxl.write.Number priceLabel = new jxl.write.Number(2,currentRow,subSheet.getUsdPrice(),bodyCellFormat);
+			sheet.addCell(priceLabel);
+			
+			//单位
+			Label unitLabel = new Label(3,currentRow,subSheet.getUnit(),bodyCellFormat);
+			sheet.addCell(unitLabel);
+			
+			//top
+			jxl.write.Number topLabel = new jxl.write.Number(4,currentRow,subSheet.getTop(),bodyCellFormat);
+			sheet.addCell(topLabel);
+			
+			//bottom
+			jxl.write.Number bottomLabel = new jxl.write.Number(5,currentRow,subSheet.getBottom(),bodyCellFormat);
+			sheet.addCell(bottomLabel);
+			
+			//height
+			jxl.write.Number heightLabel = new jxl.write.Number(6,currentRow,subSheet.getHeight(),bodyCellFormat);
+			sheet.addCell(heightLabel);
+			
+			//weight
+			jxl.write.Number weightLabel = new jxl.write.Number(7,currentRow,subSheet.getWeight(),bodyCellFormat);
+			sheet.addCell(weightLabel);
+			
+			//volume
+			jxl.write.Number volumeLabel = new jxl.write.Number(8,currentRow,subSheet.getVolume(),bodyCellFormat);
+			sheet.addCell(volumeLabel);
+			
+			//packing
+			Label packingLabel = new Label(9,currentRow,subSheet.getPacking(),bodyCellFormat);
+			sheet.addCell(packingLabel);
+			
+			//packing rate
+			jxl.write.Number packingRateLabel = new jxl.write.Number(10,currentRow,subSheet.getPackingRate(),bodyCellFormat);
+			sheet.addCell(packingRateLabel);
+			
+			//number
+			jxl.write.Number numberLabel = new jxl.write.Number(11,currentRow,subSheet.getNumber(),bodyCellFormat);
+			sheet.addCell(numberLabel);
+			
+			//pack number
+			jxl.write.Number packNumberLabel = new jxl.write.Number(12,currentRow,subSheet.getPackNum(),bodyCellFormat);
+			sheet.addCell(packNumberLabel);
+			
+			//cbm
+			jxl.write.Number cbmLabel = new jxl.write.Number(13,currentRow,subSheet.getProduct().getCbm(),bodyCellFormat);
+			sheet.addCell(cbmLabel);
+			
+			//total cbm
+			jxl.write.Number totalCbmLabel = new jxl.write.Number(14,currentRow,subSheet.getTotalcbm(),bodyCellFormat);
+			sheet.addCell(totalCbmLabel);
+			
+			//gw
+			jxl.write.Number gwLabel = new jxl.write.Number(15,currentRow,subSheet.getGw(),bodyCellFormat);
+			sheet.addCell(gwLabel);
+			
+			//total gw
+			jxl.write.Number totalGwLabel = new jxl.write.Number(16,currentRow,subSheet.getTotalGw(),bodyCellFormat);
+			sheet.addCell(totalGwLabel);
+		}
+		
+		// 写入Excel工作表
+		wwb.write();
+		// 关闭Excel工作薄对象
+		book.close();
+		wwb.close();
+		// 关闭流
+		outputStream.flush();
+		outputStream.close();
+		outputStream = null;
 	}
 	
+	/**
+	 * 导出新的报价单格式
+	 * @param outputStream
+	 * @param quotationSheet
+	 * @param basePath
+	 * @throws Exception
+	 */
 	public static void exportQuotationSheetExcel(OutputStream outputStream,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
 		// 定义Excel对象
 		Workbook book = Workbook.getWorkbook(new File(basePath+QUOTATION_SHEET_TEMPLATE_PATH));
@@ -133,7 +303,7 @@ public class OfpExportUtils extends ExportUtils{
 		bodyCellFormat.setVerticalAlignment(VerticalAlignment.CENTRE);
 		
 		//日期格式化
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		if(quotationSheet.getQuotationDate() != null){
 			String date = sdf.format(quotationSheet.getQuotationDate());
@@ -235,4 +405,99 @@ public class OfpExportUtils extends ExportUtils{
 		outputStream.close();
 		outputStream = null;
 	}
+	
+	
+	/**
+	 * 导出pdf，这里先导出excel，然后使用jacob 把excel转为pdf
+	 * @param response
+	 * @param quotationSheet
+	 * @param basePath
+	 * @throws Exception
+	 */
+	public static void exportQuotationSheetPdf(HttpServletResponse response,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
+		String fileName = quotationSheet.getQuotationSheetCode()+System.currentTimeMillis();
+		// 设置响应头
+		response.setContentType("application/pdf");
+		// 执行文件写入
+		response.setHeader("Content-Disposition", "attachment;filename="
+				+ fileName + ".pdf");
+		// 获取输出流
+		OutputStream outputStreamResponse = response.getOutputStream();
+		exportQuotationSheetPdf(outputStreamResponse,quotationSheet,basePath,fileName);
+	}
+	
+	/**
+	 * 导出pdf，这里先导出excel，然后使用jacob 把excel转为pdf
+	 * @param response
+	 * @param quotationSheet
+	 * @param basePath
+	 * @throws Exception
+	 */
+	public static void exportQuotationSheetPdf(OutputStream outputStream,QuotationSheetEntity quotationSheet,String basePath,String fileName) throws Exception {
+		String tempPath = OfpConfig.exportTempPath;
+		System.out.println("tempPath:" + tempPath);
+		File file = new File(tempPath);
+		if(!file.exists()){
+			file.mkdirs();
+		}
+		String excelPath = tempPath+"\\"+fileName+".xls";
+		String pdfPath = tempPath+"\\"+fileName+".pdf";
+		//导出excel到指定路径
+		OutputStream os = new FileOutputStream(new File(excelPath));
+		exportQuotationSheetExcel(os,quotationSheet,basePath);
+		
+		excel2Pdf(excelPath,pdfPath);
+		
+		FileInputStream fis = new FileInputStream(new File(pdfPath));
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		byte[] buffer = new byte[1024];
+		int i = bis.read(buffer);
+		while (i != -1) {
+			outputStream.write(buffer, 0, i);
+			i = bis.read(buffer);
+		}
+		
+		bis.close();
+		fis.close();
+		os.close();
+		outputStream.close();
+	}
+	
+	public static void excel2Pdf(String excelPath,String pdfPath){
+		System.out.println("Starting excel...");    
+        ActiveXComponent ax = new ActiveXComponent("Excel.Application");   
+        try {    
+            ax.setProperty("Visible",new Variant(false));
+            ax.setProperty("AutomationSecurity", new Variant(3)); //禁用宏  
+            Dispatch excels=ax.getProperty("Workbooks").toDispatch();
+            
+            Dispatch excel=Dispatch.invoke(excels,"Open",Dispatch.Method,new Object[]{  
+            	excelPath,
+                new Variant(false),  
+                new Variant(false)
+            },  
+            new int[9]).toDispatch();
+            //转换格式  
+            Dispatch.invoke(excel,"ExportAsFixedFormat",Dispatch.Method,new Object[]{  
+                new Variant(0), //PDF格式=0  
+                pdfPath,  
+                new Variant(0)  //0=标准 (生成的PDF图片不会变模糊) 1=最小文件 (生成的PDF图片糊的一塌糊涂)  
+            },new int[1]);
+            
+            Dispatch.call(excel, "Close",new Variant(false));  
+            
+            if(ax!=null){  
+                ax.invoke("Quit",new Variant[]{});  
+                ax=null;  
+            }  
+            ComThread.Release();  
+        } catch (Exception e) {    
+            System.out.println("========Error:Operation fail:" + e.getMessage());    
+        }finally {    
+            if (ax != null){    
+                ax.invoke("Quit", new Variant[] {});
+            }    
+        }
+	}
+	
 }

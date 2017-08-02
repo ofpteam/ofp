@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductMapper extends BaseMapper<ProductEntity, Long>{
-	public ProductEntity findByTypeId(String id);
+	public List<ProductEntity> findByTypeId(String id);
 	
 	public ProductEntityWithBLOBs findByIdWithBLOBS(long id);
 	

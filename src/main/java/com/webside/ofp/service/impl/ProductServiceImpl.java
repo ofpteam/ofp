@@ -32,7 +32,7 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long> imp
 	}
 
 	@Override
-	public ProductEntity findByTypeId(String id) {
+	public List<ProductEntity> findByTypeId(String id) {
 		return productMapper.findByTypeId(id);
 	}
 	

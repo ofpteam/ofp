@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,7 @@ import com.webside.shiro.ShiroAuthenticationManager;
 @Service("roleService")
 public class RoleServiceImpl extends AbstractService<RoleEntity, Long>
 		implements RoleService {
-
+	public Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private RoleMapper roleMapper;
 
@@ -96,4 +98,53 @@ public class RoleServiceImpl extends AbstractService<RoleEntity, Long>
 		}
 	}
 
+	
+	@Override
+	public boolean addRoleProductType(int roleId, int productTypeId) {
+		try {
+			Map<String, Object> parameter = new HashMap<String, Object>();
+			parameter.put("roleId", roleId);
+			parameter.put("productTypeId", productTypeId);
+			return roleMapper.addRoleProductType(parameter) > 0 ? true : false;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean addRoleProductTypeBatch(int roleId, List<Integer> productTypeIds) {
+		boolean flag = false;
+		try {
+			int productTypeCount = roleMapper.findRoleProductTypeById(roleId);
+			boolean delFlag = true;
+			if (productTypeCount > 0) {
+				int delResult = roleMapper.deleteRoleProductType(roleId);
+				if (productTypeCount != delResult) {
+					logger.error("删除角色关联的产品类型是失败!");
+					delFlag = false;
+				}
+			}
+
+			if (delFlag) {
+				if (productTypeIds.size() > 0) {
+					Map<String, Object> parameter = new HashMap<String, Object>();
+					parameter.put("roleId", roleId);
+					parameter.put("productTypeIds", productTypeIds);
+					int addResult = roleMapper.addRoleProductTypeBatch(parameter);
+					if (addResult == productTypeIds.size()) {
+						flag = true;
+					}
+				} else {
+					flag = true;
+				}
+			}
+			
+//			List<Long> userIds = roleMapper.findUserIdByRoleId(roleId);
+//			ShiroAuthenticationManager.clearUserAuthByUserId(userIds);
+			
+			return flag;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
 }

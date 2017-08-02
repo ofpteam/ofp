@@ -24,6 +24,10 @@ public interface RoleService {
     public boolean addRolePermBatch(int roleId, List<Integer> ids);
     
     public boolean addRolePerm(Long roleId, Long resourceId);
+    
+    public boolean addRoleProductType(int roleId, int productTypeId);
+    
+    public boolean addRoleProductTypeBatch(int roleId, List<Integer> productTypeIds);
 
     public int findRoleUserById(int roleId);
 }

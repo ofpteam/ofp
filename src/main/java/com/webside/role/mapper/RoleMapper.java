@@ -49,6 +49,35 @@ public interface RoleMapper extends BaseMapper<RoleEntity, Long>{
 	public int addRoleResource(Map<String, Object> parameter);
 	
 	/**
+	 * 查询该角色是否有产品权限信息
+	 * @param roleId	角色id 
+	 * 使用@Param注解主要是设置mapping中可以使用参数名进行取值
+	 * @return
+	 */
+	public int findRoleProductTypeById(@Param(value="roleId") int roleId);
+	
+
+	/**
+	 * 删除角色的产品类型权限信息
+	 * @param roleId	角色id 
+	 * 使用@Param注解主要是设置mapping中可以使用参数名进行取值
+	 * @return
+	 */
+	public int deleteRoleProductType(@Param(value="roleId") int roleId);
+	
+	/**
+	 * 批量添加角色和产品类型映射信息
+	 * @return
+	 */
+	public int addRoleProductTypeBatch(Map<String, Object> parameter);
+	
+	/**
+	 * 添加角色和产品类型映射信息
+	 * @return
+	 */
+	public int addRoleProductType(Map<String, Object> parameter);
+	
+	/**
 	 * 
 	 * @Description 根据角色Id查询用户Ids
 	 * @param roleId

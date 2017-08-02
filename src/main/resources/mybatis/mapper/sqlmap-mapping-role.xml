@@ -220,6 +220,46 @@
 			)
 	</insert>
 	
+	<select id="findRoleProductTypeById" parameterType="int" resultType="int" flushCache="true" useCache="true">
+		SELECT count(id)
+		FROM role_product
+		where ROLE_ID = ${roleId}
+	</select>
+	
+	<delete id="deleteRoleProductType" parameterType="int">
+       delete from role_product where ROLE_ID = ${roleId}   
+	</delete>
+	
+	<insert id="addRoleProductTypeBatch" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		insert ignore into role_product (
+			ROLE_ID,
+			PRODUCT_TYPE_ID,
+			create_time
+		)   
+		values 
+		<foreach collection="productTypeIds" item ="productTypeId" separator=",">
+			(
+				#{roleId},
+				#{productTypeId},
+				now()
+			)
+		</foreach>
+	</insert>
+	
+	<insert id="addRoleProductType" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		insert ignore into role_product (
+			ROLE_ID,
+			PRODUCT_TYPE_ID,
+			create_time
+		)   
+		values 
+			(
+				#{roleId},
+				#{productTypeId},
+				now()
+			)
+	</insert>
+	
 	<select id="findUserIdByRoleId" parameterType="int" resultType="long" flushCache="true" useCache="true">
 		SELECT DISTINCT u_id FROM tb_role_user where r_id = ${roleId}
 	</select>

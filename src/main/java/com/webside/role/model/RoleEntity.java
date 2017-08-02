@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.type.Alias;
 
 import com.webside.base.basemodel.BaseEntity;
+import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.user.model.UserEntity;
 
 /**

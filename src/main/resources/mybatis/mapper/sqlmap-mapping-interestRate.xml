@@ -14,7 +14,7 @@
 		flushCache="true" useCache="true">
 		SELECT
 		<include refid="interest_rate_Column_List" />
-		from customer where INTEREST_RATE_ID >= (
+		from interest_rate where INTEREST_RATE_ID >= (
 			select INTEREST_RATE_ID from INTEREST_RATE order by INTEREST_RATE_ID limit ${start},1
 		)
 		limit ${pageNumber}  
@@ -24,8 +24,7 @@
 		flushCache="true" useCache="true">
 		SELECT
 		<include refid="interest_rate_Column_List" />
-		from customer 
-		order by CUSTOMER_ID desc
+		from interest_rate 
 	</select>
 	
 	<select id="findById" parameterType="long" resultMap="interestRateMap"

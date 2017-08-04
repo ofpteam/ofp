@@ -360,7 +360,7 @@ public class ProductController extends BaseController {
 		// 判断 request 是否有文件上传,即多部分请求
 		if (multipartResolver.isMultipart(request)) {
 			try {
-				String path = System.getProperty("catalina.home") ;
+				String path = System.getProperty("catalina.home");
 				// 转换成多部分request
 				MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
 				// 取得request中的所有文件名
@@ -378,7 +378,8 @@ public class ProductController extends BaseController {
 							String fileName = path + File.separator + myFileName;
 							File localFile = new File(fileName);
 							file.transferTo(localFile);
-							//productService.insertWithBlobs(productEntityWithBLOBs, basePath)
+							// productService.insertWithBlobs(productEntityWithBLOBs,
+							// basePath)
 						}
 					}
 				}

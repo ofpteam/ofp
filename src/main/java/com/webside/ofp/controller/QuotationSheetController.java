@@ -34,6 +34,7 @@ import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.ofp.model.QuotationSheetEntity;
 import com.webside.ofp.model.QuotationSubSheetEntity;
 import com.webside.ofp.service.CustomerService;
+import com.webside.ofp.service.ProductService;
 import com.webside.ofp.service.QuotationSheetService;
 import com.webside.user.model.UserEntity;
 import com.webside.user.service.UserService;
@@ -51,6 +52,9 @@ public class QuotationSheetController extends BaseController {
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private ProductService productService;
 
 	@RequestMapping("listUI.html")
 	public String listUI(Model model, HttpServletRequest request) {
@@ -193,6 +197,28 @@ public class QuotationSheetController extends BaseController {
 		return map;
 	}
 
+	@RequestMapping("findProductById.html")
+	@ResponseBody
+	public Object findProductById(ProductEntity productEntity) throws AjaxException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			// 设置创建者姓名
+			ProductEntity model = productService.findById((long)productEntity.getProductId());
+			if (model != null) {
+				map.put("success", Boolean.TRUE);
+				map.put("data", model);
+				map.put("message", "查询成功");
+			} else {
+				map.put("success", Boolean.FALSE);
+				map.put("data", null);
+				map.put("message", "没有查询到任何信息");
+			}
+		} catch (Exception e) {
+			throw new AjaxException(e);
+		}
+		return map;
+	}
+
 	/**
 	 * 校验提交的数据
 	 * 
@@ -264,30 +290,20 @@ public class QuotationSheetController extends BaseController {
 		jsonMap.put("iTotalRecords", 0);
 		jsonMap.put("iTotalDisplayRecords", 0);
 		List<QuotationSubSheetEntity> datas = new ArrayList<>();
-		/*QuotationSubSheetEntity model = null;
-		for (int i = 0; i < 57; i++) {
-			model = new QuotationSubSheetEntity();
-			ProductEntityWithBLOBs product = new ProductEntityWithBLOBs();
-			product.setProductId(i);
-			model.setProduct(product);
-			model.setBuyPrice((double) 2);
-			model.setUsdPrice((double) 20);
-			model.setUnit("件");
-			model.setTop((long) 22);
-			model.setBottom((long) 123);
-			model.setHeight((long) 33);
-			model.setWeight(18);
-			model.setVolume(7);
-			model.setPacking("packing");
-			model.setPackingRate((double) 51);
-			model.setNumber(2);
-			model.setPackNum(2);
-			model.setTotalcbm((double) 90);
-			 model.setGw((double) 2); 
-			model.setTotalGw((double) 56);
-
-			datas.add(model);
-		}*/
+		/*
+		 * QuotationSubSheetEntity model = null; for (int i = 0; i < 57; i++) {
+		 * model = new QuotationSubSheetEntity(); ProductEntityWithBLOBs product
+		 * = new ProductEntityWithBLOBs(); product.setProductId(i);
+		 * model.setProduct(product); model.setBuyPrice((double) 2);
+		 * model.setUsdPrice((double) 20); model.setUnit("件");
+		 * model.setTop((long) 22); model.setBottom((long) 123);
+		 * model.setHeight((long) 33); model.setWeight(18); model.setVolume(7);
+		 * model.setPacking("packing"); model.setPackingRate((double) 51);
+		 * model.setNumber(2); model.setPackNum(2); model.setTotalcbm((double)
+		 * 90); model.setGw((double) 2); model.setTotalGw((double) 56);
+		 * 
+		 * datas.add(model); }
+		 */
 		jsonMap.put("aaData", datas);
 		/*
 		 * String obj=JSON.toJSONString(jsonMap); logger.info(obj);

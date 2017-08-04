@@ -4,12 +4,12 @@
 			customers = JSON.parse(resp).data;
 			if (customers != null) {
 				$.each(customers, function(index, value) {
-					$(".chosen-select").append(
+					$("#customerSelect").append(
 							'<option value='+value.customerId+'>'
 									+ value.customerName + '</option>')
 				});
-				$(".chosen-select").chosen().change(function(option) {
-					var selectCustomerId = $(".chosen-select").val();
+				$("#customerSelect").chosen().change(function(option) {
+					var selectCustomerId = $("#customerSelect").val();
 					 $.each(customers, function(index,v) {
 						 if (v.customerId == selectCustomerId) {
 							$('#contacts').val(v.contacts);
@@ -22,23 +22,70 @@
 			}
 
 		});
-//
+$.post(sys.rootPath + "/product/allList.html", function(
+		resp) {
+	var result=JSON.parse(resp);
+	if(result.success==true){
+		$.each(result.data,function(index,value){
+			$("#productSelect").append('<option value='+value.productId+'>'
+					+value.productType.cnName+"-"+ value.cnName + '</option>');
+			/*样式会变？？？*/
+			/*$("#productSelect").chosen().change(function(option) {
+			});*/
+		});
+	}
+});
+//打开模态框
+$('#btnOpenModal').click(function(){
+	$('#myModal').modal('show');
+	
+});
+// 是否整数
+function isInteger(obj) {
+	 return obj%1 === 0
+}
+//添加商品明细
 $('#btnAddRows').click(function(){
-	  var arr = new Array();  
-      var $tree = $('#searchTree');  
-      arr = $tree.treeview('getChecked', 0);  
-      
-      debugger;
-	$.each(arr,function(i,v){
-		$('#example').dataTable().fnAddData(
-				[ v.productTypeEntity.buyPrice, v.productTypeEntity.usdPrice,v.productTypeEntity.unit,v.productTypeEntity.top,
-				  v.productTypeEntity.bottom,v.productTypeEntity.height,v.productTypeEntity.weight,
-				  v.productTypeEntity.volume,v.productTypeEntity.packing,0,0,0,0,0,0 ]);
-	});
+	if($('#productSelect').val()==""){
+		layer.msg('请选择商品', {icon : 0});
+		return false;
+	}
+	if($('#packingRate').val()==""||isNaN($('#packingRate').val())||Number($('#packingRate').val())<=0){
+		layer.msg('装箱率必须是数字', {icon : 0});
+		return false;
+	}
+	if($('#number').val()==""||!isInteger($('#number').val())||Number($('#number').val())<=0){
+		layer.msg('数量必须是正整数', {icon : 0});
+		return false;
+	}if($('#packNum').val()==""||!isInteger($('#packNum').val())||Number($('#packNum').val())<=0){
+		layer.msg('箱数必须是正整数', {icon : 0});
+		return false;
+	}
+	$.post(sys.rootPath+'/quotationsheet/findProductById.html',{productId:$('#productSelect').val()},function(resp){
+		debugger;
+		var v=JSON.parse(resp);
+		if(v.success==true){
+			$('#example').dataTable().fnAddData(
+							[ {productId:$('#productSelect').val(),buyPrice:v.data.buyPrice,
+								usdPrice:v.data.usdPrice, unit:v.data.unit, top:v.data.top,
+								bottom:v.data.bottom, height:v.data.height,
+								weight:v.data.weight, volume:v.data.volume,
+								packing:v.data.packing,packingRate:$('#packingRate').val(),
+								number:$('#number').val(), packNum:$('#packNum').val(), totalcbm:0,
+								totalGw:0 }]);
+			$('#myModal').modal('hide');
+		}else{
+			layer.msg(v.message, {icon : 0});
+		}
+	
+	
+	})
+	
+
 	
 });
 // 绑定数据到tree
-var url = sys.rootPath + "/producttype/list.html";
+/*var url = sys.rootPath + "/producttype/list.html";
 $.ajax({
 	type : "post",
 	url : url,
@@ -49,9 +96,9 @@ $.ajax({
 		$('#searchTree').treeview({
 			data :JSON.parse(data),
 			levels : 1,// 只展开1级
-		/*	onNodeSelected : function(event, data) {
+			onNodeSelected : function(event, data) {
 				selectId = data['id'];// 获取选中node的id
-			},*/
+			},
 			showCheckbox:true,  
 			onNodeChecked:nodeChecked ,  
 		    onNodeUnchecked:nodeUnchecked,
@@ -132,7 +179,7 @@ function uncheckAllSon(node){
         }
     }
 }
-
+*/
 
 
 var url= sys.rootPath+"/quotationsheet/getSubSheet.html";
@@ -162,15 +209,15 @@ var url= sys.rootPath+"/quotationsheet/getSubSheet.html";
 			                alert("错误代码：" + resp.status + "," + "错误信息：" + resp.readyState);
 			            }
 			        });
-			    }, "aoColumnDefs" :[
-				                         { "bVisible": false, "aTargets": [0] }/*第一列隐藏*/
-			                               ],
+			    }/*, "aoColumnDefs" :[
+				                         { "bVisible": false, "aTargets": [0] }第一列隐藏
+			                               ]*/,
 			      "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
 					/* Append the grade to the default row class name */
 					/*if (aData[4] == "A") {*/
-						$('td:eq(9)', nRow).html('<input type="number" value="'+aData.packingRate+'"></input>');
-						$('td:eq(10)', nRow).html('<input type="number" value="'+aData.number+'"></input>');
-						$('td:eq(11)', nRow).html('<input type="number" value="'+aData.packNum+'"></input>');
+						//$('td:eq(9)', nRow).html('<input type="number" value="'+aData.packingRate+'"></input>');
+						//$('td:eq(10)', nRow).html('<input type="number" value="'+aData.number+'"></input>');
+						//$('td:eq(11)', nRow).html('<input type="number" value="'+aData.packNum+'"></input>');
 					/*}*/
 				},                            
 		        "aoColumns": [
@@ -303,7 +350,8 @@ $('#quotationsheetForm').validate({
         	digits:true
         }*/,interestMonth:{
         	required : true,
-        	digits:true
+        	digits:true,
+        	range:[0,99]
         }
     },
     messages : {

@@ -31,6 +31,7 @@
 		validateForm();
 
 	});
+	
 </script>
 <div class="page-header">
 	<h1>
@@ -65,7 +66,7 @@
 					<div class="col-sm-3">
 						<div>
 							<select class="chosen-select" style="width: 100%"
-								data-placeholder="客户名称...">
+								id="customerSelect" data-placeholder="客户名称...">
 								<option value="">&nbsp;</option>
 							</select>
 						</div>
@@ -169,9 +170,8 @@
 						for="payMode">付款方式:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="payMode" id="payMode" type="text"
-								value="${quotationSheetEntity.payMode }"
+							<input class="form-control" name="payMode" id="payMode"
+								type="text" value="${quotationSheetEntity.payMode }"
 								placeholder="付款方式..." />
 						</div>
 					</div>
@@ -179,9 +179,8 @@
 						for="resource">起运地:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="resource" id="resource" type="text"
-								value="${quotationSheetEntity.resource }"
+							<input class="form-control" name="resource" id="resource"
+								type="text" value="${quotationSheetEntity.resource }"
 								placeholder="起运地..." />
 						</div>
 					</div>
@@ -192,10 +191,8 @@
 					<label class="col-sm-1 control-label no-padding-right" for="dest">目的地:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="dest" id="dest" type="text"
-								value="${quotationSheetEntity.dest }"
-								placeholder="目的地..." />
+							<input class="form-control" name="dest" id="dest" type="text"
+								value="${quotationSheetEntity.dest }" placeholder="目的地..." />
 						</div>
 					</div>
 
@@ -211,12 +208,10 @@
 						for="insuranceCost">保险费:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="insuranceCost" id="insuranceCost"
-								type="number" 
+							<input class="form-control" name="insuranceCost"
+								id="insuranceCost" type="number"
 								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
-								"${quotationSheetEntity.insuranceCost }"
-								placeholder="保险费..." />
+								${quotationSheetEntity.insuranceCost } placeholder="保险费..." />
 						</div>
 					</div>
 				</div>
@@ -227,9 +222,9 @@
 						for="foreignGreight">国外运费:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="foreignGreight" id="foreignGreight"
-								type="number" value="${quotationSheetEntity.foreignGreight }"
+							<input class="form-control" name="foreignGreight"
+								id="foreignGreight" type="number"
+								value="${quotationSheetEntity.foreignGreight }"
 								placeholder="国外运费..." />
 						</div>
 					</div>
@@ -238,8 +233,7 @@
 						for="homeGreight">国内运费:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="homeGreight" id="homeGreight"
+							<input class="form-control" name="homeGreight" id="homeGreight"
 								type="number" value="${quotationSheetEntity.homeGreight }"
 								placeholder="国内运费..." />
 						</div>
@@ -248,9 +242,9 @@
 						for="operationCost">管理费:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="operationCost" id="operationCost"
-								type="number" value="${quotationSheetEntity.operationCost }"
+							<input class="form-control" name="operationCost"
+								id="operationCost" type="number"
+								value="${quotationSheetEntity.operationCost }"
 								placeholder="管理费..." />
 						</div>
 					</div>
@@ -262,8 +256,7 @@
 						for="commission">佣金:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="commission" id="commission"
+							<input class="form-control" name="commission" id="commission"
 								type="number" value="${quotationSheetEntity.commission }"
 								placeholder="佣金..." />
 						</div>
@@ -272,8 +265,8 @@
 					<label class="col-sm-1 control-label no-padding-right" for="rebate">折扣:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="rebate" id="rebate" type="number" 
+							<input class="form-control" name="rebate" id="rebate"
+								type="number"
 								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
 								"${quotationSheetEntity.rebate }" placeholder="折扣..." />
 						</div>
@@ -282,8 +275,7 @@
 						for="totalCbm">CBM合计:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="totalCbm" id="totalCbm"
+							<input class="form-control" name="totalCbm" id="totalCbm"
 								type="number" value="${quotationSheetEntity.totalCbm }"
 								placeholder="CBM合计..." />
 						</div>
@@ -295,9 +287,9 @@
 					<label class="col-sm-1 control-label no-padding-right" for="profit">利润:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="profit" id="profit" type="number" readonly
-								value="${quotationSheetEntity.profit }" placeholder="利润..." />
+							<input class="form-control" name="profit" id="profit"
+								type="number" readonly value="${quotationSheetEntity.profit }"
+								placeholder="利润..." />
 						</div>
 					</div>
 
@@ -305,9 +297,8 @@
 						for="swapRate">换汇率:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="swapRate" id="swapRate" readonly
-								type="number" value="${quotationSheetEntity.swapRate }"
+							<input class="form-control" name="swapRate" id="swapRate"
+								readonly type="number" value="${quotationSheetEntity.swapRate }"
 								placeholder="换汇率..." />
 						</div>
 					</div>
@@ -315,9 +306,9 @@
 						for="interestMonth">计息月:</label>
 					<div class="col-sm-3">
 						<div>
-							<input
-								class="form-control" name="interestMonth" id="interestMonth"
-								type="number" value="${quotationSheetEntity.interestMonth }"
+							<input class="form-control" name="interestMonth"
+								id="interestMonth" type="number"
+								value="${quotationSheetEntity.interestMonth }"
 								placeholder="计息月..." />
 						</div>
 					</div>
@@ -329,7 +320,7 @@
 </div>
 <!-- 按钮触发模态框 -->
 <button class="btn btn-primary btn-lg" data-toggle="modal"
-	data-target="#myModal">添加商品</button>
+	id="btnOpenModal">添加商品</button>
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
@@ -341,7 +332,57 @@
 				<h4 class="modal-title" id="myModalLabel">选择商品</h4>
 			</div>
 			<div class="modal-body">
-				<div id="searchTree"></div>
+				<!-- <div id="searchTree"></div> -->
+				<div class="form-group">
+					<div class="row">
+						<label class="col-sm-2 control-label no-padding-right"
+							for="productSelect">商品名称:</label>
+						<div class="col-sm-10">
+							<div>
+								<select class="chosen-select" id="productSelect"
+									style="width: 100%;" data-placeholder="商品名称...">
+									<option value="">&nbsp;</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="row">
+						<label class="col-sm-2 control-label no-padding-right"
+							for="packingRate">装箱率:</label>
+						<div class="col-sm-10">
+							<div>
+								<input class="form-control" name="packingRate"
+									id="packingRate" type="number" placeholder="装箱率..." />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="row">
+						<label class="col-sm-2 control-label no-padding-right"
+							for="number">数量:</label>
+						<div class="col-sm-10">
+							<div>
+								<input class="form-control" name="number" id="number"
+									type="number" placeholder="数量..." />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="row">
+						<label class="col-sm-2 control-label no-padding-right"
+							for="packNum">箱数:</label>
+						<div class="col-sm-10">
+							<div>
+								<input class="form-control" name="packNum" id="packNum"
+									type="number" placeholder="箱数..." />
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
@@ -356,14 +397,14 @@
 <table id="example" class="display" cellspacing="0" width="100%">
 	<thead>
 		<tr>
-			<th>产品编码</th>
+			<th>商品编码</th>
 			<th>收购单价</th>
 			<th>美金单价</th>
 			<th>单位</th>
 			<th>Top(cm)</th>
 			<th>Bottom(cm)</th>
 			<th>Height(cm)</th>
-			<th>Weight(g)</th>
+			<th>Weight(g)</th> 	
 			<th>Volume(ml)</th>
 			<th>Packing(cm)</th>
 			<th>装箱率</th>

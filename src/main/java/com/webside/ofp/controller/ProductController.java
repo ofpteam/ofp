@@ -43,6 +43,7 @@ import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.ofp.service.ProductService;
 import com.webside.ofp.service.ProductTypeService;
 import com.webside.shiro.ShiroAuthenticationManager;
+import com.webside.user.model.UserEntity;
 import com.webside.util.PageUtil;
 import com.webside.dtgrid.model.Pager;
 import com.webside.dtgrid.util.ExportUtils;
@@ -92,6 +93,12 @@ public class ProductController extends BaseController {
 		if (parameters.size() < 0) {
 			parameters.put("CN_NAME", null);
 		}
+		
+		//获取当前登录用户
+		UserEntity user = ShiroAuthenticationManager.getUserEntity();
+		int roleId = user.getRole().getId().intValue();
+		parameters.put("roleId", roleId);
+		
 		// 3、判断是否是导出操作
 		if (pager.getIsExport()) {
 			if (pager.getExportAllData()) {

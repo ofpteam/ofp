@@ -114,6 +114,9 @@
     	p.IS_DELETE, p.CREATE_TIME, p.MODIFY_TIME, p.CREATE_USER, p.MODIFY_USER, p.DESCRIPTION,
 		<include refid="product_type_column_list" />
 		from product p left join product_type pt on p.PRODUCT_TYPE_ID = pt.PRODUCT_TYPE_ID 
+		<if test="roleId != null">
+		 	join role_product rp on rp.PRODUCT_TYPE_ID =  pt.PRODUCT_TYPE_ID and rp.ROLE_ID = #{roleId} 
+		</if> 
 		where p.is_delete = 0 
 		<include refid="where_clause" /> 
 		order by PRODUCT_ID desc
@@ -250,7 +253,10 @@
 		a.CN_NAME cnName,
 		b.CN_NAME AS typecn_name
 		FROM product a
-		LEFT JOIN product_type b ON a.PRODUCT_TYPE_ID = b.PRODUCT_TYPE_ID
+		LEFT JOIN product_type b ON a.PRODUCT_TYPE_ID = b.PRODUCT_TYPE_ID 
+		<if test="roleId != null">
+		 	join role_product rp on rp.PRODUCT_TYPE_ID =  b.PRODUCT_TYPE_ID and rp.ROLE_ID = #{roleId} 
+		</if> 
 		<where>
 			a.IS_DELETE = 0 AND b.IS_DELETE = 0 
 			<if test="CN_NAME !=null and CN_NAME != ''">

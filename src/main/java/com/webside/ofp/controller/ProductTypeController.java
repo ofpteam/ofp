@@ -32,6 +32,7 @@ import com.webside.ofp.service.ItemTypeService;
 import com.webside.ofp.service.ProductTypeService;
 import com.webside.role.model.RoleEntity;
 import com.webside.shiro.ShiroAuthenticationManager;
+import com.webside.user.model.UserEntity;
 import com.webside.util.PageUtil;
 import com.webside.dtgrid.model.Pager;
 
@@ -61,7 +62,10 @@ public class ProductTypeController extends BaseController {
 	@RequestMapping(value = "/list.html", method = RequestMethod.POST)
 	@ResponseBody
 	public Object list(String gridPager) throws Exception {
-		return productTypeService.findAllProductTypeTreeJsonString();
+		//获取当前登录用户
+		UserEntity user = ShiroAuthenticationManager.getUserEntity();
+		int roleId = user.getRole().getId().intValue();
+		return productTypeService.findAllProductTypeTreeJsonString(roleId);
 	}
 
 	@RequestMapping("addUI.html")

@@ -86,7 +86,7 @@ public class ProductTypeTest extends BaseJunit {
 	
 	@Test
 	public void testFindAllProductTypeTreeJsonString(){
-		String jsonString = productTypeService.findAllProductTypeTreeJsonString();
+		String jsonString = productTypeService.findAllProductTypeTreeJsonString(2);
 		System.out.println("json:" + jsonString);
 	}
 }

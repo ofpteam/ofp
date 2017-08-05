@@ -58,8 +58,8 @@
 
 
 	<!-- 项目发布到私服 -->
-	<distributionManagement>
-		<!-- 两个ID必须与 setting.xml中的<server><id>nexus-releases</id></server>保持一致 -->
+	<!-- <distributionManagement>
+		两个ID必须与 setting.xml中的<server><id>nexus-releases</id></server>保持一致
 		<repository>
 			<id>releases</id>
 			<url>http://localhost:8081/nexus/content/repositories/releases</url>
@@ -68,7 +68,7 @@
 			<id>snapshots</id>
 			<url>http://localhost:8081/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
-	</distributionManagement>
+	</distributionManagement> -->
 
 	<dependencies>
 		<!-- junit单元测试 -->
@@ -593,6 +593,13 @@
 					<path>/webside</path> <!-- 应用的部署位置 -->
 					<username>tomcat</username>  
                     <password>tomcat</password>
+                    <httpsPort>8443</httpsPort>
+                    <keystoreFile>D:\apache\apache-tomcat-8.0.21\bin\keystore.keystore</keystoreFile>
+        			<keystorePass>19840407</keystorePass>
+                    <compilerArguments>
+					   <verbose />
+					   <bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
+					</compilerArguments>
 				</configuration>
 			</plugin>
 

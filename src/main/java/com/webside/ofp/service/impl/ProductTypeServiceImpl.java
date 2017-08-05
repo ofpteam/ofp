@@ -20,8 +20,6 @@ import com.webside.ofp.service.ProductTypeService;
 public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, Long>implements ProductTypeService {
 	@Autowired
 	private ProductTypeMapper productTypeMapper;
-	@Autowired
-	private ProductMapper productMapper;
 
 	// 这句必须要加上。不然会报空指针异常，因为在实际调用的时候不是BaseMapper调用，而是具体的mapper
 	@Autowired
@@ -30,10 +28,11 @@ public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, L
 	}
 
 	@Override
-	public List<OfpTreeBean> findAllProductTypeTree() {
+	public List<OfpTreeBean> findAllProductTypeTree(int roleId) {
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		// 这里id为0必须设置为字符串，不然查询所有
 		parameter.put("parentId", "0");
+		parameter.put("roleId", roleId);
 		List<ProductTypeEntity> list = productTypeMapper.queryListAll(parameter);
 		List<OfpTreeBean> allOfpTrees = new ArrayList<OfpTreeBean>();
 		for (ProductTypeEntity productTypeEntity : list) {
@@ -44,16 +43,18 @@ public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, L
 			parameter.put("productTypeId", productTypeEntity.getProductTypeId());
 			subOfpTreeBean.setProductEntities(productMapper.queryListAll(parameter));*/
 			// 递归查找大类下所有子类型
-			this.findProDuctTypeTreeByParentId(subOfpTreeBean);
+			this.findProductTypeTreeByParentId(subOfpTreeBean,roleId);
 			allOfpTrees.add(subOfpTreeBean);
 		}
 		return allOfpTrees;
 	}
 
 	@Override
-	public void findProDuctTypeTreeByParentId(OfpTreeBean ofpTreeBean) {
+	public void findProductTypeTreeByParentId(OfpTreeBean ofpTreeBean,int roleId) {
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		parameter.put("parentId", ofpTreeBean.getId());
+		parameter.put("roleId", roleId);
+		
 		List<ProductTypeEntity> list = productTypeMapper.queryListAll(parameter);
 		if (list != null && list.size() > 0) {
 			List<OfpTreeBean> subProductTypeTreeBean = new ArrayList<OfpTreeBean>();
@@ -61,7 +62,7 @@ public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, L
 				OfpTreeBean subOfpTreeBean = new OfpTreeBean();
 				subOfpTreeBean.setText(productTypeEntity.getCnName());
 				subOfpTreeBean.setId(productTypeEntity.getProductTypeId());
-				this.findProDuctTypeTreeByParentId(subOfpTreeBean);
+				this.findProductTypeTreeByParentId(subOfpTreeBean,roleId);
 				subProductTypeTreeBean.add(subOfpTreeBean);
 			}
 			ofpTreeBean.setNodes(subProductTypeTreeBean);
@@ -69,8 +70,8 @@ public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, L
 	}
 
 	@Override
-	public String findAllProductTypeTreeJsonString() {
-		List<OfpTreeBean> ofpTreeBeans = this.findAllProductTypeTree();
+	public String findAllProductTypeTreeJsonString(int roleId) {
+		List<OfpTreeBean> ofpTreeBeans = this.findAllProductTypeTree(roleId);
 		String treeJsonString = JSON.toJSONString(ofpTreeBeans);
 		return treeJsonString;
 	}

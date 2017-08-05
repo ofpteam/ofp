@@ -12,9 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,12 +32,14 @@ import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
 import com.webside.ofp.common.util.StrUtil;
 import com.webside.ofp.model.CustomerEntity;
+import com.webside.ofp.model.InterestRateEntity;
 import com.webside.ofp.model.ProductEntity;
 import com.webside.ofp.model.ProductEntityWithBLOBs;
 import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.ofp.model.QuotationSheetEntity;
 import com.webside.ofp.model.QuotationSubSheetEntity;
 import com.webside.ofp.service.CustomerService;
+import com.webside.ofp.service.InterestRateService;
 import com.webside.ofp.service.ProductService;
 import com.webside.ofp.service.QuotationSheetService;
 import com.webside.user.model.UserEntity;
@@ -49,12 +55,13 @@ public class QuotationSheetController extends BaseController {
 
 	@Autowired
 	private QuotationSheetService quotationSheetService;
-
 	@Autowired
 	private CustomerService customerService;
 
 	@Autowired
 	private ProductService productService;
+	@Autowired
+	private InterestRateService interestRateService;
 
 	@RequestMapping("listUI.html")
 	public String listUI(Model model, HttpServletRequest request) {
@@ -123,6 +130,9 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping("addUI.html")
 	public String addUI(Model model) {
 		try {
+			Map<String, Object> parameter = new HashMap<String, Object>();
+			List<InterestRateEntity> interestRateEntities = interestRateService.queryListAll(parameter);
+			model.addAttribute("interestRateId", interestRateEntities.get(0).getRate());
 			return Common.BACKGROUND_PATH + "/ofp/quotationsheet/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
@@ -132,32 +142,103 @@ public class QuotationSheetController extends BaseController {
 
 	@RequestMapping("add.html")
 	@ResponseBody
-	public Object add(QuotationSheetEntity quotationSheetEntity,
-			List<QuotationSubSheetEntity> quotationSubSheetEntities) throws AjaxException {
+	public Object add(QuotationSheetEntity quotationSheetEntity, CustomerEntity customerEntity,
+			String quotationSubSheetEntities) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			StringBuilder sb = this.validateSubmitVal(quotationSheetEntity);
-			if (sb.length() == 0) { // 后台验证
-				int result = quotationSheetService.insert(quotationSheetEntity);
-				if (result == 1) {
+			List<QuotationSubSheetEntity> quotationSubSheetList = JSON.parseArray(quotationSubSheetEntities,
+					QuotationSubSheetEntity.class);
+			if (quotationSubSheetList != null && quotationSubSheetList.size() > 0) {
+				StringBuilder sb = this.validateSubmitVal(quotationSheetEntity);
+				if (sb.length() == 0) { // 后台验证
+					// quotationSheetEntity.setSubSheetList(quotationSubSheetList);
+					// 绑定客户信息
+					quotationSheetEntity.setCustomer(customerEntity);
+					// 获取当时的利率
+					InterestRateEntity interestRateEntity = interestRateService.findById((long) 1);
+					quotationSheetEntity.setInterestRateId(interestRateEntity.getRate().intValue());
+
+					Map<String, Double> mapResult = this.CalculationProfit(quotationSheetEntity, quotationSubSheetList,
+							interestRateEntity.getRate().intValue());
+					// 计算利润
+					double profit = mapResult.get("profit");
+					// 美金总额
+					double usPricteTotal = mapResult.get("usPricteTotal");
+					// 换汇率 = 利润 / 美金总额
+					double swapRate = profit / usPricteTotal;
+					quotationSheetEntity.setProfit(profit);
+					quotationSheetEntity.setSwapRate(swapRate);
+					quotationSheetService.insertSheetWithSubSheet(quotationSheetEntity);
+					// if (result == 1) {
 					map.put("success", Boolean.TRUE);
 					map.put("data", null);
 					map.put("message", "添加成功");
-				} else {
+					/*
+					 * } else { map.put("success", Boolean.FALSE);
+					 * map.put("data", null); map.put("message", "添加失败"); }
+					 */
+				} else {// 校验错误
 					map.put("success", Boolean.FALSE);
 					map.put("data", null);
-					map.put("message", "添加失败");
+					map.put("message", "添加失败" + sb.toString());
 				}
-			} else {// 校验错误
+			} else {
 				map.put("success", Boolean.FALSE);
 				map.put("data", null);
-				map.put("message", "添加失败" + sb.toString());
+				map.put("message", "请添加至少一种商品");
 			}
 
 		} catch (ServiceException e) {
 			throw new AjaxException(e);
 		}
 		return map;
+	}
+
+	/**
+	 * 计算利润
+	 * 
+	 * @return
+	 */
+	private Map<String, Double> CalculationProfit(QuotationSheetEntity quotationSheetEntity,
+			List<QuotationSubSheetEntity> quotationSubSheetEntities, Integer Rate) {
+		Map<String, Double> mapResult = new HashMap<>();
+		InterestRateEntity interestRateEntity = interestRateService.findById((long) 2);
+		double usPricteTotal = 0;// 美金总额 = 美金单价 * 数量
+		double buyPriceTotal = 0;// 收购总价
+		double profit = 0;// 利润 = 美金总额*汇率 - 收购单价*数量 +
+		// （收购单价*数量 ） /（1+增值税率）*退税率 – 美金总额*管理费率 – 国外运费*汇率 – 国内运费 –
+		// 美金总额 * 保险费率 –美金总额*折扣率 – 收购单价 * 数量 * 计息月 * 利率-佣金
+
+		for (QuotationSubSheetEntity quotationSubSheetEntity : quotationSubSheetEntities) {
+			usPricteTotal += quotationSubSheetEntity.getUsdPrice() * quotationSubSheetEntity.getNumber();
+			buyPriceTotal += quotationSubSheetEntity.getBuyPrice() * quotationSubSheetEntity.getNumber();
+		}
+		// 美金总额
+		double p1 = usPricteTotal;
+		// 佣金=佣金率*美金总额(默认0)
+		double p2 = quotationSheetEntity.getCommission() * p1 / 100;
+		// 保费=保险费率*美金总额(默认0)
+		double p3 = quotationSheetEntity.getInsuranceCost() * p1 / 100;
+		// 管理费
+		double p4 = quotationSheetEntity.getOperationCost() / 100;
+		// 国外运费
+		double p5 = quotationSheetEntity.getForeignGreight();
+		// 折扣率
+		double p6 = quotationSheetEntity.getRebate();
+		// 汇率
+		double p7 = Rate;
+		// 收购单价*数量
+		double p8 = buyPriceTotal;
+		// （收购单价*数量 ） /（1+增值税率）*退税率
+		double p9 = buyPriceTotal / ((1 + interestRateEntity.getRate().intValue() / 100) * 13);
+		// 国外运费
+		double p10 = quotationSheetEntity.getHomeGreight();
+		// 收购单价 * 数量 * 计息月 * 利率
+		double p11 = buyPriceTotal * quotationSheetEntity.getInterestMonth() * Rate;
+		profit = (p1 - p2 - p3 - p4 - p5 - p6) * p7 - p8 + p9 - p10 - p11;
+		mapResult.put("profit", profit);
+		mapResult.put("usPricteTotal", usPricteTotal);
+		return mapResult;
 	}
 
 	@RequestMapping("editUI.html")
@@ -203,7 +284,7 @@ public class QuotationSheetController extends BaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			// 设置创建者姓名
-			ProductEntity model = productService.findById((long)productEntity.getProductId());
+			ProductEntity model = productService.findById((long) productEntity.getProductId());
 			if (model != null) {
 				map.put("success", Boolean.TRUE);
 				map.put("data", model);
@@ -275,6 +356,14 @@ public class QuotationSheetController extends BaseController {
 		}
 		return sb;
 	}
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+	}
+	// true:允许输入空值，false:不能为空值
 
 	/**
 	 * ajax获取报价单明星

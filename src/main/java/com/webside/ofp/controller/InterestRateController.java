@@ -90,7 +90,7 @@ public class InterestRateController extends BaseController {
 
 	@RequestMapping("edit.html")
 	@ResponseBody
-	public Object update(InterestRateEntity interestRateEntity) throws AjaxException {
+	public Object edit(InterestRateEntity interestRateEntity) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			if (interestRateEntity.getRate() == null || interestRateEntity.getRate() <= 0) {

@@ -33,17 +33,16 @@
 	});
 </script>
 <style type="text/css">
-input.has-error {
+/* input.has-error {
 	border: 1px solid red !important;
 }
-
+ */
 .help-block {
 	padding-left: 16px;
 	padding-bottom: 2px;
 	font-weight: bold;
 	color: red;
 }
-
 </style>
 <div class="page-header">
 	<h1>
@@ -269,7 +268,8 @@ input.has-error {
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="commission" id="commission"
-								type="number" value="${quotationSheetEntity.commission }"
+							value=<c:if test="${empty commission}">0</c:if>
+								"${quotationSheetEntity.commission }"
 								placeholder="佣金率..." />
 						</div>
 					</div>
@@ -323,6 +323,40 @@ input.has-error {
 								value="${quotationSheetEntity.interestMonth }"
 								placeholder="计息月..." />
 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right"
+						for="taxRebateRate">退税率:</label>
+					<div class="col-sm-3">
+						<div>
+							<input class="form-control" name="taxRebateRate"
+								id="taxRebateRate"
+								value=<c:if test="${empty taxRebateRate}">0</c:if>
+								"${quotationSheetEntity.taxRebateRate }"
+								 type="number"
+								placeholder="退税率..." />
+						</div>
+					</div>
+
+					<label class="col-sm-1 control-label no-padding-right"
+						for="valueAddedTaxRate">增值税率:</label>
+					<div class="col-sm-3">
+						<div>
+							<input class="form-control" name="valueAddedTaxRate"
+								id="valueAddedTaxRate" type="number"
+								value=<c:if test="${empty valueAddedTaxRate}">17</c:if>
+								"${quotationSheetEntity.valueAddedTaxRate }"
+								placeholder="换汇率..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="rate">利率:</label>
+					<div class="col-sm-3">
+						<input class="form-control" name="rate" id="rate" type="number"
+							value="${interestRateEntity.rate }" placeholder="利率..." />
 					</div>
 				</div>
 			</div>

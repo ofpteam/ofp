@@ -130,9 +130,6 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping("addUI.html")
 	public String addUI(Model model) {
 		try {
-			Map<String, Object> parameter = new HashMap<String, Object>();
-			List<InterestRateEntity> interestRateEntities = interestRateService.queryListAll(parameter);
-			model.addAttribute("interestRateId", interestRateEntities.get(0).getRate());
 			return Common.BACKGROUND_PATH + "/ofp/quotationsheet/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
@@ -143,7 +140,7 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping("add.html")
 	@ResponseBody
 	public Object add(QuotationSheetEntity quotationSheetEntity, CustomerEntity customerEntity,
-			String quotationSubSheetEntities) throws AjaxException {
+			String quotationSubSheetEntities, long rate) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			List<QuotationSubSheetEntity> quotationSubSheetList = JSON.parseArray(quotationSubSheetEntities,
@@ -154,12 +151,9 @@ public class QuotationSheetController extends BaseController {
 					// quotationSheetEntity.setSubSheetList(quotationSubSheetList);
 					// 绑定客户信息
 					quotationSheetEntity.setCustomer(customerEntity);
-					// 获取当时的利率
-					InterestRateEntity interestRateEntity = interestRateService.findById((long) 1);
-					quotationSheetEntity.setInterestRateId(interestRateEntity.getRate().intValue());
-
+					// quotationSheetEntity.setInterestRateId(1);
 					Map<String, Double> mapResult = this.CalculationProfit(quotationSheetEntity, quotationSubSheetList,
-							interestRateEntity.getRate().intValue());
+							rate);
 					// 计算利润
 					double profit = mapResult.get("profit");
 					// 美金总额
@@ -168,15 +162,23 @@ public class QuotationSheetController extends BaseController {
 					double swapRate = profit / usPricteTotal;
 					quotationSheetEntity.setProfit(profit);
 					quotationSheetEntity.setSwapRate(swapRate);
-					quotationSheetService.insertSheetWithSubSheet(quotationSheetEntity);
-					// if (result == 1) {
-					map.put("success", Boolean.TRUE);
-					map.put("data", null);
-					map.put("message", "添加成功");
-					/*
-					 * } else { map.put("success", Boolean.FALSE);
-					 * map.put("data", null); map.put("message", "添加失败"); }
-					 */
+					quotationSheetEntity.setSubSheetList(quotationSubSheetList);
+					int rersult = quotationSheetService.insertSheetWithSubSheet(quotationSheetEntity);
+					if (rersult > 1) {
+						InterestRateEntity interestRateEntity = new InterestRateEntity();
+						interestRateEntity.setInterestRateId(quotationSheetEntity.getQuotationSheetId());
+						interestRateEntity.setRate(rate);
+						interestRateService.insert(interestRateEntity);
+						map.put("success", Boolean.TRUE);
+						map.put("data", null);
+						map.put("message", "添加成功");
+
+					} else {
+						map.put("success", Boolean.FALSE);
+						map.put("data", null);
+						map.put("message", "添加失败");
+					}
+
 				} else {// 校验错误
 					map.put("success", Boolean.FALSE);
 					map.put("data", null);
@@ -200,9 +202,8 @@ public class QuotationSheetController extends BaseController {
 	 * @return
 	 */
 	private Map<String, Double> CalculationProfit(QuotationSheetEntity quotationSheetEntity,
-			List<QuotationSubSheetEntity> quotationSubSheetEntities, Integer Rate) {
+			List<QuotationSubSheetEntity> quotationSubSheetEntities, Long Rate) {
 		Map<String, Double> mapResult = new HashMap<>();
-		InterestRateEntity interestRateEntity = interestRateService.findById((long) 2);
 		double usPricteTotal = 0;// 美金总额 = 美金单价 * 数量
 		double buyPriceTotal = 0;// 收购总价
 		double profit = 0;// 利润 = 美金总额*汇率 - 收购单价*数量 +
@@ -216,11 +217,11 @@ public class QuotationSheetController extends BaseController {
 		// 美金总额
 		double p1 = usPricteTotal;
 		// 佣金=佣金率*美金总额(默认0)
-		double p2 = quotationSheetEntity.getCommission() * p1 / 100;
+		double p2 = (quotationSheetEntity.getCommission() * p1) / 100;
 		// 保费=保险费率*美金总额(默认0)
-		double p3 = quotationSheetEntity.getInsuranceCost() * p1 / 100;
+		double p3 = (quotationSheetEntity.getInsuranceCost() * p1) / 100;
 		// 管理费
-		double p4 = quotationSheetEntity.getOperationCost() / 100;
+		double p4 = (quotationSheetEntity.getOperationCost()) / 100;
 		// 国外运费
 		double p5 = quotationSheetEntity.getForeignGreight();
 		// 折扣率
@@ -230,7 +231,8 @@ public class QuotationSheetController extends BaseController {
 		// 收购单价*数量
 		double p8 = buyPriceTotal;
 		// （收购单价*数量 ） /（1+增值税率）*退税率
-		double p9 = buyPriceTotal / ((1 + interestRateEntity.getRate().intValue() / 100) * 13);
+		double p9 = (buyPriceTotal * quotationSheetEntity.getTaxRebateRate())
+				/ ((1 + (quotationSheetEntity.getValueAddedTaxRate() / 100)));
 		// 国外运费
 		double p10 = quotationSheetEntity.getHomeGreight();
 		// 收购单价 * 数量 * 计息月 * 利率
@@ -353,6 +355,12 @@ public class QuotationSheetController extends BaseController {
 		}
 		if (quotationSheetEntity.getInterestMonth() == null || quotationSheetEntity.getInterestMonth() < 0) {
 			sb.append("计息月不能为空且大于0,");
+		}
+		if (quotationSheetEntity.getValueAddedTaxRate() == null || quotationSheetEntity.getValueAddedTaxRate() < 0) {
+			sb.append("增值税率不能为空且大于0,");
+		}
+		if (quotationSheetEntity.getTaxRebateRate() == null || quotationSheetEntity.getTaxRebateRate() < 0) {
+			sb.append("退税率不能为空且大于0,");
 		}
 		return sb;
 	}

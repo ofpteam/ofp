@@ -349,10 +349,18 @@ $('#quotationsheetForm').validate({
         	required : true,
         	digits:true,
         	range:[0,99]
-        },swapRate:{
+        },valueAddedTaxRate:{
         	required : true,
-        	digits:true,
-        	range:[0,99]
+        	number:true
+        },taxRebateRate:{
+        	required : true,
+        	number:true
+        },exchangeRate:{
+        	required : true,
+        	number:true
+        },rate:{
+        	required : true,
+        	digits:true
         }
     },
     messages : {

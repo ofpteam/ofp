@@ -23,7 +23,7 @@ public interface QuotationSheetService extends BaseService<QuotationSheetEntity,
 	 * 插入报价单信息，包括子单信息
 	 * @param quotationSheetEntity
 	 */
-	public void insertSheetWithSubSheet(QuotationSheetEntity quotationSheetEntity);
+	public int insertSheetWithSubSheet(QuotationSheetEntity quotationSheetEntity);
 	
 	/**
 	 * 根据报价单id查找报价单信息，包括报价子单关联的产品信息

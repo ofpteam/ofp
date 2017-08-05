@@ -35,6 +35,8 @@
     <result column="CREATE_USER" jdbcType="INTEGER" property="createUser" />
     <result column="MODIFY_USER" jdbcType="INTEGER" property="modifyUser" />
     <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="TAX_REBATE_RATE" jdbcType="DECIMAL" property="taxRebateRate" />
+    <result column="VALUE_ADDED_TAX_RATE" jdbcType="DECIMAL" property="valueAddedTaxRate" />
     <association property="customer" column="CUSTOMER_ID" javaType="com.webside.ofp.model.CustomerEntity">
     	<id column="CUSTOMER_ID" jdbcType="INTEGER" property="customerId" />
 		<result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName" />
@@ -74,7 +76,7 @@
     qs.PRICE_TERMS, qs.CURRENCY, qs.EXCHANGE_RATE, qs.EXPIRATION_DATE, qs.PAY_MODE, qs.RESOURCE, DEST, 
     qs.DELIVERY_DATE, qs.INSURANCE_COST, qs.FOREIGN_GREIGHT, qs.HOME_GREIGHT, qs.OPERATION_COST, qs.COMMISSION, 
     qs.REBATE, qs.TOTAL_CBM, qs.PROFIT, qs.SWAP_RATE, qs.INTEREST_MONTH, qs.IS_DELETE, qs.CREATE_TIME, qs.MODIFY_TIME, 
-    qs.CREATE_USER, qs.MODIFY_USER, qs.DESCRIPTION
+    qs.CREATE_USER, qs.MODIFY_USER, qs.DESCRIPTION,qs.TAX_REBATE_RATE,qs.VALUE_ADDED_TAX_RATE
   </sql>
   
   <sql id="quotation_sub_sheet_column_list">
@@ -178,7 +180,7 @@
       HOME_GREIGHT, OPERATION_COST, COMMISSION, 
       REBATE, TOTAL_CBM, PROFIT, 
       SWAP_RATE, INTEREST_MONTH, IS_DELETE, 
-      CREATE_TIME, CREATE_USER, DESCRIPTION)
+      CREATE_TIME, CREATE_USER, DESCRIPTION,TAX_REBATE_RATE,VALUE_ADDED_TAX_RATE)
     values (#{customer.customerId,jdbcType=INTEGER}, #{interestRateId,jdbcType=INTEGER}, 
       #{quotationSheetCode,jdbcType=VARCHAR}, #{quotationDate,jdbcType=DATE}, #{priceTerms,jdbcType=VARCHAR}, 
       #{currency,jdbcType=VARCHAR}, #{exchangeRate,jdbcType=DECIMAL}, #{expirationDate,jdbcType=TIMESTAMP}, 
@@ -187,7 +189,8 @@
       #{homeGreight,jdbcType=DECIMAL}, #{operationCost,jdbcType=DECIMAL}, #{commission,jdbcType=DECIMAL}, 
       #{rebate,jdbcType=DECIMAL}, #{totalCbm,jdbcType=DECIMAL}, #{profit,jdbcType=DECIMAL}, 
       #{swapRate,jdbcType=DECIMAL}, #{interestMonth,jdbcType=INTEGER}, 0, 
-      now(), #{createUser,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR})
+      now(), #{createUser,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}
+      ,#{taxRebateRate,jdbcType=DECIMAL}, #{valueAddedTaxRate,jdbcType=DECIMAL})
   </insert>
   
   <update id="update" parameterType="com.webside.ofp.model.QuotationSheetEntity">
@@ -221,7 +224,9 @@
       INTEREST_MONTH = #{interestMonth,jdbcType=INTEGER},
       MODIFY_TIME = now(),
       MODIFY_USER = #{modifyUser,jdbcType=INTEGER},
-      DESCRIPTION = #{description,jdbcType=VARCHAR}
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      TAX_REBATE_RATE = #{taxRebateRate,jdbcType=DECIMAL},
+      VALUE_ADDED_TAX_RATE = #{valueAddedTaxRate,jdbcType=DECIMAL}
     where QUOTATION_SHEET_ID = #{quotationSheetId,jdbcType=INTEGER}
   </update>
 </mapper>

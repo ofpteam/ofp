@@ -54,12 +54,12 @@ public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEnt
 		quotationSubSheetMapper.insertBatch(quotationSheetEntity.getSubSheetList());
 	}
 	
-	public void insertSheetWithSubSheet(QuotationSheetEntity quotationSheetEntity){
+	public int insertSheetWithSubSheet(QuotationSheetEntity quotationSheetEntity){
 		int i = quotationSheetMapper.insert(quotationSheetEntity);
 		for(QuotationSubSheetEntity quotationSubSheetEntity:quotationSheetEntity.getSubSheetList()){
 			quotationSubSheetEntity.setQuotationSheetId(quotationSheetEntity.getQuotationSheetId());
 		}
-		quotationSubSheetMapper.insertBatch(quotationSheetEntity.getSubSheetList());
+		return quotationSubSheetMapper.insertBatch(quotationSheetEntity.getSubSheetList());
 	}
 	
 	@Override

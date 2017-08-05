@@ -62,7 +62,6 @@ $('#btnAddRows').click(function(){
 		return false;
 	}
 	$.post(sys.rootPath+'/quotationsheet/findProductById.html',{productId:$('#productSelect').val()},function(resp){
-		debugger;
 		var v=JSON.parse(resp);
 		if(v.success==true){
 			$('#example').dataTable().fnAddData(
@@ -74,6 +73,7 @@ $('#btnAddRows').click(function(){
 								number:$('#number').val(), packNum:$('#packNum').val(), totalcbm:0,
 								totalGw:0 }]);
 			$('#myModal').modal('hide');
+		
 		}else{
 			layer.msg(v.message, {icon : 0});
 		}
@@ -309,12 +309,9 @@ $('#quotationsheetForm').validate({
         },currency:{
         	required : true,
         	maxlength:20
-        },exchangeRate:{
-        	required : true,
-        	digits:true
         },expirationDate:{
         	required : true,
-        	dateISO:true
+        	digits:true
         },payMode:{
         	required : true,
         	maxlength:20
@@ -326,29 +323,33 @@ $('#quotationsheetForm').validate({
         	maxlength:50
         },deliveryDate:{
         	required : true,
-        	dateISO:true
+        	digits:true
         },insuranceCost:{
         	required : true,
-        	digits:true
+        	number:true
         },foreignGreight:{
         	required : true,
-        	digits:true
+        	number:true
         },homeGreight:{
         	required : true,
-        	digits:true
+        	number:true
         },operationCost:{
         	required : true,
-        	digits:true
+        	number:true
         },commission:{
         	required : true,
-        	digits:true
+        	number:true
         },rebate:{
         	required : true,
-        	digits:true
+        	number:true
         }/*,totalCbm:{计算的出来
         	required : true,
         	digits:true
         }*/,interestMonth:{
+        	required : true,
+        	digits:true,
+        	range:[0,99]
+        },swapRate:{
         	required : true,
         	digits:true,
         	range:[0,99]
@@ -378,14 +379,24 @@ $('#quotationsheetForm').validate({
             error.insertAfter(element.parent());
     },
     submitHandler : function(form) {
-        var userId = $("#userId").val();
-        var url = "";
-        if (userId != undefined) {
-            url = '/quotationsheet/edit.html';
-        } else {
-            url = '/quotationsheet/add.html';
-        }
-        webside.common.commit('quotationsheetForm', url, '/quotationsheet/listUI.html');
+        var quotationSheetId = $("#quotationSheetId").val();
+    	var items=$('#example').dataTable().fnGetData();
+    	if(items.length>0){
+    		debugger;
+    		$('#quotationSubSheetEntities').val(JSON.stringify(items));
+    		$('#quotationsheetForm').serializeArray();
+    	     var url = "";
+    	        if (quotationSheetId != undefined) {
+    	        	url ='/quotationsheet/edit.html';
+    	        } else {
+    	        	url = '/quotationsheet/add.html';
+    	        }
+    	       webside.common.commit('quotationsheetForm', url, '/quotationsheet/listUI.html');
+    	}else{
+    		layer.msg('请添加至少一种商品', {icon : 0});
+    		return false;
+    	}
+   
     }
 });
 }

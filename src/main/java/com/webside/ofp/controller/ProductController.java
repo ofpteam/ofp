@@ -93,12 +93,12 @@ public class ProductController extends BaseController {
 		if (parameters.size() < 0) {
 			parameters.put("CN_NAME", null);
 		}
-		
-		//获取当前登录用户
+
+		// 获取当前登录用户
 		UserEntity user = ShiroAuthenticationManager.getUserEntity();
 		int roleId = user.getRole().getId().intValue();
 		parameters.put("roleId", roleId);
-		
+
 		// 3、判断是否是导出操作
 		if (pager.getIsExport()) {
 			if (pager.getExportAllData()) {

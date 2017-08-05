@@ -1,3 +1,7 @@
+jQuery.validator.addMethod("positiveinteger", function(value, element) {
+   var aint=parseInt(value);	
+    return aint>0&& (aint+"")==value;   
+  }, "Please enter a valid number.");   
 //提交
 function validateForm(){
 $('#interestRateForm').validate({
@@ -9,10 +13,13 @@ $('#interestRateForm').validate({
     rules : {
     	rate : {
             required : true,
-            number:true
+            positiveinteger:true
         }
     },
     messages : {
+    	rate:{
+    		 positiveinteger:'必须输入正整数'
+    	}
     },
     highlight : function(e) {
         $(e).removeClass('has-info').addClass('has-error');

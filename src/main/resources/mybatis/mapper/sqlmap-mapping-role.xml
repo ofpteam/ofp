@@ -226,6 +226,12 @@
 		where ROLE_ID = ${roleId}
 	</select>
 	
+	<select id="findRoleProductTypesById" parameterType="int" resultType="int" flushCache="true" useCache="true">
+		SELECT count(id)
+		FROM role_product
+		where ROLE_ID = ${roleId}
+	</select>
+	
 	<delete id="deleteRoleProductType" parameterType="int">
        delete from role_product where ROLE_ID = ${roleId}   
 	</delete>

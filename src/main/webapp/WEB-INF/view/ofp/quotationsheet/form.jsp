@@ -31,8 +31,20 @@
 		validateForm();
 
 	});
-	
 </script>
+<style type="text/css">
+input.has-error {
+	border: 1px solid red !important;
+}
+
+.help-block {
+	padding-left: 16px;
+	padding-bottom: 2px;
+	font-weight: bold;
+	color: red;
+}
+
+</style>
 <div class="page-header">
 	<h1>
 		<c:if test="${empty quotationSheetEntity}">
@@ -60,13 +72,15 @@
 					value="${quotationSheetEntity.quotationSheetId }">
 			</c:if>
 			<div class="form-group">
+				<input type="hidden" name="quotationSubSheetEntities"
+					id="quotationSubSheetEntities" />
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="customerName">客户名称:</label>
 					<div class="col-sm-3">
 						<div>
 							<select class="chosen-select" style="width: 100%"
-								id="customerSelect" data-placeholder="客户名称...">
+								name="customerId" id="customerSelect" data-placeholder="客户名称...">
 								<option value="">&nbsp;</option>
 							</select>
 						</div>
@@ -76,8 +90,7 @@
 						for="contacts">联系人:</label>
 					<div class="col-sm-3">
 						<div>
-							<input readonly class="form-control" name="contacts"
-								id="contacts" type="text"
+							<input readonly class="form-control" id="contacts" type="text"
 								value="${quotationSheetEntity.customer.contacts }"
 								placeholder="联系人..." />
 						</div>
@@ -86,8 +99,7 @@
 						for="telephone">联系电话:</label>
 					<div class="col-sm-3">
 						<div>
-							<input class="form-control" readonly name="telephone"
-								id="telephone" type="text"
+							<input class="form-control" readonly id="telephone" type="text"
 								value="${quotationSheetEntity.customer.telephone }"
 								placeholder="联系电话..." />
 						</div>
@@ -128,9 +140,8 @@
 						for="country">国家:</label>
 					<div class="col-sm-3">
 						<div>
-							<input readonly class="form-control" name="country" id="country"
-								type="text" value="${quotationSheetEntity.country }"
-								placeholder="国家..." />
+							<input readonly class="form-control" id="country" type="text"
+								value="${quotationSheetEntity.country }" placeholder="国家..." />
 						</div>
 					</div>
 
@@ -162,7 +173,7 @@
 						<div>
 							<input type="text" id="expirationDate" name="expirationDate"
 								value="${quotationSheetEntity.expirationDate }"
-								class="datepicker col-sm-12" placeholder="有效期限" />
+								class="form-control" type="number" placeholder="有效期限" />
 						</div>
 					</div>
 
@@ -201,17 +212,17 @@
 					<div class="col-sm-3">
 						<div>
 							<input type="number" id="deliveryDate" name="deliveryDate"
-								class="datepicker col-sm-12" placeholder="交货期限..." />
+								class="form-control" placeholder="交货期限..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="insuranceCost">保险费:</label>
+						for="insuranceCost">保险费率:</label>
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="insuranceCost"
 								id="insuranceCost" type="number"
 								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
-								${quotationSheetEntity.insuranceCost } placeholder="保险费..." />
+								${quotationSheetEntity.insuranceCost } placeholder="保险费率..." />
 						</div>
 					</div>
 				</div>
@@ -244,7 +255,8 @@
 						<div>
 							<input class="form-control" name="operationCost"
 								id="operationCost" type="number"
-								value="${quotationSheetEntity.operationCost }"
+								value=<c:if test="${empty quotationSheetEntity}">1.5</c:if>
+								"${quotationSheetEntity.operationCost }" 
 								placeholder="管理费..." />
 						</div>
 					</div>
@@ -253,22 +265,22 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="commission">佣金:</label>
+						for="commission">佣金率:</label>
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="commission" id="commission"
 								type="number" value="${quotationSheetEntity.commission }"
-								placeholder="佣金..." />
+								placeholder="佣金率..." />
 						</div>
 					</div>
 
-					<label class="col-sm-1 control-label no-padding-right" for="rebate">折扣:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="rebate">折扣率:</label>
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="rebate" id="rebate"
 								type="number"
 								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
-								"${quotationSheetEntity.rebate }" placeholder="折扣..." />
+								"${quotationSheetEntity.rebate }" placeholder="折扣率..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
@@ -276,7 +288,7 @@
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="totalCbm" id="totalCbm"
-								type="number" value="${quotationSheetEntity.totalCbm }"
+								readonly type="number" value="${quotationSheetEntity.totalCbm }"
 								placeholder="CBM合计..." />
 						</div>
 					</div>
@@ -288,7 +300,7 @@
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="profit" id="profit"
-								type="number" readonly value="${quotationSheetEntity.profit }"
+								value="${quotationSheetEntity.profit }" type="number" readonly
 								placeholder="利润..." />
 						</div>
 					</div>
@@ -353,8 +365,8 @@
 							for="packingRate">装箱率:</label>
 						<div class="col-sm-10">
 							<div>
-								<input class="form-control" name="packingRate"
-									id="packingRate" type="number" placeholder="装箱率..." />
+								<input class="form-control" name="packingRate" id="packingRate"
+									type="number" placeholder="装箱率..." />
 							</div>
 						</div>
 					</div>
@@ -404,7 +416,7 @@
 			<th>Top(cm)</th>
 			<th>Bottom(cm)</th>
 			<th>Height(cm)</th>
-			<th>Weight(g)</th> 	
+			<th>Weight(g)</th>
 			<th>Volume(ml)</th>
 			<th>Packing(cm)</th>
 			<th>装箱率</th>

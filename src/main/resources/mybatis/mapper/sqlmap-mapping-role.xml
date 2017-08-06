@@ -3,7 +3,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.webside.role.mapper.RoleMapper">
 	<!--mybatis ehcache缓存配置,以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 -->
-	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/> 
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
 	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
 
 	<sql id="roleAttributes">
@@ -16,7 +16,7 @@
 		r_update_time
 	</sql>
 
-	<resultMap id="roleMap" type="com.webside.role.model.RoleEntity">
+<resultMap id="roleMap" type="com.webside.role.model.RoleEntity">
 		<id property="id" column="r_id"/>
 		<result property="name" column="r_name"/>
 		<result property="key" column="r_key"/>
@@ -39,18 +39,41 @@
 		</collection>
 	</resultMap>
 	
-	<select id="queryListByPage" parameterType="map" resultMap="roleMap" flushCache="true" useCache="true">
-		<!-- 
-			偏移offset较小的时候，直接使用limit较优；
-			偏移offset较大的时候，使用下面子查询的方式较优；
-			具体可以根据业务情况选择 
-		-->
-		<!-- 
-		select <include refid="userAttributes" /> from tb_user Where u_id >=(
-		select u_id from tb_user order by u_id limit ${start},1
-		) limit ${pageNumber}
-		 -->
-		SELECT 
+
+
+	<select id="getProductsByRoleId" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		<!-- 偏移offset较小的时候，直接使用limit较优； 偏移offset较大的时候，使用下面子查询的方式较优； 具体可以根据业务情况选择 -->
+		<!-- select <include refid="userAttributes" /> from tb_user Where u_id 
+			>=( select u_id from tb_user order by u_id limit ${start},1 ) limit ${pageNumber} -->
+		SELECT
+		ru.Id,
+		ru.create_time,
+		u.product_Type_Id,
+		u.cn_name,
+		u.en_Name,
+		u.parent_Id,
+		u.level,
+		u.description,
+		u.is_Delete
+		FROM
+		role_product ru
+		LEFT
+		JOIN tb_role r ON r.r_id = ru.ROLE_ID
+		LEFT JOIN product_type u ON
+		ru.PRODUCT_TYPE_ID = u.PRODUCT_TYPE_ID
+		where u.IS_DELETE=0
+		<if test="r_id != null and r_id != ''">
+			and r.r_id=#{r_id}
+		</if>
+	</select>
+
+	<select id="queryListByPage" parameterType="map" resultMap="roleMap"
+		flushCache="true" useCache="true">
+		<!-- 偏移offset较小的时候，直接使用limit较优； 偏移offset较大的时候，使用下面子查询的方式较优； 具体可以根据业务情况选择 -->
+		<!-- select <include refid="userAttributes" /> from tb_user Where u_id 
+			>=( select u_id from tb_user order by u_id limit ${start},1 ) limit ${pageNumber} -->
+		SELECT
 		r.r_id,
 		r.r_name,
 		r.r_key,
@@ -69,7 +92,10 @@
 		u.u_creator_name,
 		u.u_create_time,
 		u.u_update_time
-		FROM tb_role r LEFT JOIN tb_role_user ru ON r.r_id = ru.r_id LEFT JOIN tb_user u ON ru.u_id = u.u_id
+		FROM tb_role r LEFT
+		JOIN tb_role_user ru ON r.r_id = ru.r_id LEFT JOIN
+		tb_user u ON
+		ru.u_id = u.u_id
 		<where>
 			<if test="name != null and name != ''">
 				r.r_name=#{name}
@@ -77,9 +103,10 @@
 		</where>
 		order by r_id DESC
 	</select>
-	
-	<select id="findByName" parameterType="String" resultMap="roleMap" flushCache="true" useCache="true">
-		SELECT 
+
+	<select id="findByName" parameterType="String" resultMap="roleMap"
+		flushCache="true" useCache="true">
+		SELECT
 		r.r_id,
 		r.r_name,
 		r.r_key,
@@ -98,30 +125,36 @@
 		u.u_creator_name,
 		u.u_create_time,
 		u.u_update_time
-		FROM tb_role r LEFT JOIN tb_role_user ru ON r.r_id = ru.r_id LEFT JOIN tb_user u ON ru.u_id = u.u_id
-		where r.r_name = #{name}
+		FROM tb_role r LEFT
+		JOIN tb_role_user ru
+		ON r.r_id = ru.r_id LEFT JOIN tb_user u ON
+		ru.u_id = u.u_id
+		where
+		r.r_name = #{name}
 	</select>
-	
-	<insert id="insert" parameterType="com.webside.role.model.RoleEntity" useGeneratedKeys="true" keyProperty="id">
+
+	<insert id="insert" parameterType="com.webside.role.model.RoleEntity"
+		useGeneratedKeys="true" keyProperty="id">
 		insert ignore into tb_role (
-			r_name,
-			r_key,
-			r_status,
-			r_description,
-			r_create_time
-			)   
+		r_name,
+		r_key,
+		r_status,
+		r_description,
+		r_create_time
+		)
 		values (
-			#{name},
-			#{key},
-			#{status},
-			#{description},
-			now()
-			)  
+		#{name},
+		#{key},
+		#{status},
+		#{description},
+		now()
+		)
 	</insert>
-	
-	
-	<select id="findById" parameterType="long" resultMap="roleMap" flushCache="true" useCache="true">
-		SELECT 
+
+
+	<select id="findById" parameterType="long" resultMap="roleMap"
+		flushCache="true" useCache="true">
+		SELECT
 		r.r_id,
 		r.r_name,
 		r.r_key,
@@ -140,11 +173,16 @@
 		u.u_creator_name,
 		u.u_create_time,
 		u.u_update_time
-		FROM tb_role r LEFT JOIN tb_role_user ru ON r.r_id = ru.r_id LEFT JOIN tb_user u ON ru.u_id = u.u_id
-		where r.r_id = #{id}
+		FROM tb_role r LEFT
+		JOIN tb_role_user ru
+		ON r.r_id = ru.r_id LEFT JOIN tb_user u ON
+		ru.u_id = u.u_id
+		where r.r_id
+		= #{id}
 	</select>
-	
-	<update id="update" parameterType="com.webside.role.model.RoleEntity" flushCache="true">
+
+	<update id="update" parameterType="com.webside.role.model.RoleEntity"
+		flushCache="true">
 		update tb_role
 		<set>
 			<if test="name != null and name != ''">
@@ -162,112 +200,142 @@
 		</set>
 		where r_id = ${id}
 	</update>
-	
+
 	<delete id="deleteBatchById" parameterType="list">
-       delete from tb_role where r_id in  
-	    <foreach collection="list" item = "id" open="(" separator="," close=")">
-	    #{id}  
-	    </foreach>  
+		delete from tb_role where r_id in
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
 	</delete>
-	
+
 	<delete id="deleteById" parameterType="int">
-       delete from tb_role where r_id = ${id}
+		delete from tb_role where
+		r_id = ${id}
 	</delete>
-	
+
 	<delete id="deleteRoleResource" parameterType="int">
-       delete from tb_resources_role where r_id = ${roleId}   
+		delete from
+		tb_resources_role where r_id = ${roleId}
 	</delete>
-	
-	<select id="findRoleUserById" parameterType="int" resultType="int" flushCache="true" useCache="true">
+
+	<select id="findRoleUserById" parameterType="int" resultType="int"
+		flushCache="true" useCache="true">
 		SELECT count(id)
 		FROM tb_role_user
-		where r_id = ${roleId}
+		where r_id
+		= ${roleId}
 	</select>
-	
-	<select id="findRoleResourceById" parameterType="int" resultType="int" flushCache="true" useCache="true">
+
+	<select id="findRoleResourceById" parameterType="int"
+		resultType="int" flushCache="true" useCache="true">
 		SELECT count(id)
-		FROM tb_resources_role
+		FROM
+		tb_resources_role
 		where r_id = ${roleId}
 	</select>
-	
+
 	<insert id="addRoleResourceBatch" parameterType="map">
 		insert ignore into tb_resources_role (
-			s_id,
-			r_id,
-			t_create_time
-		)   
-		values 
-		<foreach collection="resourceIds" item ="id" separator=",">
+		s_id,
+		r_id,
+		t_create_time
+		)
+		values
+		<foreach collection="resourceIds" item="id" separator=",">
 			(
-				#{id},
-				#{roleId},
-				now()
+			#{id},
+			#{roleId},
+			now()
 			)
 		</foreach>
 	</insert>
-	
+
 	<insert id="addRoleResource" parameterType="map">
-		insert ignore into tb_resources_role (
-			s_id,
-			r_id,
-			t_create_time
-		)   
-		values 
-			(
-				#{resourceId},
-				#{roleId},
-				now()
-			)
+		insert ignore into
+		tb_resources_role (
+		s_id,
+		r_id,
+		t_create_time
+		)
+		values
+		(
+		#{resourceId},
+		#{roleId},
+		now()
+		)
 	</insert>
-	
-	<select id="findRoleProductTypeById" parameterType="int" resultType="int" flushCache="true" useCache="true">
+
+	<select id="findRoleProductTypeById" parameterType="int"
+		resultType="int" flushCache="true" useCache="true">
 		SELECT count(id)
-		FROM role_product
+		FROM
+		role_product
 		where ROLE_ID = ${roleId}
 	</select>
-	
-	<select id="findRoleProductTypesById" parameterType="int" resultType="int" flushCache="true" useCache="true">
+
+	<select id="findRoleProductTypesById" parameterType="int"
+		resultType="int" flushCache="true" useCache="true">
 		SELECT count(id)
-		FROM role_product
+		FROM
+		role_product
 		where ROLE_ID = ${roleId}
 	</select>
-	
+
 	<delete id="deleteRoleProductType" parameterType="int">
-       delete from role_product where ROLE_ID = ${roleId}   
+		delete from
+		role_product where ROLE_ID = ${roleId}
 	</delete>
-	
-	<insert id="addRoleProductTypeBatch" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+
+	<insert id="addRoleProductTypeBatch" parameterType="map"
+		useGeneratedKeys="true" keyProperty="id">
 		insert ignore into role_product (
-			ROLE_ID,
-			PRODUCT_TYPE_ID,
-			create_time
-		)   
-		values 
-		<foreach collection="productTypeIds" item ="productTypeId" separator=",">
+		ROLE_ID,
+		PRODUCT_TYPE_ID,
+		create_time
+		)
+		values
+		<foreach collection="productTypeIds" item="productTypeId"
+			separator=",">
 			(
-				#{roleId},
-				#{productTypeId},
-				now()
+			#{roleId},
+			#{productTypeId},
+			now()
 			)
 		</foreach>
 	</insert>
-	
-	<insert id="addRoleProductType" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+
+	<insert id="addRoleProductType" parameterType="map"
+		useGeneratedKeys="true" keyProperty="id">
 		insert ignore into role_product (
-			ROLE_ID,
-			PRODUCT_TYPE_ID,
-			create_time
-		)   
-		values 
-			(
-				#{roleId},
-				#{productTypeId},
-				now()
-			)
+		ROLE_ID,
+		PRODUCT_TYPE_ID,
+		create_time
+		)
+		values
+		(
+		#{roleId},
+		#{productTypeId},
+		now()
+		)
 	</insert>
-	
-	<select id="findUserIdByRoleId" parameterType="int" resultType="long" flushCache="true" useCache="true">
-		SELECT DISTINCT u_id FROM tb_role_user where r_id = ${roleId}
+
+	<select id="findUserIdByRoleId" parameterType="int" resultType="long"
+		flushCache="true" useCache="true">
+		SELECT DISTINCT u_id FROM tb_role_user
+		where r_id = ${roleId}
 	</select>
-	
+
+	<select id="queryListAll" resultMap="roleMap" flushCache="true"
+		parameterType="map" useCache="true">
+		select
+		<include refid="roleAttributes" />
+		from tb_role where r_status=0
+		<where>
+			<if test="r_id != null and r_id != ''">
+				and r_id=#{r_id}
+			</if>
+		</where>
+	</select>
+
 </mapper>

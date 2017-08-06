@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.webside.base.baseservice.impl.AbstractService;
 import com.webside.exception.ServiceException;
+import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.role.mapper.RoleMapper;
 import com.webside.role.model.RoleEntity;
 import com.webside.role.service.RoleService;
 import com.webside.shiro.ShiroAuthenticationManager;
 
 @Service("roleService")
-public class RoleServiceImpl extends AbstractService<RoleEntity, Long>
-		implements RoleService {
+public class RoleServiceImpl extends AbstractService<RoleEntity, Long>implements RoleService {
 	public Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private RoleMapper roleMapper;
@@ -55,10 +55,10 @@ public class RoleServiceImpl extends AbstractService<RoleEntity, Long>
 					flag = true;
 				}
 			}
-			
+
 			List<Long> userIds = roleMapper.findUserIdByRoleId(id);
 			ShiroAuthenticationManager.clearUserAuthByUserId(userIds);
-			
+
 			return flag;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -98,7 +98,6 @@ public class RoleServiceImpl extends AbstractService<RoleEntity, Long>
 		}
 	}
 
-	
 	@Override
 	public boolean addRoleProductType(int roleId, int productTypeId) {
 		try {
@@ -110,7 +109,7 @@ public class RoleServiceImpl extends AbstractService<RoleEntity, Long>
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean addRoleProductTypeBatch(int roleId, List<Integer> productTypeIds) {
 		boolean flag = false;
@@ -138,13 +137,27 @@ public class RoleServiceImpl extends AbstractService<RoleEntity, Long>
 					flag = true;
 				}
 			}
-			
-//			List<Long> userIds = roleMapper.findUserIdByRoleId(roleId);
-//			ShiroAuthenticationManager.clearUserAuthByUserId(userIds);
-			
+
+			// List<Long> userIds = roleMapper.findUserIdByRoleId(roleId);
+			// ShiroAuthenticationManager.clearUserAuthByUserId(userIds);
+
 			return flag;
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
+
+	/**
+	 * 获取所有角色列表
+	 */
+	@Override
+	public List<RoleEntity> queryAllList(Map<String, Object> parameter) {
+		return roleMapper.queryListAll(parameter);
+	}
+
+	@Override
+	public List<Map<String, Object>> getProductsByRoleId(Map<String, Object> parameter) {
+		return roleMapper.getProductsByRoleId(parameter);
+	}
+
 }

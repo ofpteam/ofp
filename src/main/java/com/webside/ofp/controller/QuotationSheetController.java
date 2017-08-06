@@ -42,6 +42,8 @@ import com.webside.ofp.service.CustomerService;
 import com.webside.ofp.service.InterestRateService;
 import com.webside.ofp.service.ProductService;
 import com.webside.ofp.service.QuotationSheetService;
+import com.webside.role.model.RoleEntity;
+import com.webside.role.service.RoleService;
 import com.webside.user.model.UserEntity;
 import com.webside.user.service.UserService;
 import com.webside.util.PageUtil;
@@ -57,7 +59,7 @@ public class QuotationSheetController extends BaseController {
 	private QuotationSheetService quotationSheetService;
 	@Autowired
 	private CustomerService customerService;
-
+	
 	@Autowired
 	private ProductService productService;
 	@Autowired
@@ -431,24 +433,5 @@ public class QuotationSheetController extends BaseController {
 		return map;
 	}
 
-	/**
-	 * 根据id获取客户信息
-	 * 
-	 * @param ids
-	 * @return
-	 *//*
-		 * @RequestMapping("findById.html")
-		 * 
-		 * @ResponseBody public Object findById(CustomerEntity customerEntity) {
-		 * Map<String, Object> result = new HashMap<String, Object>(); try { if
-		 * (customerEntity.getCustomerId() != null) { CustomerEntity
-		 * getCustomerEntity = customerService.findById((long)
-		 * customerEntity.getCustomerId()); if (getCustomerEntity != null) {
-		 * result.put("success", true); result.put("data", getCustomerEntity);
-		 * result.put("message", "查询成功"); } else { result.put("success", false);
-		 * result.put("data", null); result.put("message", "查询失败"); } }
-		 * 
-		 * } catch (Exception e) { throw new AjaxException(e); } return result;
-		 * }
-		 */
+	
 }

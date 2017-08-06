@@ -14,6 +14,8 @@ public interface ProductMapper extends BaseMapper<ProductEntity, Long>{
 	public List<ProductEntity> findByTypeId(String id);
 	
 	public ProductEntityWithBLOBs findByIdWithBLOBS(long id);
-	
+	/**
+	 * 报价单查询页面
+	 */
 	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet);
 }

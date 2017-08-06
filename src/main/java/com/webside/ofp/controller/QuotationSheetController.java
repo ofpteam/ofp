@@ -59,7 +59,7 @@ public class QuotationSheetController extends BaseController {
 	private QuotationSheetService quotationSheetService;
 	@Autowired
 	private CustomerService customerService;
-	
+
 	@Autowired
 	private ProductService productService;
 	@Autowired
@@ -104,7 +104,7 @@ public class QuotationSheetController extends BaseController {
 		if (pager.getIsExport()) {
 			if (pager.getExportAllData()) {
 				// 3.1、导出全部数据
-				List<QuotationSheetEntity> list = quotationSheetService.queryListByPage(parameters);
+				List<Map<String, Object>> list = quotationSheetService.selectByPage(parameters);
 				ExportUtils.exportAll(response, pager, list);
 				return null;
 			} else {
@@ -115,7 +115,7 @@ public class QuotationSheetController extends BaseController {
 		} else {
 			// 设置分页，page里面包含了分页信息
 			Page<Object> page = PageHelper.startPage(pager.getNowPage(), pager.getPageSize(), true);
-			List<QuotationSheetEntity> list = quotationSheetService.queryListByPage(parameters);
+			List<Map<String, Object>> list = quotationSheetService.selectByPage(parameters);
 			parameters.clear();
 			parameters.put("isSuccess", Boolean.TRUE);
 			parameters.put("nowPage", pager.getNowPage());
@@ -433,5 +433,4 @@ public class QuotationSheetController extends BaseController {
 		return map;
 	}
 
-	
 }

@@ -103,7 +103,7 @@ public class ProductController extends BaseController {
 		if (pager.getIsExport()) {
 			if (pager.getExportAllData()) {
 				// 3.1、导出全部数据
-				List<ProductEntity> list = productService.queryListByPage(parameters);
+				List<Map<String, Object>> list = productService.selectByPage(parameters);
 				ExportUtils.exportAll(response, pager, list);
 				return null;
 			} else {

@@ -4,6 +4,7 @@ import com.webside.base.basemapper.BaseMapper;
 import com.webside.ofp.model.QuotationSheetEntity;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,6 @@ public interface QuotationSheetMapper extends BaseMapper<QuotationSheetEntity, L
 	 * @return
 	 */
 	public List<QuotationSheetEntity> findByCustomerId(String id);
+	
+	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet);
 }

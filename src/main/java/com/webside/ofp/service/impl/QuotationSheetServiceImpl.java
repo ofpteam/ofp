@@ -1,7 +1,7 @@
 package com.webside.ofp.service.impl;
 
-
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,8 @@ import com.webside.ofp.service.ProductService;
 import com.webside.ofp.service.QuotationSheetService;
 
 @Service("quotationSheetService")
-public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEntity, Long> implements QuotationSheetService {
+public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEntity, Long>
+		implements QuotationSheetService {
 	@Autowired
 	private QuotationSheetMapper quotationSheetMapper;
 
@@ -27,16 +28,16 @@ public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEnt
 	public void setBaseMapper() {
 		super.setBaseMapper(quotationSheetMapper);
 	}
-	
+
 	@Autowired
 	private QuotationSubSheetMapper quotationSubSheetMapper;
-	
+
 	@Autowired
 	private ProductMapper productMapper;
-	
+
 	@Autowired
 	private ProductService productService;
-	
+
 	public void setProductService(ProductService productService) {
 		this.productService = productService;
 	}
@@ -53,26 +54,33 @@ public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEnt
 		quotationSubSheetMapper.deleteBySheetIdPhysical(quotationSheetEntity.getQuotationSheetId());
 		quotationSubSheetMapper.insertBatch(quotationSheetEntity.getSubSheetList());
 	}
-	
-	public int insertSheetWithSubSheet(QuotationSheetEntity quotationSheetEntity){
+
+	public int insertSheetWithSubSheet(QuotationSheetEntity quotationSheetEntity) {
 		int i = quotationSheetMapper.insert(quotationSheetEntity);
-		for(QuotationSubSheetEntity quotationSubSheetEntity:quotationSheetEntity.getSubSheetList()){
+		for (QuotationSubSheetEntity quotationSubSheetEntity : quotationSheetEntity.getSubSheetList()) {
 			quotationSubSheetEntity.setQuotationSheetId(quotationSheetEntity.getQuotationSheetId());
 		}
 		return quotationSubSheetMapper.insertBatch(quotationSheetEntity.getSubSheetList());
 	}
-	
+
 	@Override
-	public QuotationSheetEntity findQuotationSheetWithProducts(long id){
+	public QuotationSheetEntity findQuotationSheetWithProducts(long id) {
 		QuotationSheetEntity quotationSheetEntity = quotationSheetMapper.findById(id);
 		List<QuotationSubSheetEntity> subList = quotationSheetEntity.getSubSheetList();
-		for(QuotationSubSheetEntity quotationSubSheetEntity : subList){
-			if(quotationSubSheetEntity.getProductId() != null){
-				ProductEntityWithBLOBs product = productService.findByIdWithBLOBS(quotationSubSheetEntity.getProductId());
+		for (QuotationSubSheetEntity quotationSubSheetEntity : subList) {
+			if (quotationSubSheetEntity.getProductId() != null) {
+				ProductEntityWithBLOBs product = productService
+						.findByIdWithBLOBS(quotationSubSheetEntity.getProductId());
 				quotationSubSheetEntity.setProduct(product);
 			}
 		}
 		return quotationSheetEntity;
 	}
 
+	/**
+	 * 报价单查询页面
+	 */
+	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet) {
+		return quotationSheetMapper.selectByPage(paramet);
+	}
 }

@@ -30,7 +30,7 @@
 	</shiro:hasPermission>
 	<shiro:hasPermission name="quotationsheet:editUI">
 		<button id="btnEdit" type="button"
-			onclick="webside.common.editModel('/quotationsheet/editUI.html')"
+			onclick="editQuotationSheet('/quotationsheet/editUI.html')"
 			class="btn btn-success btn-sm">
 			<i class="fa fa-pencil-square-o"></i>&nbsp;编辑
 		</button>
@@ -38,16 +38,21 @@
 </div>
 <div class="input-group col-xs-12">
 	<label class="col-sm-1 control-label no-padding-right" for="times">报价单日期:</label>
-	<div class="col-sm-5">
+	<div class="col-sm-8">
 		<input type="text" id="starttime" class="datepicker"
-			placeholder="报价单日开始日期" />——<input type="text" id="endtime"
-			class="datepicker" placeholder="报价单日开始日期" />
+			style="width: 100%" placeholder="报价单日开始日期" />
 	</div>
-
 </div>
 <div class="input-group col-xs-12" style="margin-top: 5px;">
-		<label class="col-sm-1 control-label no-padding-right" for="times">客户姓名:</label>
-	<div class="col-sm-5">
+	<label class="col-sm-1 control-label no-padding-right" for="times">报价单日期:</label>
+	<div class="col-sm-8">
+		<input type="text" id="endtime" class="datepicker" style="width: 100%"
+			placeholder="报价单日开始日期" />
+	</div>
+</div>
+<div class="input-group col-xs-12" style="margin-top: 5px;">
+	<label class="col-sm-1 control-label no-padding-right" for="times">客户姓名:</label>
+	<div class="col-sm-8">
 		<input id="searchKey" type="text" class="input form-control"
 			placeholder="客户名称...">
 	</div>

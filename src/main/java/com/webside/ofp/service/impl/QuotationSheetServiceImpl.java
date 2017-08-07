@@ -49,10 +49,10 @@ public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEnt
 	}
 
 	@Override
-	public void updateWithSubSheet(QuotationSheetEntity quotationSheetEntity) {
+	public int updateWithSubSheet(QuotationSheetEntity quotationSheetEntity) {
 		quotationSheetMapper.update(quotationSheetEntity);
 		quotationSubSheetMapper.deleteBySheetIdPhysical(quotationSheetEntity.getQuotationSheetId());
-		quotationSubSheetMapper.insertBatch(quotationSheetEntity.getSubSheetList());
+		return quotationSubSheetMapper.insertBatch(quotationSheetEntity.getSubSheetList());
 	}
 
 	public int insertSheetWithSubSheet(QuotationSheetEntity quotationSheetEntity) {

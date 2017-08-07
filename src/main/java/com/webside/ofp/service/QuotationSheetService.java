@@ -22,8 +22,8 @@ public interface QuotationSheetService extends BaseService<QuotationSheetEntity,
 	 * @param quotationSheetEntity
 	 *            报价单对象
 	 */
-	public void updateWithSubSheet(QuotationSheetEntity quotationSheetEntity);
-
+	public int updateWithSubSheet(QuotationSheetEntity quotationSheetEntity);
+	
 	/**
 	 * 插入报价单信息，包括子单信息
 	 * 

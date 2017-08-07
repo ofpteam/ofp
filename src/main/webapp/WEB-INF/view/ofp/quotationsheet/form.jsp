@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="ctx" value="${pageContext.request.contextPath }" />
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/js/chosen/chosen.css" />
@@ -16,10 +17,10 @@
 	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.min.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.bootstrap.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.jeditable.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.editable.js"></script>
+<%-- <script type="text/javascript"
+	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.jeditable.js"></script> --%>
+<%-- <script type="text/javascript"
+	src="${pageContext.request.contextPath }/resources/js/jquerydatatables/jquery.dataTables.editable.js"></script> --%>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/resources/js/ace/tree.min.js"></script>
 <script type="text/javascript"
@@ -29,7 +30,6 @@
 <script type="text/javascript">
 	$(function() {
 		validateForm();
-
 	});
 </script>
 <style type="text/css">
@@ -59,16 +59,20 @@
 		<form id="quotationsheetForm" name="quotationsheetForm"
 			class="form-horizontal" role="form" method="post">
 			<c:if test="${!empty quotationSheetEntity}">
-				<input type="hidden" id="pageNum" name="pageNum"
+				<%-- <input type="hidden" id="pageNum" name="pageNum"
 					value="${page.pageNum }">
 				<input type="hidden" id="pageSize" name="pageSize"
 					value="${page.pageSize }">
 				<input type="hidden" id="orderByColumn" name="orderByColumn"
 					value="${page.orderByColumn }">
 				<input type="hidden" id="orderByType" name="orderByType"
-					value="${page.orderByType }">
+					value="${page.orderByType }"> --%>
+				<input type="hidden" name="createUser" id="createUser"
+					value="${quotationSheetEntity.createUser }">
 				<input type="hidden" name="quotationSheetId" id="quotationSheetId"
 					value="${quotationSheetEntity.quotationSheetId }">
+				<input type="hidden"  id="customerId"
+					value="${quotationSheetEntity.customer.customerId }">
 			</c:if>
 			<div class="form-group">
 				<input type="hidden" name="quotationSubSheetEntities"
@@ -120,6 +124,7 @@
 						for="quotationDate">报价日期:</label>
 					<div class="col-sm-3">
 						<input type="text" id="quotationDate" name="quotationDate"
+							value=<fmt:formatDate value="${quotationSheetEntity.quotationDate }" pattern="yyyy-MM-dd"/>
 							class="datepicker col-sm-12" placeholder="报价日期" />
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
@@ -140,7 +145,8 @@
 					<div class="col-sm-3">
 						<div>
 							<input readonly class="form-control" id="country" type="text"
-								value="${quotationSheetEntity.country }" placeholder="国家..." />
+								value="${quotationSheetEntity.customer.country }"
+								placeholder="国家..." />
 						</div>
 					</div>
 
@@ -211,6 +217,7 @@
 					<div class="col-sm-3">
 						<div>
 							<input type="number" id="deliveryDate" name="deliveryDate"
+								value="${quotationSheetEntity.deliveryDate }"
 								class="form-control" placeholder="交货期限..." />
 						</div>
 					</div>
@@ -268,7 +275,7 @@
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="commission" id="commission"
-							value=<c:if test="${empty commission}">0</c:if>
+								value=<c:if test="${empty commission}">0</c:if>
 								"${quotationSheetEntity.commission }"
 								placeholder="佣金率..." />
 						</div>
@@ -352,11 +359,12 @@
 								placeholder="换汇率..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right"
-						for="rate">利率:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="rate">利率:</label>
 					<div class="col-sm-3">
 						<input class="form-control" name="rate" id="rate" type="number"
-							value="${interestRateEntity.rate }" placeholder="利率..." />
+							value=<c:if test="${empty interestRateEntity}">${rate }</c:if>
+							"${interestRateEntity.rate }"
+							placeholder="利率..." />
 					</div>
 				</div>
 			</div>
@@ -458,6 +466,7 @@
 			<th>箱数</th>
 			<th>TOTALCBM</th>
 			<th>总毛重</th>
+			<th>操作</th>
 		</tr>
 	</thead>
 </table>
@@ -474,7 +483,7 @@
 		</c:if>
 	</button>
 	<button id="btn" type="button"
-		onclick="webside.common.loadPage('/quotationsheet/listUI.html<c:if test="${!empty quotationSheetEntity}">?page=${page.pageNum }&rows=${page.pageSize }&sidx=${page.orderByColumn }&sord=${page.orderByType }</c:if>')"
+		onclick="webside.common.loadPage('/quotationsheet/listUI.html')"
 		class="btn btn-info btn-sm">
 		<i class="fa fa-undo"></i>&nbsp;返回
 	</button>

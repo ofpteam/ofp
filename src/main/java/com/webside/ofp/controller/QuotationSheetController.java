@@ -44,6 +44,7 @@ import com.webside.ofp.service.ProductService;
 import com.webside.ofp.service.QuotationSheetService;
 import com.webside.role.model.RoleEntity;
 import com.webside.role.service.RoleService;
+import com.webside.shiro.ShiroAuthenticationManager;
 import com.webside.user.model.UserEntity;
 import com.webside.user.service.UserService;
 import com.webside.util.PageUtil;
@@ -132,6 +133,9 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping("addUI.html")
 	public String addUI(Model model) {
 		try {
+			// 默认
+			InterestRateEntity interestRateEntity = interestRateService.findById((long) 1);
+			model.addAttribute("Rate", interestRateEntity.getRate());
 			return Common.BACKGROUND_PATH + "/ofp/quotationsheet/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
@@ -163,10 +167,14 @@ public class QuotationSheetController extends BaseController {
 					// 换汇率 = 利润 / 美金总额
 					double swapRate = profit / usPricteTotal;
 					quotationSheetEntity.setProfit(profit);
+					quotationSheetEntity.setQuotationSheetCode(
+							ShiroAuthenticationManager.getUserAccountName() + System.currentTimeMillis());
 					quotationSheetEntity.setSwapRate(swapRate);
 					quotationSheetEntity.setSubSheetList(quotationSubSheetList);
+					quotationSheetEntity.setCreateTime(new Date());
+					quotationSheetEntity.setCreateUser(ShiroAuthenticationManager.getUserId().intValue());
 					int rersult = quotationSheetService.insertSheetWithSubSheet(quotationSheetEntity);
-					if (rersult > 1) {
+					if (rersult > 0) {
 						InterestRateEntity interestRateEntity = new InterestRateEntity();
 						interestRateEntity.setInterestRateId(quotationSheetEntity.getQuotationSheetId());
 						interestRateEntity.setRate(rate);
@@ -248,6 +256,14 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping("editUI.html")
 	public String editUI(Model model, HttpServletRequest request, Long id) {
 		try {
+			Map<String, Object> map = new HashMap<>();
+			QuotationSheetEntity theQuotationSheetEntity = quotationSheetService.findById((long) id);
+			if (theQuotationSheetEntity != null) {
+				model.addAttribute("quotationSheetEntity", theQuotationSheetEntity);
+				InterestRateEntity interestRateEntity = interestRateService
+						.findById((long) theQuotationSheetEntity.getQuotationSheetId());
+				model.addAttribute("interestRateEntity", interestRateEntity);
+			}
 			PageUtil page = new PageUtil();
 			page.setPageNum(Integer.valueOf(request.getParameter("page")));
 			page.setPageSize(Integer.valueOf(request.getParameter("rows")));
@@ -262,24 +278,62 @@ public class QuotationSheetController extends BaseController {
 
 	@RequestMapping("edit.html")
 	@ResponseBody
-	public Object update(QuotationSheetEntity quotationSheetEntity) throws AjaxException {
+	public Object update(QuotationSheetEntity quotationSheetEntity, CustomerEntity customerEntity,
+			String quotationSubSheetEntities, long rate) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			// 设置创建者姓名
-			int result = 1;
-			if (result == 1) {
-				map.put("success", Boolean.TRUE);
-				map.put("data", null);
-				map.put("message", "编辑成功");
-			} else {
-				map.put("success", Boolean.FALSE);
-				map.put("data", null);
-				map.put("message", "编辑失败");
+		if (ShiroAuthenticationManager.getUserId() != quotationSheetEntity.getCreateUser().intValue()) {
+			map.put("success", Boolean.FALSE);
+			map.put("data", null);
+			map.put("message", "添加失败,不能修改非本人的报价单");
+		} else {
+			try {
+				List<QuotationSubSheetEntity> quotationSubSheetList = JSON.parseArray(quotationSubSheetEntities,
+						QuotationSubSheetEntity.class);
+				if (quotationSubSheetList != null && quotationSubSheetList.size() > 0) {
+					StringBuilder sb = this.validateSubmitVal(quotationSheetEntity);
+					if (sb.length() == 0) { // 后台验证
+						// quotationSheetEntity.setSubSheetList(quotationSubSheetList);
+						// 绑定客户信息
+						quotationSheetEntity.setCustomer(customerEntity);
+						// quotationSheetEntity.setInterestRateId(1);
+						Map<String, Double> mapResult = this.CalculationProfit(quotationSheetEntity,
+								quotationSubSheetList, rate);
+						// 计算利润
+						double profit = mapResult.get("profit");
+						// 美金总额
+						double usPricteTotal = mapResult.get("usPricteTotal");
+						// 换汇率 = 利润 / 美金总额
+						double swapRate = profit / usPricteTotal;
+						quotationSheetEntity.setProfit(profit);
+						quotationSheetEntity.setSwapRate(swapRate);
+						quotationSheetEntity.setSubSheetList(quotationSubSheetList);
+						quotationSheetEntity.setModifyTime(new Date());
+						quotationSheetEntity.setModifyUser(ShiroAuthenticationManager.getUserId().intValue());
+						quotationSheetService.updateWithSubSheet(quotationSheetEntity);
+						InterestRateEntity interestRateEntity = new InterestRateEntity();
+						interestRateEntity.setInterestRateId(quotationSheetEntity.getQuotationSheetId());
+						interestRateEntity.setRate(rate);
+						interestRateService.update(interestRateEntity);
+						map.put("success", Boolean.TRUE);
+						map.put("data", null);
+						map.put("message", "添加成功");
+
+					} else {// 校验错误
+						map.put("success", Boolean.FALSE);
+						map.put("data", null);
+						map.put("message", "添加失败" + sb.toString());
+					}
+				} else {
+					map.put("success", Boolean.FALSE);
+					map.put("data", null);
+					map.put("message", "请添加至少一种商品");
+				}
+			} catch (Exception e) {
+				throw new AjaxException(e);
 			}
-		} catch (Exception e) {
-			throw new AjaxException(e);
 		}
 		return map;
+
 	}
 
 	@RequestMapping("findProductById.html")
@@ -384,11 +438,20 @@ public class QuotationSheetController extends BaseController {
 	 */
 	@RequestMapping(value = "getSubSheet.html")
 	@ResponseBody
-	public Object getSubSheet(String gridPager, HttpServletResponse response) throws Exception {
+	public Object getSubSheet(HttpServletRequest request) throws Exception {
 		Map<String, Object> jsonMap = new HashMap<>();
 		jsonMap.put("iTotalRecords", 0);
 		jsonMap.put("iTotalDisplayRecords", 0);
+
 		List<QuotationSubSheetEntity> datas = new ArrayList<>();
+		if (request.getParameter("id") != null) {
+			QuotationSheetEntity quotationSheetEntity = quotationSheetService
+					.findById(Long.parseLong(request.getParameter("id").toString()));
+			datas = quotationSheetEntity.getSubSheetList();
+			jsonMap.put("iTotalRecords", quotationSheetEntity.getSubSheetList().size());
+			jsonMap.put("iTotalDisplayRecords", quotationSheetEntity.getSubSheetList().size());
+
+		}
 		/*
 		 * QuotationSubSheetEntity model = null; for (int i = 0; i < 57; i++) {
 		 * model = new QuotationSubSheetEntity(); ProductEntityWithBLOBs product

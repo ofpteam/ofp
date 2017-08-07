@@ -1,54 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.webside.ofp.mapper.InterestRateMapper">
-  <resultMap id="interestRateMap" type="com.webside.ofp.model.InterestRateEntity">
-    <id column="INTEREST_RATE_ID" jdbcType="INTEGER" property="interestRateId" />
-    <result column="RATE" jdbcType="DECIMAL" property="rate" />
-  </resultMap>
-  
-  <sql id="interest_rate_Column_List">
-    INTEREST_RATE_ID, RATE
-  </sql>
-  
-  <select id="queryListByPage" parameterType="map" resultMap="interestRateMap"
+	<resultMap id="interestRateMap" type="com.webside.ofp.model.InterestRateEntity">
+		<id column="INTEREST_RATE_ID" jdbcType="INTEGER" property="interestRateId" />
+		<result column="RATE" jdbcType="DECIMAL" property="rate" />
+	</resultMap>
+
+	<sql id="interest_rate_Column_List">
+		INTEREST_RATE_ID, RATE
+	</sql>
+
+	<select id="queryListByPage" parameterType="map" resultMap="interestRateMap"
 		flushCache="true" useCache="true">
 		SELECT
 		<include refid="interest_rate_Column_List" />
 		from interest_rate where INTEREST_RATE_ID >= (
-			select INTEREST_RATE_ID from INTEREST_RATE order by INTEREST_RATE_ID limit ${start},1
+		select INTEREST_RATE_ID
+		from INTEREST_RATE order by INTEREST_RATE_ID limit
+		${start},1
 		)
-		limit ${pageNumber}  
+		limit
+		${pageNumber}
 	</select>
-	
+
 	<select id="queryListAll" parameterType="map" resultMap="interestRateMap"
 		flushCache="true" useCache="true">
 		SELECT
 		<include refid="interest_rate_Column_List" />
-		from interest_rate 
+		from interest_rate
 	</select>
-	
+
 	<select id="findById" parameterType="long" resultMap="interestRateMap"
 		flushCache="true" useCache="true">
 		SELECT
 		<include refid="interest_rate_Column_List" />
-		FROM interest_rate 
+		FROM interest_rate
 		where INTEREST_RATE_ID = #{id}
 	</select>
-	
+
 	<delete id="deleteById" parameterType="int">
-		 delete from interest_rate
-   		 where INTEREST_RATE_ID = #{interestRateId,jdbcType=INTEGER}
+		delete from interest_rate
+		where INTEREST_RATE_ID = #{interestRateId,jdbcType=INTEGER}
 	</delete>
-	
-  <insert id="insert" parameterType="com.webside.ofp.model.InterestRateEntity" useGeneratedKeys="true" keyProperty="interestRateId">
-    insert into interest_rate (RATE)
-    values (#{rate,jdbcType=DECIMAL})
-  </insert>
-  
-  
-  <update id="update" parameterType="com.webside.ofp.model.InterestRateEntity">
-    update interest_rate
-    set RATE = #{rate,jdbcType=DECIMAL}
-    where INTEREST_RATE_ID = #{interestRateId,jdbcType=INTEGER}
-  </update>
+
+	<insert id="insert" parameterType="com.webside.ofp.model.InterestRateEntity">
+		insert into interest_rate (INTEREST_RATE_ID,RATE)
+		values
+		(#{interestRateId,jdbcType=INTEGER},#{rate,jdbcType=DECIMAL})
+	</insert>
+
+
+	<update id="update" parameterType="com.webside.ofp.model.InterestRateEntity">
+		update interest_rate
+		set RATE =
+		#{rate,jdbcType=DECIMAL}
+		where INTEREST_RATE_ID =
+		#{interestRateId,jdbcType=INTEGER}
+	</update>
 </mapper>

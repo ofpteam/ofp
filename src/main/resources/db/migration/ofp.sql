@@ -20,7 +20,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `interest_rate`;
 CREATE TABLE `interest_rate` (
-  `INTEREST_RATE_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `INTEREST_RATE_ID` int(11) NOT NULL,
   `RATE` decimal(10,2) DEFAULT NULL COMMENT '利率,算利息的',
   PRIMARY KEY (`INTEREST_RATE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -309,14 +309,20 @@ public class QuotationSheetController extends BaseController {
 						quotationSheetEntity.setSubSheetList(quotationSubSheetList);
 						quotationSheetEntity.setModifyTime(new Date());
 						quotationSheetEntity.setModifyUser(ShiroAuthenticationManager.getUserId().intValue());
-						quotationSheetService.updateWithSubSheet(quotationSheetEntity);
-						InterestRateEntity interestRateEntity = new InterestRateEntity();
-						interestRateEntity.setInterestRateId(quotationSheetEntity.getQuotationSheetId());
-						interestRateEntity.setRate(rate);
-						interestRateService.update(interestRateEntity);
-						map.put("success", Boolean.TRUE);
-						map.put("data", null);
-						map.put("message", "添加成功");
+						int rersult = quotationSheetService.updateWithSubSheet(quotationSheetEntity);
+						if (rersult > 0) {
+							InterestRateEntity interestRateEntity = new InterestRateEntity();
+							interestRateEntity.setInterestRateId(quotationSheetEntity.getQuotationSheetId());
+							interestRateEntity.setRate(rate);
+							interestRateService.update(interestRateEntity);
+							map.put("success", Boolean.TRUE);
+							map.put("data", null);
+							map.put("message", "添加成功");
+						} else {
+							map.put("success", Boolean.FALSE);
+							map.put("data", null);
+							map.put("message", "添加失败");
+						}
 
 					} else {// 校验错误
 						map.put("success", Boolean.FALSE);

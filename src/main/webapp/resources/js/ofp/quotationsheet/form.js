@@ -49,10 +49,12 @@ function isInteger(obj) {
 	 return obj%1 === 0
 }
 $('#btnDelteRow').click(function(){
-	var anSelected = fnGetSelected( oTable );
-    if ( anSelected.length !== 0 ) {
-        oTable.fnDeleteRow( anSelected[0] );
-    }
+	debugger;
+var anSelected=	oTable.$('tr.selected');
+if ( anSelected.length !== 0 ) {
+    oTable.fnDeleteRow( anSelected[0] );
+}
+	//oTable.row('.selected').remove().draw( false );
 });
 //添加商品明细
 $('#btnAddRows').click(function(){
@@ -190,10 +192,7 @@ function uncheckAllSon(node){
     }
 }
 */
-/*	  Add/remove class to a row when clicked on 
-	  $('#example tbody tr').click( function() {
-	        $(this).toggleClass('row_selected');
-	    } );*/
+
     /* Init the table */
  // 编辑时反现子表
     var url= sys.rootPath+"/quotationsheet/getSubSheet.html";
@@ -221,13 +220,15 @@ function uncheckAllSon(node){
     			            "url": sSource,
     			            "success": function (modellist) {
     			                fnCallback(modellist); //string to json
-    			                $(document).ready(function(){
-    			                	$('#example tr').bind('click',function() {
-    			                		//TODO删除
-    			                		/*debugger;
-    			                		$(this).remove();*/
-    			                    } );
-    			      		  });
+    			                $('#example tbody').on( 'click', 'tr', function () {
+    			                    if ( $(this).hasClass('selected') ) {
+    			                        $(this).removeClass('selected');
+    			                    }
+    			                    else {
+    			                    	oTable.$('tr.selected').removeClass('selected');
+    			                        $(this).addClass('selected');
+    			                    }
+    			                } );
     			            },
     			            "error": function (resp) {
     			                alert("错误代码：" + resp.status + "," + "错误信息：" + resp.readyState);
@@ -265,7 +266,7 @@ function uncheckAllSon(node){
     		                ]
     		} );
     		
-    		
+    			
                
     		     
 

@@ -125,7 +125,9 @@
 						for="quotationDate">报价日期:</label>
 					<div class="col-sm-3">
 						<input type="text" id="quotationDate" name="quotationDate"
+							<c:if test="${!empty quotationSheetEntity}">
 							value=<fmt:formatDate value="${quotationSheetEntity.quotationDate }" pattern="yyyy-MM-dd"/>
+							</c:if>
 							class="datepicker col-sm-12" placeholder="报价日期" />
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
@@ -379,8 +381,10 @@
 <button class="btn btn-primary btn-xm" id="btnDelteRow">删除商品</button>
 <button class="btn btn-primary btn-xm" id="btnExcel"
 	onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'EXCEL')">导出Excel</button>
-<button class="btn btn-primary btn-xm" id="btnExcelOld" onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'OLDEXCEL')">导出Excel(Old)</button>
-<button class="btn btn-primary btn-xm" id="btnExcelOld" onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'PDF')">导出PDF</button>
+<button class="btn btn-primary btn-xm" id="btnExcelOld"
+	onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'OLDEXCEL')">导出Excel(Old)</button>
+<button class="btn btn-primary btn-xm" id="btnExcelOld"
+	onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'PDF')">导出PDF</button>
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">

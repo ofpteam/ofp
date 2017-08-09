@@ -91,8 +91,8 @@ $('#btnAddRows').click(function(){
 								bottom:v.data.bottom, height:v.data.height,
 								weight:v.data.weight, volume:v.data.volume,
 								packing:v.data.packing,packingRate:$('#packingRate').val(),
-								number:$('#number').val(), packNum:$('#packNum').val(), totalcbm:0,
-								totalGw:0,quotationSheetId:$('#quotationSheetId').val()==undefined?'':$('#quotationSheetId').val() }]);
+								number:$('#number').val(), packNum:$('#packNum').val(), totalcbm:Number($('#number').val())*v.data.cbm,
+								totalGw:Number($('#number').val())*v.data.gw,quotationSheetId:$('#quotationSheetId').val()==undefined?'':$('#quotationSheetId').val() }]);
 			$('#myModal').modal('hide');
 		
 		}else{

@@ -48,6 +48,15 @@ $('#btnOpenModal').click(function(){
 function isInteger(obj) {
 	 return obj%1 === 0
 }
+//导出excel
+function exportQuotationSheet(url,exportType){
+	if($('#quotationSheetId').val()!=undefined){
+		webside.common.loadPage(url+'?quotationSheetId='+$('#quotationSheetId').val()+'&exportType='+exportType);
+	}else{
+		layer.msg('新增的报价单不能导出', {icon : 0});
+	}
+}
+	
 $('#btnDelteRow').click(function(){
 	debugger;
 var anSelected=	oTable.$('tr.selected');

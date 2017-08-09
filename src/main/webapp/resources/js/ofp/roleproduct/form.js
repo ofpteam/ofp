@@ -13,6 +13,7 @@ var arr=str.split(',');
 $('#usertype').selectpicker('val', arr);*/
 //绑定客户
 	//获取商品一级目录
+debugger;
 					$.post(sys.rootPath + "/roleProduct/queryAllProductTypeList.html", function(
 							resp) {
 						//绑定

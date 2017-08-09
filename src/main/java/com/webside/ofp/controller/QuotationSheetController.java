@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.druid.support.opds.udf.ExportTables;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -50,6 +52,7 @@ import com.webside.user.service.UserService;
 import com.webside.util.PageUtil;
 import com.webside.dtgrid.model.Pager;
 import com.webside.dtgrid.util.ExportUtils;
+import com.webside.enums.ExportType;
 
 @Controller
 @Scope("prototype")
@@ -274,6 +277,27 @@ public class QuotationSheetController extends BaseController {
 		} catch (Exception e) {
 			throw new AjaxException(e);
 		}
+	}
+
+	/**
+	 * 导出报价单
+	 * 
+	 * @param response
+	 * @param quotationSheet
+	 * @param request
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/exportQuotationSheet.html")
+	public void exportQuotationSheet(HttpServletResponse response, HttpServletRequest request, long quotationSheetId,
+			String exportType) throws Exception {
+		QuotationSheetEntity model = quotationSheetService.findQuotationSheetWithProducts(quotationSheetId);
+		if (model != null) {
+			com.webside.ofp.common.util.OfpExportUtils.exportQuotationSheet(response, model, ExportType.EXCEL.name(),
+					request.getSession().getServletContext().getRealPath("/"));
+		} else {
+			throw new Exception("exportQuotationSheet is null");
+		}
+
 	}
 
 	@RequestMapping("edit.html")

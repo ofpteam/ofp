@@ -327,14 +327,33 @@
 		</form>
 		<div class="form-group">
 			<div class="row">
-				<div id="fileList" class="uploader-list"></div>
-				<div id="upInfo"></div>
-				<div id="filePicker">选择文件</div>
-				<input type="button" id="btn" value="开始上传" class="btn btn-default">
+				<div id="uploader-demo" class="col-sm-1">
+					<div id="fileList" class="uploader-list"></div>
+					<div id="upInfo"></div>
+					<div id="filePicker">选择文件</div>
+				</div>
+				<div class="col-sm-3">
+					<input type="button" id="btn" value="开始上传">
+				</div>
+				
+				<label class="col-sm-1 control-label no-padding-right"
+						for="packHeight">二维码:</label>
+				<div class="col-sm-3">
+					<div>
+						<img id="qrCode" alt="二维码" src="product/loadQRCode.html?productId=${productEntity.productId }" />
+					</div>
+				</div>
+	
+				<label class="col-sm-1 control-label no-padding-right"
+					for="packingRate">装箱率:</label>
+				<div class="col-sm-3">
+					<div>
+						<input class="form-control" name="packingRate" id="packingRate"
+							type="number" value="${productEntity.packingRate }"
+							placeholder="装箱率..." />
+					</div>
+				</div>
 			</div>
-		</div>
-		<div class="form-group">
-			<div class="row"></div>
 		</div>
 	</div>
 </div>

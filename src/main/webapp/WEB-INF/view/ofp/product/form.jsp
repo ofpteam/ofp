@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath }" />
 <link rel="stylesheet"
 	href="${ctx }/resources/js/select2/select2.min.css" />
@@ -20,6 +21,12 @@
 	$(function() {
 		validateForm();
 	});
+	//加载二维码
+	function loadQrCodePic(productId) {
+		var url = sys.rootPath + "/product/loadQRCode.html?productId="
+				+ productId;
+		webside.common.loadPage(url);
+	}
 </script>
 <div class="page-header">
 	<h1>
@@ -310,12 +317,39 @@
 			</div>
 		</form>
 		<div class="form-group">
-			<div id="uploader-demo">
-				<div id="fileList" class="uploader-list"></div>
-				<div id="upInfo"></div>
-				<div id="filePicker">选择文件</div>
+			<div class="row">
+				<div id="uploader-demo" class="col-sm-1">
+					<div id="fileList" class="uploader-list"></div>
+					<div id="upInfo"></div>
+					<div id="filePicker">选择文件</div>
+				</div>
+				<div class="col-sm-3">
+					<input type="button" id="btn" value="开始上传">
+				</div>
+
+				<label class="col-sm-1 control-label no-padding-right"
+					for="packHeight">二维码:</label>
+				<div class="col-sm-3">
+					<div>
+						<shiro:hasPermission name="product:loadQRCode">
+							<img id="qrCode" alt="二维码"
+								src="product/loadQRCode.html?productId=${productEntity.productId }" />
+						</shiro:hasPermission>
+					</div>
+				</div>
+
+				<label class="col-sm-1 control-label no-padding-right"
+					for="packingRate">装箱率:</label>
+				<div class="col-sm-3">
+					<div>
+						<input class="form-control" name="packingRate" id="packingRate"
+							type="number" value="${productEntity.packingRate }"
+							placeholder="装箱率..." />
+					</div>
+				</div>
+
 			</div>
-			<input type="button" id="btn" value="开始上传" class="btn btn-default">
+
 		</div>
 	</div>
 </div>

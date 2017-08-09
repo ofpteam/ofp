@@ -55,26 +55,30 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long> imp
 			
 			//缩略图
 			String hdMapUrl = productEntity.getHdMapUrl();
-			String prefix = hdMapUrl.substring(0,hdMapUrl.lastIndexOf("."));
-			String endfix = hdMapUrl.substring(hdMapUrl.lastIndexOf(".") + 1);
-			String thumbnailUrl = prefix + "_thumbnail." + endfix;
-			//生成固定高度缩略图，默认为100
-			String waterUrl = basePath + "\\resources\\images\\ofplogo.png";
-			ImageUtils.scaleWithHeightAndWaterMark(productEntity.getHdMapUrl(), thumbnailUrl, THUMBNAIL_DEFAULT_HEIGHT,waterUrl);
-			File file = new File(thumbnailUrl);
-			input = new FileImageInputStream(file);
-		    output2 = new ByteOutputStream();
-	    	byte[] buf = new byte[1024];
-	      	int numBytesRead = 0;
-	      	while ((numBytesRead = input.read(buf)) != -1) {
-	      		output2.write(buf, 0, numBytesRead);
-	      	}
-		    byte[] data =  output2.getBytes();
-		    productEntity.setThumbnail(data);
+			if(hdMapUrl != null && hdMapUrl.indexOf(".") != -1){
+				String prefix = hdMapUrl.substring(0,hdMapUrl.lastIndexOf("."));
+				String endfix = hdMapUrl.substring(hdMapUrl.lastIndexOf(".") + 1);
+				String thumbnailUrl = prefix + "_thumbnail." + endfix;
+				//生成固定高度缩略图，默认为100
+				String waterUrl = basePath + "\\resources\\images\\ofplogo.png";
+				ImageUtils.scaleWithHeightAndWaterMark(productEntity.getHdMapUrl(), thumbnailUrl, THUMBNAIL_DEFAULT_HEIGHT,waterUrl);
+				File file = new File(thumbnailUrl);
+				input = new FileImageInputStream(file);
+			    output2 = new ByteOutputStream();
+		    	byte[] buf = new byte[1024];
+		      	int numBytesRead = 0;
+		      	while ((numBytesRead = input.read(buf)) != -1) {
+		      		output2.write(buf, 0, numBytesRead);
+		      	}
+			    byte[] data =  output2.getBytes();
+			    productEntity.setThumbnail(data);
+			}
 			
 			int size = this.insert(productEntity);
+			return size;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
 		} finally{
 			try {
 				if(input != null){
@@ -88,7 +92,6 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long> imp
 				e.printStackTrace();
 			}
 		}
-		return 0;
 	}
 
 	@Override

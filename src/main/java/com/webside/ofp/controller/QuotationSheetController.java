@@ -177,6 +177,17 @@ public class QuotationSheetController extends BaseController {
 					quotationSheetEntity.setSubSheetList(quotationSubSheetList);
 					quotationSheetEntity.setCreateTime(new Date());
 					quotationSheetEntity.setCreateUser(ShiroAuthenticationManager.getUserId().intValue());
+					double sumCbm = 0;
+					for (QuotationSubSheetEntity quotationSubSheetEntity : quotationSubSheetList) {
+						double totalcbm = quotationSubSheetEntity.getProduct().getCbm()
+								* quotationSubSheetEntity.getNumber();
+						double totalgw = quotationSubSheetEntity.getProduct().getGw()
+								* quotationSubSheetEntity.getNumber();
+						quotationSubSheetEntity.setTotalcbm(totalcbm);// totalCbm
+						quotationSubSheetEntity.setTotalGw(totalgw);
+						sumCbm += totalcbm;
+					}
+					quotationSheetEntity.setTotalCbm(sumCbm);
 					int rersult = quotationSheetService.insertSheetWithSubSheet(quotationSheetEntity);
 					if (rersult > 0) {
 						InterestRateEntity interestRateEntity = new InterestRateEntity();

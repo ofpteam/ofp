@@ -37,6 +37,7 @@ import com.webside.base.basecontroller.BaseController;
 import com.webside.common.Common;
 import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
+import com.webside.ofp.common.config.OfpConfig;
 import com.webside.ofp.common.util.StrUtil;
 import com.webside.ofp.model.ProductEntity;
 import com.webside.ofp.model.ProductEntityWithBLOBs;
@@ -167,8 +168,7 @@ public class ProductController extends BaseController {
 				productEntityWithBLOBs.setProductType(productTypeEntity);
 				productEntityWithBLOBs.setIsDelete(0);
 				productEntityWithBLOBs.setCreateTime(new Date());
-				String fileUrl = System.getProperty("catalina.home") + File.separator
-						+ productEntityWithBLOBs.getHdMapUrl();
+				String fileUrl = OfpConfig.exportTempPath + File.separator + productEntityWithBLOBs.getHdMapUrl();
 				productEntityWithBLOBs.setHdMapUrl(fileUrl);
 				productEntityWithBLOBs.setCreateUser(ShiroAuthenticationManager.getUserId().intValue());
 				int result = productService.insert(productEntityWithBLOBs);
@@ -397,7 +397,7 @@ public class ProductController extends BaseController {
 		// 判断 request 是否有文件上传,即多部分请求
 		if (multipartResolver.isMultipart(request)) {
 			try {
-				String path = System.getProperty("catalina.home");
+				// String path = System.getProperty("catalina.home");
 				// 转换成多部分request
 				MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
 				// 取得request中的所有文件名
@@ -412,8 +412,7 @@ public class ProductController extends BaseController {
 						// 如果名称不为“”,说明该文件存在，否则说明该文件不存在
 						if (myFileName.trim() != "") {
 							// 重命名上传后的文件名
-							String fileName = path + File.separator + myFileName;
-							File localFile = new File(fileName);
+							File localFile = new File(myFileName);
 							file.transferTo(localFile);
 							// productService.insertWithBlobs(productEntityWithBLOBs,
 							// basePath)

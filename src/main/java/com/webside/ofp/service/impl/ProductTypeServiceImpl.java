@@ -32,7 +32,7 @@ public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, L
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		// 这里id为0必须设置为字符串，不然查询所有
 		parameter.put("parentId", "0");
-		parameter.put("roleId", roleId);
+		//parameter.put("roleId", roleId);//暂时去掉权限，逻辑有问题
 		List<ProductTypeEntity> list = productTypeMapper.queryListAll(parameter);
 		List<OfpTreeBean> allOfpTrees = new ArrayList<OfpTreeBean>();
 		for (ProductTypeEntity productTypeEntity : list) {
@@ -56,7 +56,7 @@ public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, L
 	public void findProductTypeTreeByParentId(OfpTreeBean ofpTreeBean, int roleId) {
 		Map<String, Object> parameter = new HashMap<String, Object>();
 		parameter.put("parentId", ofpTreeBean.getId());
-		parameter.put("roleId", roleId);
+		//parameter.put("roleId", roleId);//逻辑有问题
 
 		List<ProductTypeEntity> list = productTypeMapper.queryListAll(parameter);
 		if (list != null && list.size() > 0) {

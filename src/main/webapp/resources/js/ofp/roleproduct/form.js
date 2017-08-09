@@ -13,7 +13,6 @@ var arr=str.split(',');
 $('#usertype').selectpicker('val', arr);*/
 //绑定客户
 	//获取商品一级目录
-debugger;
 					$.post(sys.rootPath + "/roleProduct/queryAllProductTypeList.html", function(
 							resp) {
 						//绑定
@@ -68,7 +67,6 @@ $('#btnSave').click(function(){
 	var roleId = $("#roleId").val();
 	var productTypes=$('.selectpicker').val();
 	var productTypString=productTypes.toString();
-	debugger;
 	$.post(sys.rootPath+'/roleProduct/addRoleProductTypeBatch.html',{roleId:roleId,productTypString:productTypString},function(resp){
 		var result = JSON.parse(resp);
 		if(result.success==false){

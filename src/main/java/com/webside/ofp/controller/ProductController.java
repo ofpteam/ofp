@@ -96,9 +96,11 @@ public class ProductController extends BaseController {
 		}
 
 		// 获取当前登录用户
-		UserEntity user = ShiroAuthenticationManager.getUserEntity();
-		int roleId = user.getRole().getId().intValue();
-		parameters.put("roleId", roleId);
+		/*
+		 * UserEntity user = ShiroAuthenticationManager.getUserEntity(); int
+		 * roleId = user.getRole().getId().intValue(); parameters.put("roleId",
+		 * roleId);
+		 */
 
 		// 3、判断是否是导出操作
 		if (pager.getIsExport()) {
@@ -156,8 +158,8 @@ public class ProductController extends BaseController {
 
 	@RequestMapping("add.html")
 	@ResponseBody
-	public Object add(ProductEntityWithBLOBs productEntityWithBLOBs, ProductTypeEntity productTypeEntity)
-			throws AjaxException {
+	public Object add(ProductEntityWithBLOBs productEntityWithBLOBs, ProductTypeEntity productTypeEntity,
+			HttpServletRequest request) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			StringBuilder sb = this.validateSubmitVal(productEntityWithBLOBs, productTypeEntity);
@@ -165,6 +167,9 @@ public class ProductController extends BaseController {
 				productEntityWithBLOBs.setProductType(productTypeEntity);
 				productEntityWithBLOBs.setIsDelete(0);
 				productEntityWithBLOBs.setCreateTime(new Date());
+				String fileUrl = System.getProperty("catalina.home") + File.separator
+						+ productEntityWithBLOBs.getHdMapUrl();
+				productEntityWithBLOBs.setHdMapUrl(fileUrl);
 				productEntityWithBLOBs.setCreateUser(ShiroAuthenticationManager.getUserId().intValue());
 				int result = productService.insert(productEntityWithBLOBs);
 				if (result == 1) {
@@ -342,14 +347,17 @@ public class ProductController extends BaseController {
 
 	@RequestMapping("edit.html")
 	@ResponseBody
-	public Object update(ProductEntityWithBLOBs productEntityWithBLOBs, ProductTypeEntity productTypeEntity)
-			throws AjaxException {
+	public Object update(ProductEntityWithBLOBs productEntityWithBLOBs, ProductTypeEntity productTypeEntity,
+			HttpServletRequest request) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			StringBuilder sb = this.validateSubmitVal(productEntityWithBLOBs, productTypeEntity);
 			if (sb.length() == 0) {// 校验通过
 				productEntityWithBLOBs.setProductType(productTypeEntity);
 				productEntityWithBLOBs.setModifyTime(new Date());
+				String fileUrl = System.getProperty("catalina.home") + File.separator
+						+ productEntityWithBLOBs.getHdMapUrl();
+				productEntityWithBLOBs.setHdMapUrl(fileUrl);
 				productEntityWithBLOBs.setModifyUser(ShiroAuthenticationManager.getUserId().intValue());
 				int result = productService.update(productEntityWithBLOBs);
 				if (result == 1) {
@@ -426,27 +434,25 @@ public class ProductController extends BaseController {
 		}
 		return map;
 	}
-	
-	
-	
-	@RequestMapping(value="loadQRCode.html",method=RequestMethod.GET)
-	public void loadQRCode(HttpServletResponse response, @RequestParam("productId")int productId){
+
+	@RequestMapping(value = "loadQRCode.html", method = RequestMethod.GET)
+	public void loadQRCode(HttpServletResponse response, @RequestParam("productId") int productId) {
 		System.out.println("productId:" + productId);
-	    OutputStream os = null;
-        try {
-        	response.setContentType("img/*");
-        	os = response.getOutputStream();
-        	ProductEntityWithBLOBs productEntityWithBLOBs = productService.findByIdWithBLOBS(productId);
-            os.write(productEntityWithBLOBs.getQrCodePic()); 
-            os.flush();
-        } catch (Exception e) {  
-        	logger.error("产品二维码显示异常：",e); 
-        }finally{
-        	try {
+		OutputStream os = null;
+		try {
+			response.setContentType("img/*");
+			os = response.getOutputStream();
+			ProductEntityWithBLOBs productEntityWithBLOBs = productService.findByIdWithBLOBS(productId);
+			os.write(productEntityWithBLOBs.getQrCodePic());
+			os.flush();
+		} catch (Exception e) {
+			logger.error("产品二维码显示异常：", e);
+		} finally {
+			try {
 				os.close();
 			} catch (IOException e) {
-				logger.error("关闭输出流错误：",e);
+				logger.error("关闭输出流错误：", e);
 			}
-        }
+		}
 	}
 }

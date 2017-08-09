@@ -48,7 +48,7 @@
 					value="${productEntity.productId }">
 			</c:if>
 			<input type="hidden" name="hdMapUrl" id="hdMapUrl"
-					value="${productEntity.hdMapUrl }">
+				value="${productEntity.hdMapUrl }">
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
@@ -308,18 +308,14 @@
 					</div>
 				</div>
 			</div>
-
 		</form>
 		<div class="form-group">
-		
-			<div class="row">
-				<div id="uploader-demo">
-					<div id="fileList" class="uploader-list"></div>
-					<div id="upInfo"></div>
-					<div id="filePicker">选择文件</div>
-				</div>
-				<input type="button" id="btn" value="开始上传">
+			<div id="uploader-demo">
+				<div id="fileList" class="uploader-list"></div>
+				<div id="upInfo"></div>
+				<div id="filePicker">选择文件</div>
 			</div>
+			<input type="button" id="btn" value="开始上传" class="btn btn-default">
 		</div>
 	</div>
 </div>

@@ -1,5 +1,6 @@
 package com.webside.ofp.controller;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -293,7 +294,7 @@ public class QuotationSheetController extends BaseController {
 		QuotationSheetEntity model = quotationSheetService.findQuotationSheetWithProducts(quotationSheetId);
 		if (model != null) {
 			com.webside.ofp.common.util.OfpExportUtils.exportQuotationSheet(response, model, ExportType.EXCEL.name(),
-					request.getSession().getServletContext().getRealPath("/"));
+					request.getSession().getServletContext().getRealPath(File.separator));
 		} else {
 			throw new Exception("exportQuotationSheet is null");
 		}

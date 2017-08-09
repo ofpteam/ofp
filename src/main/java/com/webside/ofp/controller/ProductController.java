@@ -355,9 +355,9 @@ public class ProductController extends BaseController {
 			if (sb.length() == 0) {// 校验通过
 				productEntityWithBLOBs.setProductType(productTypeEntity);
 				productEntityWithBLOBs.setModifyTime(new Date());
-				String fileUrl = System.getProperty("catalina.home") + File.separator
-						+ productEntityWithBLOBs.getHdMapUrl();
+				String fileUrl = OfpConfig.exportTempPath + File.separator + productEntityWithBLOBs.getHdMapUrl();
 				productEntityWithBLOBs.setHdMapUrl(fileUrl);
+
 				productEntityWithBLOBs.setModifyUser(ShiroAuthenticationManager.getUserId().intValue());
 				int result = productService.update(productEntityWithBLOBs);
 				if (result == 1) {
@@ -410,13 +410,15 @@ public class ProductController extends BaseController {
 						String myFileName = UUID.randomUUID().toString() + file.getOriginalFilename();
 						map.put("data", myFileName);
 						// 如果名称不为“”,说明该文件存在，否则说明该文件不存在
-						if (myFileName.trim() != "") {
-							// 重命名上传后的文件名
-							File localFile = new File(myFileName);
-							file.transferTo(localFile);
-							// productService.insertWithBlobs(productEntityWithBLOBs,
-							// basePath)
+						// 重命名上传后的文件名
+						File downloadfile = new File(OfpConfig.exportTempPath);
+						if (!downloadfile.exists()) {
+							downloadfile.mkdirs();
 						}
+						downloadfile = new File(OfpConfig.exportTempPath + File.separator + myFileName);
+						file.transferTo(downloadfile);
+						// productService.insertWithBlobs(productEntityWithBLOBs,
+						// basePath)
 					}
 				}
 				map.put("success", Boolean.TRUE);
@@ -427,11 +429,14 @@ public class ProductController extends BaseController {
 				map.put("message", "添加是失败");
 				e.printStackTrace();
 			}
-		} else {
+		} else
+
+		{
 			map.put("success", Boolean.FALSE);
 			map.put("message", "添加是失败,没有需要上传的附件信息");
 		}
 		return map;
+
 	}
 
 	@RequestMapping(value = "loadQRCode.html", method = RequestMethod.GET)

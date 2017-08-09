@@ -179,9 +179,11 @@ public class QuotationSheetController extends BaseController {
 					quotationSheetEntity.setCreateUser(ShiroAuthenticationManager.getUserId().intValue());
 					double sumCbm = 0;
 					for (QuotationSubSheetEntity quotationSubSheetEntity : quotationSubSheetList) {
-						double totalcbm = quotationSubSheetEntity.getProduct().getCbm()
+						ProductEntity productEntity = productService
+								.findById((long) quotationSubSheetEntity.getProductId());
+						double totalcbm = productEntity.getCbm()
 								* quotationSubSheetEntity.getNumber();
-						double totalgw = quotationSubSheetEntity.getProduct().getGw()
+						double totalgw = productEntity.getGw()
 								* quotationSubSheetEntity.getNumber();
 						quotationSubSheetEntity.setTotalcbm(totalcbm);// totalCbm
 						quotationSubSheetEntity.setTotalGw(totalgw);

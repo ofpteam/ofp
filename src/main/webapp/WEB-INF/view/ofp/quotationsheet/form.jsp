@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath }" />
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/js/chosen/chosen.css" />
@@ -71,7 +72,7 @@
 					value="${quotationSheetEntity.createUser }">
 				<input type="hidden" name="quotationSheetId" id="quotationSheetId"
 					value="${quotationSheetEntity.quotationSheetId }">
-				<input type="hidden"  id="customerId"
+				<input type="hidden" id="customerId"
 					value="${quotationSheetEntity.customer.customerId }">
 			</c:if>
 			<div class="form-group">
@@ -373,8 +374,13 @@
 	</div>
 </div>
 <!-- 按钮触发模态框 -->
-<button class="btn btn-primary btn-lg" data-toggle="modal"
+<button class="btn btn-primary btn-xm" data-toggle="modal"
 	id="btnOpenModal">添加商品</button>
+<button class="btn btn-primary btn-xm" id="btnDelteRow">删除商品</button>
+<button class="btn btn-primary btn-xm" id="btnExcel"
+	onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'EXCEL')">导出Excel</button>
+<button class="btn btn-primary btn-xm" id="btnExcelOld" onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'OLDEXCEL')">导出Excel(Old)</button>
+<button class="btn btn-primary btn-xm" id="btnExcelOld" onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'PDF')">导出PDF</button>
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">

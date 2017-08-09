@@ -20,13 +20,10 @@
 <script type="text/javascript">
 	$(function() {
 		validateForm();
-	});
-	//加载二维码
-	function loadQrCodePic(productId) {
 		var url = sys.rootPath + "/product/loadQRCode.html?productId="
-				+ productId;
-		webside.common.loadPage(url);
-	}
+				+ $('#productId').val()+'&baseUri='+$.url().attr('path');
+		document.getElementById("qrCode").src=url;
+	});
 </script>
 <div class="page-header">
 	<h1>
@@ -304,8 +301,7 @@
 					<div class="col-sm-3">
 						<div>
 							<shiro:hasPermission name="product:loadQRCode">
-								<img id="qrCode" alt="二维码"
-									src="product/loadQRCode.html?productId=${productEntity.productId }" />
+								<img id="qrCode" alt="二维码" />
 							</shiro:hasPermission>
 						</div>
 					</div>

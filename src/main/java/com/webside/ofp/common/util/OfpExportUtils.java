@@ -46,10 +46,10 @@ import jxl.write.WritableWorkbook;
 
 public class OfpExportUtils extends ExportUtils{
 	//报价单excel模板名称
-	private static final String QUOTATION_SHEET_TEMPLATE_PATH = "\\template\\quotation_sheet.xls";
+	private static final String QUOTATION_SHEET_TEMPLATE_PATH = "\\quotation_sheet.xls";
 	
 	//老的报价单excel模板名称
-	private static final String OLD_QUOTATION_SHEET_TEMPLATE_PATH = "\\template\\quotation_sheet2.xls";
+	private static final String OLD_QUOTATION_SHEET_TEMPLATE_PATH = "\\quotation_sheet2.xls";
 	
 	
 	/**

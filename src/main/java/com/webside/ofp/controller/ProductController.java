@@ -171,7 +171,8 @@ public class ProductController extends BaseController {
 						+ productEntityWithBLOBs.getHdMapUrl();
 				productEntityWithBLOBs.setHdMapUrl(fileUrl);
 				productEntityWithBLOBs.setCreateUser(ShiroAuthenticationManager.getUserId().intValue());
-				int result = productService.insert(productEntityWithBLOBs);
+				String path = request.getSession().getServletContext().getRealPath("/");
+				int result = productService.insertWithBlobs(productEntityWithBLOBs,path);
 				if (result == 1) {
 					map.put("success", Boolean.TRUE);
 					map.put("data", null);

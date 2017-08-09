@@ -2,6 +2,7 @@ package com.webside.ofp.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -425,5 +426,27 @@ public class ProductController extends BaseController {
 		}
 		return map;
 	}
-
+	
+	
+	
+	@RequestMapping(value="loadQRCode.html",method=RequestMethod.GET)
+	public void loadQRCode(HttpServletResponse response, @RequestParam("productId")int productId){
+		System.out.println("productId:" + productId);
+	    OutputStream os = null;
+        try {
+        	response.setContentType("img/*");
+        	os = response.getOutputStream();
+        	ProductEntityWithBLOBs productEntityWithBLOBs = productService.findByIdWithBLOBS(productId);
+            os.write(productEntityWithBLOBs.getQrCodePic()); 
+            os.flush();
+        } catch (Exception e) {  
+        	logger.error("产品二维码显示异常：",e); 
+        }finally{
+        	try {
+				os.close();
+			} catch (IOException e) {
+				logger.error("关闭输出流错误：",e);
+			}
+        }
+	}
 }

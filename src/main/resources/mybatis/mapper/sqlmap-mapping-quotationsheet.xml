@@ -266,5 +266,6 @@
 		c.customer_id
 		where qs.is_delete = 0
 		<include refid="where_clause" />
+		order by qs.QUOTATION_SHEET_ID desc
 	</select>
 </mapper>

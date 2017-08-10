@@ -71,6 +71,8 @@ $('#btnSave').click(function(){
 		var result = JSON.parse(resp);
 		if(result.success==false){
 			layer.msg('保存数据失败', {icon : 0});
+		}else{
+			layer.msg('保存数据成功', {icon : 0});
 		}
 	});
 });

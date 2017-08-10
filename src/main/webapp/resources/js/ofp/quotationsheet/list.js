@@ -51,8 +51,9 @@ $(function() {
 //自定义查询
 function customSearch() {
     grid.parameters = new Object();
-    grid.parameters['CUSTOMER_NAME'] = $("#searchKey").val();
-    grid.parameters['TIMES'] = $("#id-date-range-picker-1").val();
+    grid.parameters['customername'] = $("#searchKey").val();
+    grid.parameters['starttime'] = $("#starttime").val();
+    grid.parameters['endtime'] = $("#endtime").val();
     grid.refresh(true);
 }
 

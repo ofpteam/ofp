@@ -103,7 +103,7 @@ public class QuotationSheetController extends BaseController {
 		// 2、设置查询参数
 		parameters = pager.getParameters();
 		if (parameters.size() < 0) {
-			parameters.put("CUSTOMER_NAME", null);
+			parameters.put("customerName", null);
 		}
 		// 3、判断是否是导出操作
 		if (pager.getIsExport()) {

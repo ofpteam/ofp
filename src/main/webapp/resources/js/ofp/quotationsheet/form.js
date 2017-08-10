@@ -351,7 +351,7 @@ $('#quotationsheetForm').validate({
         	number:true
         },rate:{
         	required : true,
-        	digits:true
+        	number:true
         }
     },
     messages : {

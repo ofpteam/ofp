@@ -305,6 +305,7 @@
 		a.PRODUCT_CODE productCode,
 		a.CN_NAME
 		cnName,
+		a.FACTORY_CODE factoryCode,
 		b.CN_NAME AS typecn_name
 		FROM product a
 		LEFT JOIN product_type b

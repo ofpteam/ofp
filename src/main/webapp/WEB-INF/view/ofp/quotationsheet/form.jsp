@@ -56,7 +56,7 @@
 	</h1>
 </div>
 <div class="row" style="margin-top: 5px;">
-	<div class="col-xs-12">
+	<div class="col-xs-12"><form id="exportExcelForm" method="post"></form>
 		<form id="quotationsheetForm" name="quotationsheetForm"
 			class="form-horizontal" role="form" method="post">
 			<c:if test="${!empty quotationSheetEntity}">
@@ -357,7 +357,7 @@
 						<div>
 							<input class="form-control" name="valueAddedTaxRate"
 								id="valueAddedTaxRate" type="number"
-								value=<c:if test="${empty valueAddedTaxRate}">17</c:if>
+								value=<c:if test="${empty quotationSheetEntity}">17</c:if>
 								"${quotationSheetEntity.valueAddedTaxRate }"
 								placeholder="换汇率..." />
 						</div>

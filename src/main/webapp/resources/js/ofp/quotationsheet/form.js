@@ -51,14 +51,17 @@ function isInteger(obj) {
 //导出excel
 function exportQuotationSheet(url,exportType){
 	if($('#quotationSheetId').val()!=undefined){
-		webside.common.loadPage(url+'?quotationSheetId='+$('#quotationSheetId').val()+'&exportType='+exportType);
+		debugger;
+		var path =sys.rootPath+url+'?quotationSheetId='+$('#quotationSheetId').val()+'&exportType='+exportType+ '&baseUri='
+		+ $.url().attr('path');  
+	    $('#exportExcelForm').attr("action", path).submit();
+		//webside.common.loadPage(url+'?quotationSheetId='+$('#quotationSheetId').val()+'&exportType='+exportType);
 	}else{
 		layer.msg('新增的报价单不能导出', {icon : 0});
 	}
 }
 	
 $('#btnDelteRow').click(function(){
-	debugger;
 var anSelected=	oTable.$('tr.selected');
 if ( anSelected.length !== 0 ) {
     oTable.fnDeleteRow( anSelected[0] );
@@ -230,6 +233,16 @@ function uncheckAllSon(node){
     			            "success": function (modellist) {
     			                fnCallback(modellist); //string to json
     			                $('#example tbody').on( 'click', 'tr', function () {
+    			                	//多选
+    			               /* 	  if ( $(this).hasClass('selected') ) {
+      			                        $(this).removeClass('selected');
+      			                    }
+      			                    else {
+      			                    	  $(this).addClass('selected'); 
+      			                    	oTable.$('tr.selected').removeClass('selected');
+      			                        $(this).addClass('selected');
+      			                    }*/
+    			                	//单选
     			                    if ( $(this).hasClass('selected') ) {
     			                        $(this).removeClass('selected');
     			                    }

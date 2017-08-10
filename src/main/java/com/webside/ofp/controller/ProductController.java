@@ -3,6 +3,7 @@ package com.webside.ofp.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,6 +43,8 @@ import com.webside.ofp.common.util.StrUtil;
 import com.webside.ofp.model.ProductEntity;
 import com.webside.ofp.model.ProductEntityWithBLOBs;
 import com.webside.ofp.model.ProductTypeEntity;
+import com.webside.ofp.model.QuotationSheetEntity;
+import com.webside.ofp.model.QuotationSubSheetEntity;
 import com.webside.ofp.service.ProductService;
 import com.webside.ofp.service.ProductTypeService;
 import com.webside.shiro.ShiroAuthenticationManager;
@@ -75,6 +78,38 @@ public class ProductController extends BaseController {
 		} catch (Exception e) {
 			throw new AjaxException(e);
 		}
+	}
+
+	/**
+	 * 打印商品页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("listForPrintUI.html")
+	public String listForPrintUI() {
+		return Common.BACKGROUND_PATH + "/ofp/product/listForPrintUI";
+	}
+
+	/**
+	 * 显示所有的商品（打印页面）
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "getAllProducts.html")
+	@ResponseBody
+	public Object getAllProducts(HttpServletRequest request) throws Exception {
+		Map<String, Object> jsonMap = new HashMap<>();
+		jsonMap.put("iTotalRecords", 0);
+		jsonMap.put("iTotalDisplayRecords", 0);
+
+		List<Map<String, Object>> datas = new ArrayList<>();
+		datas = productService.selectByPage(jsonMap);
+		jsonMap.put("iTotalRecords", datas.size());
+		jsonMap.put("iTotalDisplayRecords", datas.size());
+		jsonMap.put("aaData", datas);
+		return jsonMap;
 	}
 
 	/**

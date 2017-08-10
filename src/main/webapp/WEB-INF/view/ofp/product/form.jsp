@@ -19,9 +19,22 @@
 <script type="text/javascript">
 	$(function() {
 		validateForm();
-		var url = sys.rootPath + "/product/loadQRCode.html?productId="
-				+ $('#productId').val() + '&baseUri=' + $.url().attr('path');
-		document.getElementById("qrCode").src = url;
+		if ($('#hdMapUrl').val() != undefined) {//没有上传图片不显示
+			var url = sys.rootPath + "/product/loadQRCode.html?productId="
+					+ $('#productId').val() + '&baseUri='
+					+ $.url().attr('path');
+			document.getElementById("qrCode").src = url;
+
+			var loadThumbnailurl = sys.rootPath + "/product/loadThumbnail.html?productId="
+					+ $('#productId').val() + '&baseUri='
+					+ $.url().attr('path');
+			debugger;
+			document.getElementById("thumbnail").src = loadThumbnailurl;
+
+		} else {
+			$('#qrCode').hide();
+		}
+
 	});
 </script>
 <div class="page-header">
@@ -49,9 +62,10 @@
 					value="${page.orderByType }">
 				<input type="hidden" name="productId" id="productId"
 					value="${productEntity.productId }">
+				<input type="hidden" name="hdMapUrl" id="hdMapUrl"
+					value="${productEntity.hdMapUrl }">
 			</c:if>
-			<input type="hidden" name="hdMapUrl" id="hdMapUrl"
-				value="${productEntity.hdMapUrl }">
+
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
@@ -91,6 +105,10 @@
 							name="productTypefather">
 							<c:forEach var="productTypefather" items="${productTypeList }">
 								<c:choose>
+									<c:when test="${empty productEntity}">
+										<option value='${productTypefather.productTypeId}'>
+											${productTypefather.cnName}</option>
+									</c:when>
 									<c:when
 										test="${ productEntity!=null and
 									productTypefather.productTypeId==productEntity.productType.parentId}">
@@ -102,10 +120,6 @@
 											${productTypefather.cnName}</option>
 									</c:otherwise>
 								</c:choose>
-								<c:if test="${empty productEntity}">
-									<option value='${productTypefather.productTypeId}'>
-										${productTypefather.cnName}</option>
-								</c:if>
 							</c:forEach>
 						</select>
 					</div>
@@ -295,13 +309,7 @@
 								value="${productEntity.cbm }" placeholder="CBM..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right"
-						for="packHeight">二维码:</label>
-					<div class="col-sm-3">
-						<div>
-							<img id="qrCode" alt="二维码" />
-						</div>
-					</div>
+
 
 				</div>
 			</div>
@@ -313,6 +321,24 @@
 						<div>
 							<textarea class="form-control" name="packing" id="packing"
 								placeholder="Description and Packing...">${productEntity.packing }</textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right"
+						for="packHeight">二维码:</label>
+					<div class="col-sm-3">
+						<div>
+							<img id="qrCode" alt="二维码" height="120px" />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="packHeight">缩略图:</label>
+					<div class="col-sm-3">
+						<div>
+							<img id="thumbnail" alt="缩略图" height="120px" />
 						</div>
 					</div>
 				</div>

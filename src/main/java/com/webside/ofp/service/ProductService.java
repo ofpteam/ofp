@@ -21,6 +21,8 @@ public interface ProductService extends BaseService<ProductEntity, Long> {
 
 	public int insertWithBlobs(ProductEntityWithBLOBs productEntityWithBLOBs, String basePath);
 
+	public int updateWithBlobs(ProductEntityWithBLOBs productEntity,String basePath);
+
 	/**
 	 * 报价单查询页面
 	 */

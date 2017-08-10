@@ -172,7 +172,7 @@ public class ProductController extends BaseController {
 				productEntityWithBLOBs.setHdMapUrl(fileUrl);
 				productEntityWithBLOBs.setCreateUser(ShiroAuthenticationManager.getUserId().intValue());
 				String path = request.getSession().getServletContext().getRealPath("/");
-				int result = productService.insertWithBlobs(productEntityWithBLOBs,path);
+				int result = productService.insertWithBlobs(productEntityWithBLOBs, path);
 				if (result == 1) {
 					map.put("success", Boolean.TRUE);
 					map.put("data", null);
@@ -356,11 +356,15 @@ public class ProductController extends BaseController {
 			if (sb.length() == 0) {// 校验通过
 				productEntityWithBLOBs.setProductType(productTypeEntity);
 				productEntityWithBLOBs.setModifyTime(new Date());
-				String fileUrl = OfpConfig.exportTempPath + File.separator + productEntityWithBLOBs.getHdMapUrl();
-				productEntityWithBLOBs.setHdMapUrl(fileUrl);
-
+				if (productEntityWithBLOBs.getHdMapUrl() != null
+						&& productEntityWithBLOBs.getHdMapUrl().indexOf(File.separator) == -1) {
+					// 重新上传了一次附件
+					String fileUrl = OfpConfig.exportTempPath + File.separator + productEntityWithBLOBs.getHdMapUrl();
+					productEntityWithBLOBs.setHdMapUrl(fileUrl);
+				}
 				productEntityWithBLOBs.setModifyUser(ShiroAuthenticationManager.getUserId().intValue());
-				int result = productService.update(productEntityWithBLOBs);
+				String path = request.getSession().getServletContext().getRealPath("/");
+				int result = productService.updateWithBlobs(productEntityWithBLOBs, path);
 				if (result == 1) {
 					map.put("success", Boolean.TRUE);
 					map.put("data", null);
@@ -442,7 +446,6 @@ public class ProductController extends BaseController {
 
 	@RequestMapping(value = "loadQRCode.html", method = RequestMethod.GET)
 	public void loadQRCode(HttpServletResponse response, @RequestParam("productId") int productId) {
-		System.out.println("productId:" + productId);
 		OutputStream os = null;
 		try {
 			response.setContentType("img/*");
@@ -452,6 +455,26 @@ public class ProductController extends BaseController {
 			os.flush();
 		} catch (Exception e) {
 			logger.error("产品二维码显示异常：", e);
+		} finally {
+			try {
+				os.close();
+			} catch (IOException e) {
+				logger.error("关闭输出流错误：", e);
+			}
+		}
+	}
+
+	@RequestMapping(value = "loadThumbnail.html", method = RequestMethod.GET)
+	public void loadThumbnail(HttpServletResponse response, @RequestParam("productId") int productId) {
+		OutputStream os = null;
+		try {
+			response.setContentType("img/*");
+			os = response.getOutputStream();
+			ProductEntityWithBLOBs productEntityWithBLOBs = productService.findByIdWithBLOBS(productId);
+			os.write(productEntityWithBLOBs.getThumbnail());
+			os.flush();
+		} catch (Exception e) {
+			logger.error("产品缩略图显示异常：", e);
 		} finally {
 			try {
 				os.close();

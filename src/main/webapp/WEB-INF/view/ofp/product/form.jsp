@@ -25,7 +25,8 @@
 					+ $.url().attr('path');
 			document.getElementById("qrCode").src = url;
 
-			var loadThumbnailurl = sys.rootPath + "/product/loadThumbnail.html?productId="
+			var loadThumbnailurl = sys.rootPath
+					+ "/product/loadThumbnail.html?productId="
 					+ $('#productId').val() + '&baseUri='
 					+ $.url().attr('path');
 			debugger;
@@ -64,6 +65,8 @@
 					value="${productEntity.productId }">
 				<input type="hidden" name="hdMapUrl" id="hdMapUrl"
 					value="${productEntity.hdMapUrl }">
+				<input type="hidden"  id="productTypeId"
+					value="${productEntity.productType.productTypeId }">
 			</c:if>
 
 			<div class="form-group">

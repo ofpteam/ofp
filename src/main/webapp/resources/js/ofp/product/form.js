@@ -14,7 +14,11 @@ $('#productTypefather').change(function(){
 	});
 	
 });
-
+//反现二级目录
+if($('#productTypeId').val()!=undefined){
+	debugger;
+	$('#productType').val($('#productTypeId').val());
+}
 //提交
 function validateForm(){
 $('#productForm').validate({

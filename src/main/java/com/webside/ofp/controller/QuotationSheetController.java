@@ -150,7 +150,7 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping("add.html")
 	@ResponseBody
 	public Object add(QuotationSheetEntity quotationSheetEntity, CustomerEntity customerEntity,
-			String quotationSubSheetEntities, long rate) throws AjaxException {
+			String quotationSubSheetEntities, Double rate) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			List<QuotationSubSheetEntity> quotationSubSheetList = JSON.parseArray(quotationSubSheetEntities,
@@ -229,7 +229,7 @@ public class QuotationSheetController extends BaseController {
 	 * @return
 	 */
 	private Map<String, Double> CalculationProfit(QuotationSheetEntity quotationSheetEntity,
-			List<QuotationSubSheetEntity> quotationSubSheetEntities, Long Rate) {
+			List<QuotationSubSheetEntity> quotationSubSheetEntities, Double Rate) {
 		Map<String, Double> mapResult = new HashMap<>();
 		double usPricteTotal = 0;// 美金总额 = 美金单价 * 数量
 		double buyPriceTotal = 0;// 收购总价
@@ -319,7 +319,7 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping("edit.html")
 	@ResponseBody
 	public Object update(QuotationSheetEntity quotationSheetEntity, CustomerEntity customerEntity,
-			String quotationSubSheetEntities, long rate) throws AjaxException {
+			String quotationSubSheetEntities, double rate) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (ShiroAuthenticationManager.getUserId() != quotationSheetEntity.getCreateUser().intValue()) {
 			map.put("success", Boolean.FALSE);

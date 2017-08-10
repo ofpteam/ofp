@@ -13,13 +13,10 @@ $('#interestRateForm').validate({
     rules : {
     	rate : {
             required : true,
-            positiveinteger:true
+            number:true
         }
     },
     messages : {
-    	rate:{
-    		 positiveinteger:'必须输入正整数'
-    	}
     },
     highlight : function(e) {
         $(e).removeClass('has-info').addClass('has-error');

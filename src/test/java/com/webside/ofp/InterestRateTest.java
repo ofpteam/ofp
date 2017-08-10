@@ -27,7 +27,7 @@ public class InterestRateTest extends BaseJunit {
 	public void TestUpdate(){
 		InterestRateEntity interestRateEntity = new InterestRateEntity();
 		interestRateEntity.setInterestRateId(2);
-		interestRateEntity.setRate(3l);
+		interestRateEntity.setRate((double) 3l);
 		interestRateService.update(interestRateEntity);
 	}
 }

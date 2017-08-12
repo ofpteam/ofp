@@ -12,7 +12,7 @@
 <div class="row" style="margin-top: 5px;">
 	<div class="col-xs-12">
 		<div class="form-group">
-			<label class="control-label col-sm-1 no-padding-right" for="roleId">利率:</label>
+			<label class="control-label col-sm-1 no-padding-right" for="roleId">角色:</label>
 			<div class="col-sm-10">
 				<div class="clearfix">
 					<select class="chosen-select" style="width: 100%" name="roleId"
@@ -29,7 +29,7 @@
 	<div class="col-xs-12">
 		<div class="form-group">
 			<label class="control-label col-sm-1 no-padding-right"
-				for="productId">商品:</label>
+				for="productId">产品类型:</label>
 			<div class="col-sm-10">
 				<div class="clearfix">
 					<select class="form-control selectpicker" multiple>

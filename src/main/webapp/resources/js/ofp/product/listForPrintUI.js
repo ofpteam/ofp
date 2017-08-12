@@ -48,13 +48,15 @@ $(document).ready(function(){
 
 
 $('#btnPrint').click(function(){
-var MliSelected=	oTable.$('tr.selected');
-$.each(MliSelected,function(i,v){
-	var productIds=new Array();
-	//选中
-	productIds.push(oTable.fnGetData(v));
-	
-	//var t=oTable.rows('.selected').data();
+	var url = "/product/exportQrCodeBatch.html";
+	var MliSelected = oTable.$('tr.selected');
+	var productIds="";
+	$.each(MliSelected,function(i,v){
+		//选中
+		productIds += oTable.fnGetData(v).productId + ",";
+		//var t=oTable.rows('.selected').data();
+	});
+	var path =sys.rootPath+url+'?productIds=' + productIds + '&baseUri=' + $.url().attr('path');  
 	debugger;
-});
+    $('#productForm').attr("action", path).submit();
 });

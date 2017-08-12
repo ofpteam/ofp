@@ -18,4 +18,11 @@ public interface ProductMapper extends BaseMapper<ProductEntity, Long>{
 	 * 报价单查询页面
 	 */
 	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet);
+	
+	/**
+	 * 根据产品id集合批量查找产品集合
+	 * @param productIds 产品ID集合
+	 * @return List<ProductEntityWithBLOBs> 产品信息
+	 */
+	public List<ProductEntityWithBLOBs> findByIdsWithBLOBS(List<Integer> productIds);
 }

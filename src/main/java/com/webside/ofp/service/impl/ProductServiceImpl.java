@@ -156,4 +156,9 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long>impl
 		}
 	}
 
+	@Override
+	public List<ProductEntityWithBLOBs> findByIdsWithBLOBS(List<Integer> productIds) {
+		return productMapper.findByIdsWithBLOBS(productIds);
+	}
+
 }

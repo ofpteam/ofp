@@ -88,4 +88,10 @@ public class ProductTypeServiceImpl extends AbstractService<ProductTypeEntity, L
 		List<ProductTypeEntity> ProductTypes = productTypeMapper.queryListAll(parameter);
 		return ProductTypes;
 	}
+
+	@Override
+	public List<ProductTypeEntity> findProductTypeByParentId(int parentId) {
+		List<ProductTypeEntity> ProductTypes = productTypeMapper.findByParentId(parentId);
+		return ProductTypes;
+	}
 }

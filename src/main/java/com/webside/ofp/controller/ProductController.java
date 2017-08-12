@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,6 +40,7 @@ import com.webside.common.Common;
 import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
 import com.webside.ofp.common.config.OfpConfig;
+import com.webside.ofp.common.util.OfpExportUtils;
 import com.webside.ofp.common.util.StrUtil;
 import com.webside.ofp.model.ProductEntity;
 import com.webside.ofp.model.ProductEntityWithBLOBs;
@@ -50,6 +52,9 @@ import com.webside.ofp.service.ProductTypeService;
 import com.webside.shiro.ShiroAuthenticationManager;
 import com.webside.user.model.UserEntity;
 import com.webside.util.PageUtil;
+
+import jodd.util.ArraysUtil;
+
 import com.webside.dtgrid.model.Pager;
 import com.webside.dtgrid.util.ExportUtils;
 
@@ -516,6 +521,31 @@ public class ProductController extends BaseController {
 			} catch (IOException e) {
 				logger.error("关闭输出流错误：", e);
 			}
+		}
+	}
+	
+	/**
+	 * 导出报价单
+	 * 
+	 * @param response
+	 * @param quotationSheet
+	 * @param request
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/exportQrCodeBatch.html")
+	public void exportQrCodeBatch(HttpServletResponse response,HttpServletRequest request,String productIds){
+		String[] productIdArr = productIds.split(",");
+		List<Integer> productIdList = new ArrayList<Integer>();
+		for(String id:productIdArr){
+			if(id != null && !"".equals(id)){
+				productIdList.add(Integer.parseInt(id));
+			}
+		}
+		try{
+			List<ProductEntityWithBLOBs> productEntityWithBLOBs = productService.findByIdsWithBLOBS(productIdList);
+			OfpExportUtils.exportQrCodeExcel(response, productEntityWithBLOBs);
+		}catch(Exception e){
+			logger.error("导出二维码异常：",e);
 		}
 	}
 }

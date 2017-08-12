@@ -308,7 +308,7 @@ public class QuotationSheetController extends BaseController {
 		if (model != null) {
 //			String resourcePath = request.getSession().getServletContext().getRealPath("/");
 			String path = this.getClass().getResource("/template").getPath();
-			com.webside.ofp.common.util.OfpExportUtils.exportQuotationSheet(response, model, ExportType.EXCEL.name(),
+			com.webside.ofp.common.util.OfpExportUtils.exportQuotationSheet(response, model,exportType,
 					path);
 		} else {
 			throw new Exception("exportQuotationSheet is null");

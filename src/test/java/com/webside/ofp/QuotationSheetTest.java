@@ -181,12 +181,12 @@ public class QuotationSheetTest extends BaseJunit {
 	public void testFindById() {
 		QuotationSheetEntity quotationSheetEntity = quotationSheetService.findById(9l);
 		System.out.println("code:" + quotationSheetEntity.getQuotationSheetCode());
-	}
+	}*/
 	
 	@Test
 	public void testFindQuotationSheetWithProducts(){
 		long id = 11l;
-		String basePath = "C:\\Users\\Administrator\\git\\ofp\\src\\main\\resources";
+		String basePath = "C:\\Users\\Administrator\\git\\ofp\\src\\main\\resources\\template";
 		QuotationSheetEntity quotationSheetEntity = quotationSheetService.findQuotationSheetWithProducts(id);
 		System.out.println("sss:" + quotationSheetEntity.getQuotationSheetCode());
 		FileOutputStream outPut;
@@ -202,7 +202,7 @@ public class QuotationSheetTest extends BaseJunit {
 		} 
 	}
 	
-	@Test
+	/*@Test
 	public void testQueryListByPage() {
 		Map<String, Object> parameters = new HashMap<String,Object>();
 		parameters.put("start",0);
@@ -237,7 +237,7 @@ public class QuotationSheetTest extends BaseJunit {
 		} 
 	}*/
 	
-	@Test
+	/*@Test
 	public void testExportOldExcel(){
 		long id = 12l;
 		String basePath = "C:\\Users\\Administrator\\git\\ofp\\src\\main\\resources";
@@ -254,5 +254,5 @@ public class QuotationSheetTest extends BaseJunit {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-	}
+	}*/
 }

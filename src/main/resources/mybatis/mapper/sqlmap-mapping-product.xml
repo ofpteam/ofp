@@ -195,6 +195,27 @@
 		where p.is_delete = 0 and p.product_id = #{id}
 	</select>
 
+
+	<select id="findByIdsWithBLOBS" parameterType="list" resultMap="productMapWithBLOBs">
+		SELECT
+		p.PRODUCT_ID, p.PRODUCT_TYPE_ID, p.PRODUCT_CODE, p.FACTORY_CODE, p.UNIT,
+		p.CUSTOMS_CODE, p.USD_PRICE,
+		p.CN_NAME, p.EN_NAME, p.VAT_RATE, p.BUY_PRICE, p.WEIGHT, p.VOLUME, p.TOP,
+		p.BOTTOM, p.HEIGHT, p.LENGTH,
+		p.WIDTH, p.PACK_HEIGHT, p.GW, p.PACKING_RATE, p.TAX_REBATE_RATE, p.CBM,
+		p.PACKING, p.HD_MAP_URL,
+		p.IS_DELETE, p.CREATE_TIME, p.MODIFY_TIME, p.CREATE_USER, p.MODIFY_USER,
+		p.DESCRIPTION,p.THUMBNAIL,p.QR_CODE_PIC,
+		<include refid="product_type_column_list" />
+		from product p left join product_type pt on p.PRODUCT_TYPE_ID =
+		pt.PRODUCT_TYPE_ID
+		where p.is_delete = 0 and p.product_id in 
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</select>
+
 	<select id="findByTypeId" parameterType="long" resultMap="productMap"
 		flushCache="true" useCache="true">
 		SELECT

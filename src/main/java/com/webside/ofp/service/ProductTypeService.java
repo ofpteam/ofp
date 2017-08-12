@@ -30,7 +30,13 @@ public interface ProductTypeService extends BaseService<ProductTypeEntity, Long>
 	 * @return
 	 */
 	public String findAllProductTypeTreeJsonString(int roleId);
-
+ 
+	
+	/**
+	 * 根据产品大类ID 查询大类下的小类
+	 * @param parentId 父类ID
+	 */
+	public List<ProductTypeEntity> findProductTypeByParentId(int parentId);
 
 	/**
 	 * 获取所有产品类型

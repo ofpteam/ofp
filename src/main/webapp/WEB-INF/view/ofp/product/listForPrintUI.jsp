@@ -27,9 +27,10 @@
 		</thead>
 	</table>
 </div>
+<form id="productForm" name="productForm" method="post"></form>
 <div class="center">
 	<button id="btnPrint" type="button"
-		class="btn btn-success btn-sm">
-		<i class="fa fa-user-plus"></i>&nbsp; 打印
+		class="btn btn-success btn-sm" >
+		<i class="fa fa-user-plus"></i>&nbsp; 导出excel
 	</button>
 </div>

@@ -127,6 +127,10 @@ public class RoleProductController extends BaseController {
 		String[] productTyeps = productTypString.split(",");
 		for (String productTyep : productTyeps) {
 			productTypeIds.add(Integer.parseInt(productTyep));
+			List<ProductTypeEntity> productTypes = productTypeService.findProductTypeByParentId(Integer.parseInt(productTyep));
+			for(ProductTypeEntity productType:productTypes){
+				productTypeIds.add(productType.getProductTypeId());
+			}
 		}
 		Boolean flag = roleService.addRoleProductTypeBatch(roleId, productTypeIds);
 		Map<String, Object> map = new HashMap<String, Object>();

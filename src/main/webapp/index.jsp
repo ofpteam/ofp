@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -412,8 +413,12 @@ $(function() {
 			<div class="footer-inner">
 				<!-- #section:basics/footer -->
 				<div class="footer-content">
-					<span class="bigger-120"> <span class="blue bolder">WebSide</span>
-						Application &copy; 2015
+					<span class="bigger-120"> <span class="blue bolder">外贸报价系统</span>
+						Application &copy; 2017- <%
+ 	java.util.Calendar calendar = java.util.Calendar.getInstance();//可以对每个时间域单独修改
+ %> <%
+ 	out.print(calendar.get(java.util.Calendar.YEAR) + "");
+ %>
 					</span> &nbsp; &nbsp; <span class="action-buttons"> <a href="#">
 							<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
 					</a> <a href="#"> <i

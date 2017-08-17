@@ -45,7 +45,7 @@ public class UserServiceImpl extends AbstractService<UserEntity, Long> implement
 					userEntity.getUserInfo().setId(userEntity.getId());
 					int cnt = userMapper.insertUserInfo(userEntity);
 					//发送邮件
-					emailUtil.send126Mail(userEntity.getAccountName(), "系统消息通知", "您好,您的账户已创建,账户名:"+userEntity.getAccountName() +" ,密码:" + password);
+				//	emailUtil.send126Mail(userEntity.getAccountName(), "系统消息通知", "您好,您的账户已创建,账户名:"+userEntity.getAccountName() +" ,密码:" + password);
 					return cnt;
 				}else
 				{

@@ -270,7 +270,7 @@
 		#{packHeight,jdbcType=DECIMAL}, #{gw,jdbcType=DECIMAL},
 		#{packingRate,jdbcType=DECIMAL},
 		#{taxRebateRate,jdbcType=DECIMAL}, #{cbm,jdbcType=DECIMAL}, #{packing,jdbcType=VARCHAR},
-		#{hdMapUrl,jdbcType=VARCHAR}, 0, #{createTime,jdbcType=TIMESTAMP},
+		#{hdMapUrl,jdbcType=VARCHAR}, 0, now(),
 		#{createUser,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR},
 		#{thumbnail,jdbcType=LONGVARBINARY},#{qrCodePic,jdbcType=LONGVARBINARY}
 		)

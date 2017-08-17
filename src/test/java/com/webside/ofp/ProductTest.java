@@ -111,19 +111,19 @@ public class ProductTest extends BaseJunit {
 		System.out.println("插入数据id：" + productEntity.getProductId());
     }*/
 	
-	@Test
+	/*@Test
 	public void testInsertWithBlobs() {
 		ProductTypeEntity productTypeEntity = new ProductTypeEntity();
 		productTypeEntity.setProductTypeId(10);
 		ProductEntityWithBLOBs productEntity = new ProductEntityWithBLOBs();
 		productEntity.setProductType(productTypeEntity);
-		productEntity.setProductCode("20170730003");
+		productEntity.setProductCode("20170817007");
 		productEntity.setUnit("SET");
 		productEntity.setCustomsCode("70133700");
 		productEntity.setUsdPrice(0.65);
-		productEntity.setCnName("9按压杯");
+		productEntity.setCnName("21按压杯");
 		productEntity.setEnName("GLASS CUP");
-		productEntity.setVatRate(17.21d);
+		productEntity.setVatRate(17.2123d);
 		productEntity.setBuyPrice(4.38);
 		productEntity.setWeight(250);
 		productEntity.setVolume(255);
@@ -143,7 +143,7 @@ public class ProductTest extends BaseJunit {
 		String basePath = "C:\\Users\\Administrator\\git\\ofp\\src\\main\\webapp";
 		productService.insertWithBlobs(productEntity, basePath);
 		System.out.println("插入数据id：" + productEntity.getProductId());
-    }
+    }*/
 	
 	/*@Test
 	public void testUpdate(){
@@ -166,17 +166,18 @@ public class ProductTest extends BaseJunit {
 		System.out.println("删除id为1的产品：" + size);
 	}*/
 	
-	/*@Test
+	@Test
 	public void testFindByIdWithBlobs(){
-		Integer id = 17;
+		Integer id = 34;
 		ProductEntityWithBLOBs productEntity  = productService.findByIdWithBLOBS(id);
 		System.out.println("分页查询返回对象：" + productEntity.toString());
 		if(productEntity.getQrCodePic() != null){
-//			byte[] data = productEntity.getQrCodePic();
-			byte[] data = productEntity.getThumbnail();
+			byte[] data = productEntity.getQrCodePic();
+//			byte[] data = productEntity.getThumbnail();
 			if(data != null){
 				InputStream in = new ByteArrayInputStream(data);
-				String targetPath = "D:/" + productEntity.getProductCode() + "_thumbnail.jpg";
+//				String targetPath = "D:/" + productEntity.getProductCode() + "_thumbnail.jpg";
+				String targetPath = "D:/" + productEntity.getProductCode() + "_qrcode.jpg";
 				File file = new File(targetPath);
 				String path = targetPath.substring(0, targetPath.lastIndexOf("/"));
 				if(!file.exists()){
@@ -206,7 +207,7 @@ public class ProductTest extends BaseJunit {
 				}
 			}
 		}
-	}*/
+	}
 	
 	
 	/*@Test

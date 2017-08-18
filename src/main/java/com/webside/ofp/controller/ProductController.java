@@ -210,8 +210,8 @@ public class ProductController extends BaseController {
 				productEntityWithBLOBs.setProductType(productTypeEntity);
 				productEntityWithBLOBs.setIsDelete(0);
 				// cbm=(外箱长*宽*高)/1000000.
-				double cbm = productEntityWithBLOBs.getHeight() * productEntityWithBLOBs.getWeight()
-						* productEntityWithBLOBs.getLength() / 1000000;
+				double cbm = ((double) productEntityWithBLOBs.getHeight() * (double) productEntityWithBLOBs.getWeight()
+						* productEntityWithBLOBs.getLength()) / (double) 1000000;
 				productEntityWithBLOBs.setCbm(cbm);
 				productEntityWithBLOBs.setCreateTime(new Date());
 				String fileUrl = OfpConfig.exportTempPath + File.separator + productEntityWithBLOBs.getHdMapUrl();

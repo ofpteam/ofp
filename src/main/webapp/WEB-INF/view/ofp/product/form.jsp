@@ -29,7 +29,6 @@
 					+ "/product/loadThumbnail.html?productId="
 					+ $('#productId').val() + '&baseUri='
 					+ $.url().attr('path');
-			debugger;
 			document.getElementById("thumbnail").src = loadThumbnailurl;
 
 		} else {
@@ -63,13 +62,14 @@
 					value="${page.orderByType }">
 				<input type="hidden" name="productId" id="productId"
 					value="${productEntity.productId }">
-				<input type="hidden" name="hdMapUrl" id="hdMapUrl"
-					value="${productEntity.hdMapUrl }">
-				<input type="hidden"  id="productTypeId"
+
+				<input type="hidden" id="productTypeId"
 					value="${productEntity.productType.productTypeId }">
 			</c:if>
 
 			<div class="form-group">
+				<input type="hidden" name="hdMapUrl" id="hdMapUrl"
+					value="${productEntity.hdMapUrl }">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="productCode">商品编码:</label>
@@ -245,20 +245,20 @@
 						</div>
 					</div>
 
-					<label class="col-sm-1 control-label no-padding-right" for="length">外包装长度:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="length">外箱长:</label>
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="length" id="length"
 								type="number" value="${productEntity.length }"
-								placeholder="外包装长度（单位:cm）..." />
+								placeholder="外箱长（单位:cm）..." />
 						</div>
 					</div>
 
-					<label class="col-sm-1 control-label no-padding-right" for="width">外包装宽度:</label>
+					<label class="col-sm-1 control-label no-padding-right" for="width">外箱宽:</label>
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="width" id="width" type="number"
-								value="${productEntity.width }" placeholder="外包装宽度（单位：cm）..." />
+								value="${productEntity.width }" placeholder="外箱宽（单位：cm）..." />
 						</div>
 					</div>
 				</div>
@@ -266,12 +266,12 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="packHeight">外包装高度:</label>
+						for="packHeight">外箱高:</label>
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="packHeight" id="packHeight"
 								type="number" value="${productEntity.packHeight }"
-								placeholder="外包装高度（单位：cm）..." />
+								placeholder="外箱高（单位：cm）..." />
 						</div>
 					</div>
 
@@ -309,7 +309,7 @@
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="cbm" id="cbm" type="number"
-								value="${productEntity.cbm }" placeholder="CBM..." />
+								readonly value="${productEntity.cbm }" placeholder="CBM..." />
 						</div>
 					</div>
 
@@ -342,6 +342,13 @@
 					<div class="col-sm-3">
 						<div>
 							<img id="thumbnail" alt="缩略图" height="120px" />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="hdMapUrl">原始图:</label>
+					<div class="col-sm-3">
+						<div>
+							<a id="downloadfile" >下载原始图</a>
 						</div>
 					</div>
 				</div>

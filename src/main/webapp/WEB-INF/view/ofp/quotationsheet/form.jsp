@@ -244,7 +244,8 @@
 						<div>
 							<input class="form-control" name="foreignGreight"
 								id="foreignGreight" type="number"
-								value="${quotationSheetEntity.foreignGreight }"
+								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
+								"${quotationSheetEntity.foreignGreight }"
 								placeholder="国外运费..." />
 						</div>
 					</div>
@@ -254,7 +255,8 @@
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="homeGreight" id="homeGreight"
-								type="number" value="${quotationSheetEntity.homeGreight }"
+								type="number" value=<c:if test="${empty quotationSheetEntity}">0</c:if>
+								"${quotationSheetEntity.homeGreight }"
 								placeholder="国内运费..." />
 						</div>
 					</div>
@@ -365,7 +367,7 @@
 					<label class="col-sm-1 control-label no-padding-right" for="rate">利率:</label>
 					<div class="col-sm-3">
 						<input class="form-control" name="rate" id="rate" type="number"
-							value=<c:if test="${empty interestRateEntity}">${rate }</c:if>
+							value=<c:if test="${empty interestRateEntity}">${Rate }</c:if>
 							"${interestRateEntity.rate }"
 							placeholder="利率..." />
 					</div>

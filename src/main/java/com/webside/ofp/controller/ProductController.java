@@ -1,6 +1,8 @@
 package com.webside.ofp.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -178,7 +180,7 @@ public class ProductController extends BaseController {
 		try {
 			List<ProductEntity> list = productService.queryListByPage(new HashMap<String, Object>());
 			Map<String, Object> parameter = new HashMap<>();
-			parameter.put("level", 1);
+			parameter.put("level", 2);
 			// 查询一级目录
 			List<ProductTypeEntity> productTypeList = productTypeService.queryListAll(parameter);
 			if (!productTypeList.isEmpty()) {
@@ -207,6 +209,10 @@ public class ProductController extends BaseController {
 			if (sb.length() == 0) {// 校验通过
 				productEntityWithBLOBs.setProductType(productTypeEntity);
 				productEntityWithBLOBs.setIsDelete(0);
+				// cbm=(外箱长*宽*高)/1000000.
+				double cbm = productEntityWithBLOBs.getHeight() * productEntityWithBLOBs.getWeight()
+						* productEntityWithBLOBs.getLength() / 1000000;
+				productEntityWithBLOBs.setCbm(cbm);
 				productEntityWithBLOBs.setCreateTime(new Date());
 				String fileUrl = OfpConfig.exportTempPath + File.separator + productEntityWithBLOBs.getHdMapUrl();
 				productEntityWithBLOBs.setHdMapUrl(fileUrl);
@@ -291,18 +297,17 @@ public class ProductController extends BaseController {
 		if (productEntityWithBLOBs.getPackHeight() == null || productEntityWithBLOBs.getPackHeight() <= 0) {
 			sb.append("外包装高度不能为空或者外包装高度小于0,");
 		}
-		if (productEntityWithBLOBs.getGw() == null || productEntityWithBLOBs.getGw() <= 0) {
-			sb.append("GW不能为空或者GW小于0,");
-		}
 		if (productEntityWithBLOBs.getPackingRate() == null || productEntityWithBLOBs.getPackingRate() <= 0) {
 			sb.append("装箱率不能为空或者装箱率小于0,");
 		}
 		if (productEntityWithBLOBs.getTaxRebateRate() == null || productEntityWithBLOBs.getTaxRebateRate() <= 0) {
 			sb.append("退税率不能为空或者退税率小于0,");
 		}
-		if (productEntityWithBLOBs.getCbm() == null || productEntityWithBLOBs.getCbm() <= 0) {
-			sb.append("CBM不能为空或者CBM小于0,");
-		}
+		/*
+		 * if (productEntityWithBLOBs.getCbm() == null ||
+		 * productEntityWithBLOBs.getCbm() <= 0) {
+		 * sb.append("CBM不能为空或者CBM小于0,"); }
+		 */
 		return sb;
 	}
 
@@ -311,7 +316,7 @@ public class ProductController extends BaseController {
 		try {
 			ProductEntityWithBLOBs productEntityWithBLOBs = productService.findByIdWithBLOBS(id);
 			Map<String, Object> parameter = new HashMap<>();
-			parameter.put("level", 1);
+			parameter.put("level", 2);
 			// 查询一级目录
 			List<ProductTypeEntity> productTypeList = productTypeService.queryListAll(parameter);
 			if (!productTypeList.isEmpty()) {
@@ -523,7 +528,7 @@ public class ProductController extends BaseController {
 			}
 		}
 	}
-	
+
 	/**
 	 * 导出报价单
 	 * 
@@ -533,19 +538,79 @@ public class ProductController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/exportQrCodeBatch.html")
-	public void exportQrCodeBatch(HttpServletResponse response,HttpServletRequest request,String productIds){
+	public void exportQrCodeBatch(HttpServletResponse response, HttpServletRequest request, String productIds) {
 		String[] productIdArr = productIds.split(",");
 		List<Integer> productIdList = new ArrayList<Integer>();
-		for(String id:productIdArr){
-			if(id != null && !"".equals(id)){
+		for (String id : productIdArr) {
+			if (id != null && !"".equals(id)) {
 				productIdList.add(Integer.parseInt(id));
 			}
 		}
-		try{
+		try {
 			List<ProductEntityWithBLOBs> productEntityWithBLOBs = productService.findByIdsWithBLOBS(productIdList);
 			OfpExportUtils.exportQrCodeExcel(response, productEntityWithBLOBs);
-		}catch(Exception e){
-			logger.error("导出二维码异常：",e);
+		} catch (Exception e) {
+			logger.error("导出二维码异常：", e);
 		}
+	}
+
+	/**
+	 * 文件下载
+	 * 
+	 * @Description:
+	 * @param fileName
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/downloadfile.html")
+	public String downloadFile(Long productId, HttpServletResponse response) {
+		ProductEntity productEntity = productService.findById(productId);
+		if (productEntity != null) {
+			if (productEntity.getHdMapUrl() != null) {
+				File file = new File(productEntity.getHdMapUrl());
+				if (file.exists()) {
+					response.setContentType("application/force-download");// 设置强制下载不打开
+					response.addHeader("Content-Disposition", "attachment;fileName=" + productEntity.getHdMapUrl());// 设置文件名
+					byte[] buffer = new byte[1024];
+					FileInputStream fis = null;
+					BufferedInputStream bis = null;
+					try {
+						fis = new FileInputStream(file);
+						bis = new BufferedInputStream(fis);
+						OutputStream os = response.getOutputStream();
+						int i = bis.read(buffer);
+						while (i != -1) {
+							os.write(buffer, 0, i);
+							i = bis.read(buffer);
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					} finally {
+						if (bis != null) {
+							try {
+								bis.close();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						if (fis != null) {
+							try {
+								fis.close();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+			return null;
+		} else {
+			return null;
+		}
+
 	}
 }

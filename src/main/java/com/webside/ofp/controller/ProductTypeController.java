@@ -72,7 +72,7 @@ public class ProductTypeController extends BaseController {
 	public String addUI(Model model, HttpServletRequest request, Long id) {
 		// 获取大类
 		Map<String, Object> parameter = new HashMap<>();
-		parameter.put("level", 1);
+		parameter.put("level", 2);
 		List<ProductTypeEntity> list = productTypeService.queryListAll(parameter);
 		model.addAttribute("productTypeList", list);
 		return Common.BACKGROUND_PATH + "/ofp/producttype/form";
@@ -86,6 +86,8 @@ public class ProductTypeController extends BaseController {
 			productTypeEntity.setIsDelete(0);
 			productTypeEntity.setOrderby(1);
 			productTypeEntity.setParentId(productTypeEntity.getProductTypeId());
+			ProductTypeEntity fathEntity=productTypeService.findById((long)productTypeEntity.getProductTypeId());
+			productTypeEntity.setLevel(fathEntity.getLevel()+1);
 			productTypeEntity.setCreateTime(new Date());
 			productTypeEntity.setCreateUser(ShiroAuthenticationManager.getUserId().intValue());
 			int result = productTypeService.insert(productTypeEntity);

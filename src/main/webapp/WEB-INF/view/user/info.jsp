@@ -40,7 +40,7 @@ $(document).ready(function() {
 					</button>
 				</div>
 			   <div class="form-group">
-			      <label class="control-label col-sm-1 no-padding-right">邮箱:</label>
+			      <label class="control-label col-sm-1 no-padding-right">账号:</label>
 			      <div class="col-sm-10 noform">
 			      	${userEntity.accountName }
 			      </div>

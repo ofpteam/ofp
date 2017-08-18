@@ -395,7 +395,8 @@ var webside = {
                     rules : {
                         accountName : {
                             required : true,
-                            email : true,
+                            maxlength:4,
+                           /* email : true,*/
                             remote : {//更新时不验证
                                 param : {
                                     url : sys.rootPath + '/user/withoutAuth/validateAccountName.html',
@@ -424,9 +425,8 @@ var webside = {
                     },
                     messages : {
                         accountName : {
-                            required : "请填写邮箱",
-                            email : "请填写正确的邮箱",
-                            remote : "该邮箱已注册,请使用其他邮箱"
+                            required : "请填写账号",
+                            remote : "该账号已注册,请使用其他账号"
                         },
                         password : {
                             required : "请填写密码",

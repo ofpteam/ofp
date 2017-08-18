@@ -40,18 +40,18 @@ $(document).ready(function() {
 function login() {
     if($("#accountName").val() == "")
     {
-        layer.alert('请输入账户邮箱', {icon : 5,shift : 6,time : 0});
+        layer.alert('请输入工号', {icon : 5,shift : 6,time : 0});
         $("#accountName").focus();
         return false;
     }else
     {
-        var reg = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+      /*  var reg = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
         if(!reg.test($("#accountName").val()))
         {
             layer.alert('请输入正确的邮箱', {icon : 5,shift : 6,time : 0});
             $("#accountName").focus();
             return false;
-        }
+        }*/
     }
     if($("#password").val() == "")
     {
@@ -77,19 +77,19 @@ function register() {
     var accountName = $("#registerAccountName").val();
     if(accountName == "")
     {
-        layer.alert('请输入邮箱', {icon : 5,shift : 6,time : 0});
+        layer.alert('请输入工号', {icon : 5,shift : 6,time : 0});
         $("#registerAccountName").focus();
         return false;
     }else
     {
-        var reg = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+     /*   var reg = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
         if(!reg.test(accountName))
         {
             layer.alert('请输入正确的邮箱', {icon : 5,shift : 6,time : 0});
             $("#registerAccountName").focus();
             return false;
         }else
-        {
+        {*/
             var flag = true;
             $.ajax({
                 type : "POST",
@@ -101,7 +101,7 @@ function register() {
                 async : false,
                 success : function(resultdata) {
                     if (!resultdata) {
-                        layer.msg("该邮箱已注册,请使用其他邮箱",{icon:5});
+                        layer.msg("该工号已注册,请使用其他工号",{icon:5});
                         $("#registerAccountName").focus();
                         flag = false;
                     } 
@@ -116,7 +116,7 @@ function register() {
             {
                 return flag;   
             }
-        }
+       // }
     }
     if($("#registerUserName").val() == "")
     {
@@ -162,7 +162,7 @@ function resetPassword()
     var accountName = $("#recoverAccoutName").val();
     if(accountName == "")
     {
-        layer.alert('请输入账户邮箱', {icon : 5,shift : 6,time : 0});
+        layer.alert('请输入账户工号', {icon : 5,shift : 6,time : 0});
         return;
     }
     var index = layer.load();
@@ -174,7 +174,7 @@ function resetPassword()
         success : function(resultdata) {
             layer.close(index);
             if (resultdata.success) {
-                layer.msg('您好,' + resultdata.message + ',请登录您的邮箱查看', {
+                layer.msg('您好,已经修改成功,请重新登录', {
                     icon : 1
                 });
                 $('#recoverWidget').click();

@@ -5,7 +5,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>webside	用心、专业、开源免费</title>
+<title>报价系统</title>
 <%@include file="common/common-login-cdn.jsp" %>
 
 
@@ -56,7 +56,7 @@ $(document).ready(function() {
 											<fieldset>
 												<label class="block clearfix"> 
 												<span class="block input-icon input-icon-right"> 
-													<input value="${accountName}" name="accountName" id="accountName" type="email" class="form-control" placeholder="邮箱" /> 
+													<input value="${accountName}" name="accountName" id="accountName" type="text" class="form-control" placeholder="工号" /> 
 													<i class="ace-icon fa fa-user"></i>
 												</span>
 												</label> 
@@ -109,13 +109,13 @@ $(document).ready(function() {
 									</div>
 									<!-- /.widget-main -->
 
-									<div class="toolbar clearfix">
-										<div>
+								<!-- 	<div class="toolbar clearfix"> -->
+										<!-- <div>
 											<a href="#" data-target="#forgot-box"
 												class="forgot-password-link"> <i
 												class="ace-icon fa fa-arrow-left"></i> 忘记密码
 											</a>
-										</div>
+										</div> -->
 									<!-- 
 										<div>
 											<a href="#" data-target="#signup-box"
@@ -124,7 +124,7 @@ $(document).ready(function() {
 											</a>
 										</div>
 									 -->
-									</div>
+									<!-- </div> -->
 								</div>
 								<!-- /.widget-body -->
 							</div>
@@ -138,7 +138,7 @@ $(document).ready(function() {
 										</h4>
 
 										<div class="space-6"></div>
-										<p>输入您注册时填写的邮箱</p>
+										<p>输入您注册时填写的工号</p>
 
 										<form id="recoverPassword" name="recoverPassword"
 											action="${ctx }/recoverPassword.html"
@@ -146,7 +146,7 @@ $(document).ready(function() {
 											<fieldset>
 												<label class="block clearfix"> <span
 													class="block input-icon input-icon-right"> 
-													<input name="accountName" id="recoverAccoutName" type="email" class="form-control" placeholder="邮箱" />
+													<input name="accountName" id="recoverAccoutName" type="text" class="form-control" placeholder="工号" />
 														<i class="ace-icon fa fa-envelope"></i>
 												</span>
 												</label>
@@ -192,7 +192,7 @@ $(document).ready(function() {
 												<label class="block clearfix"> <span
 													class="block input-icon input-icon-right"> 
 													<input name="accountName" id="registerAccountName"
-														type="email" class="form-control" placeholder="真实邮箱,将做为登录系统的账户名" />
+														type="text" class="form-control" placeholder="真实工号,将做为登录系统的账户名" />
 														<i class="ace-icon fa fa-envelope"></i>
 												</span>
 												</label> <label class="block clearfix"> <span

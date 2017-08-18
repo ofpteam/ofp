@@ -14,9 +14,13 @@ $('#productTypefather').change(function(){
 	});
 	
 });
+if ($('#hdMapUrl').val() != undefined) {//没有上传图片不显示
+	$('#downloadfile').attr("href",sys.rootPath+"/product/downloadfile.html?productId="+$('#productId').val()+ '&baseUri='
+			+ $.url().attr('path'));
+}
+
 //反现二级目录
 if($('#productTypeId').val()!=undefined){
-	debugger;
 	$('#productType').val($('#productTypeId').val());
 }
 //提交
@@ -76,9 +80,6 @@ $('#productForm').validate({
         	required : true,
         	number:true
         },taxRebateRate:{
-        	required : true,
-        	number:true
-        },cbm:{
         	required : true,
         	number:true
         },hdMapUrl:{

@@ -49,7 +49,7 @@ public class RoleProductController extends BaseController {
 	@ResponseBody
 	public Object queryAllRoleList() throws Exception {
 		Map<String, Object> parameter = new HashMap<>();
-		parameter.put("level", 1);
+		parameter.put("level", 2);
 		List<RoleEntity> roles = roleService.queryAllList(parameter);
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (roles != null && roles.size() > 0) {
@@ -99,7 +99,7 @@ public class RoleProductController extends BaseController {
 	@ResponseBody
 	public Object queryAllProductTypeList() throws Exception {
 		Map<String, Object> parameter = new HashMap<>();
-		parameter.put("level", 1);
+		parameter.put("level", 2);
 		List<ProductTypeEntity> ProductTypes = productTypeService.queryAllProductTypeList(parameter);
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (ProductTypes != null && ProductTypes.size() > 0) {

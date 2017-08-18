@@ -35,11 +35,11 @@
 			<input type="hidden" name="userInfo.id" value="${userEntity.id }">
 		</c:if>
 		   <div class="form-group">
-		      <label class="control-label col-sm-1 no-padding-right" for="accountName">邮箱</label>
+		      <label class="control-label col-sm-1 no-padding-right" for="accountName">工号</label>
 		      <div class="col-sm-10">
 		      <div class="clearfix">
-		         <input <c:if test="${!empty userEntity}">readonly</c:if> class="form-control" name="accountName" id="accountName" type="email" 
-		           value="${userEntity.accountName }" placeholder="邮箱,将做为用户登录系统的账户..."/>
+		         <input <c:if test="${!empty userEntity}">readonly</c:if> class="form-control" name="accountName" id="accountName" type="text"
+		           value="${userEntity.accountName }" placeholder="工号,将做为用户登录系统的账户..."/>
 		      </div>
 		      </div>
 		   </div>

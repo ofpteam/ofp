@@ -16,8 +16,8 @@ var $ = jQuery,
 */			// 选择文件的按钮。可选。
 			// 内部根据当前运行是创建，可能是input元素，也可能是flash.
 			pick : '#filePicker',
-			// 不压缩image, 默认如果是jpg，文件上传前会压缩一把再上传！
-			resize : false,
+			// 不压缩
+			compress:false,
 			//fileNumLimit:1,//上传数量控制
 			//fileSingleSizeLimit:2*1024*1024,
 			// 只允许选择附件文件。

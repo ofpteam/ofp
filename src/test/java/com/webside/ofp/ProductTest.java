@@ -117,7 +117,7 @@ public class ProductTest extends BaseJunit {
 		productTypeEntity.setProductTypeId(10);
 		ProductEntityWithBLOBs productEntity = new ProductEntityWithBLOBs();
 		productEntity.setProductType(productTypeEntity);
-		productEntity.setProductCode("20170817007");
+		productEntity.setProductCode("20170819009");
 		productEntity.setUnit("SET");
 		productEntity.setCustomsCode("70133700");
 		productEntity.setUsdPrice(0.65);
@@ -139,12 +139,12 @@ public class ProductTest extends BaseJunit {
 		productEntity.setCbm(0.053);
 		productEntity.setPacking("6 pos window box,12 sets/ctn");
 		productEntity.setCreateUser(4);
-		productEntity.setHdMapUrl("D:\\IMG_20141012_130853.jpg");;
+		productEntity.setHdMapUrl("D:\\P5510.jpg");;
 		String basePath = "C:\\Users\\Administrator\\git\\ofp\\src\\main\\webapp";
 		productService.insertWithBlobs(productEntity, basePath);
 		System.out.println("插入数据id：" + productEntity.getProductId());
     }*/
-	
+
 	/*@Test
 	public void testUpdate(){
 		ProductTypeEntity productTypeEntity = new ProductTypeEntity();
@@ -168,16 +168,16 @@ public class ProductTest extends BaseJunit {
 	
 	@Test
 	public void testFindByIdWithBlobs(){
-		Integer id = 34;
+		Integer id = 44;
 		ProductEntityWithBLOBs productEntity  = productService.findByIdWithBLOBS(id);
 		System.out.println("分页查询返回对象：" + productEntity.toString());
 		if(productEntity.getQrCodePic() != null){
-			byte[] data = productEntity.getQrCodePic();
-//			byte[] data = productEntity.getThumbnail();
+//			byte[] data = productEntity.getQrCodePic();
+			byte[] data = productEntity.getThumbnail();
 			if(data != null){
 				InputStream in = new ByteArrayInputStream(data);
-//				String targetPath = "D:/" + productEntity.getProductCode() + "_thumbnail.jpg";
-				String targetPath = "D:/" + productEntity.getProductCode() + "_qrcode.jpg";
+				String targetPath = "D:/" + productEntity.getProductCode() + "_thumbnail.jpg";
+//				String targetPath = "D:/" + productEntity.getProductCode() + "_qrcode.jpg";
 				File file = new File(targetPath);
 				String path = targetPath.substring(0, targetPath.lastIndexOf("/"));
 				if(!file.exists()){

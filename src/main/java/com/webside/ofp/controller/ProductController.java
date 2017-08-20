@@ -73,6 +73,14 @@ public class ProductController extends BaseController {
 	@RequestMapping("listUI.html")
 	public String listUI(Model model, HttpServletRequest request) {
 		try {
+			List<ProductEntity> list = productService.queryListByPage(new HashMap<String, Object>());
+			Map<String, Object> parameter = new HashMap<>();
+			parameter.put("level", 2);
+			// 查询一级目录
+			List<ProductTypeEntity> productTypeList = productTypeService.queryListAll(parameter);
+			if (!productTypeList.isEmpty()) {
+				model.addAttribute("productTypeChildrenList", productTypeList);
+			}
 			PageUtil page = new PageUtil();
 			if (request.getParameterMap().containsKey("page")) {
 				page.setPageNum(Integer.valueOf(request.getParameter("page")));
@@ -136,8 +144,8 @@ public class ProductController extends BaseController {
 		parameters = pager.getParameters();
 		if (parameters.size() < 0) {
 			parameters.put("CN_NAME", null);
-		}
-
+			parameters.put("parentId", null);
+		} 
 		// 获取当前登录用户
 		/*
 		 * UserEntity user = ShiroAuthenticationManager.getUserEntity(); int

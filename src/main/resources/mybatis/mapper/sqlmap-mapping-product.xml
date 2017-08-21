@@ -327,12 +327,10 @@
 		a.CN_NAME
 		cnName,
 		a.FACTORY_CODE factoryCode,
-		b.CN_NAME AS typecn_name,
-		c.PRODUCT_TYPE_ID parentId
+		b.CN_NAME AS typecn_name
 		FROM product a
 		LEFT JOIN product_type b
 		ON a.PRODUCT_TYPE_ID = b.PRODUCT_TYPE_ID
-		left join product_type c ON b.PARENT_ID = c.PRODUCT_TYPE_ID
 		<if test="roleId != null">
 			join role_product rp on rp.PRODUCT_TYPE_ID = b.PRODUCT_TYPE_ID and
 			rp.ROLE_ID = #{roleId}
@@ -343,7 +341,7 @@
 				and a.CN_NAME like CONCAT(#{CN_NAME},'%')
 			</if>
 			<if test="parentId !=null and parentId != ''">
-				and b.PARENT_ID = #{parentId}
+				and b.PRODUCT_TYPE_ID = #{parentId}
 			</if>
 		</where>
 		order by PRODUCT_ID desc

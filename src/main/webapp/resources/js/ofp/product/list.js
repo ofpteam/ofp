@@ -19,18 +19,18 @@ var dtGridColumns = [{
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
 }, {
-    id : 'typecn_name',
-    title : '产品类型',
+    id : 'factoryCode',
+    title : '工厂编码',
     type : 'string',
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
-}, {
+}/*, {
     id : 'cnName',
     title : '中文名称',
     type : 'string',
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
-},{
+}*/,{
 	id : 'productId',
 	title : '操作',
 	type : 'number',

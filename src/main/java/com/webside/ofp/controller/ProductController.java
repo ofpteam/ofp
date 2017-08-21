@@ -75,7 +75,7 @@ public class ProductController extends BaseController {
 		try {
 			List<ProductEntity> list = productService.queryListByPage(new HashMap<String, Object>());
 			Map<String, Object> parameter = new HashMap<>();
-			parameter.put("level", 2);
+			parameter.put("level", 3);
 			// 查询一级目录
 			List<ProductTypeEntity> productTypeList = productTypeService.queryListAll(parameter);
 			if (!productTypeList.isEmpty()) {

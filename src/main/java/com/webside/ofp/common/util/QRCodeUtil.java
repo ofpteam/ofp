@@ -24,7 +24,6 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 
 /**
  * 二维码工具类
@@ -34,7 +33,7 @@ public class QRCodeUtil {
     private static final String CHARSET = "utf-8";
     private static final String FORMAT = "JPG";
     // 二维码尺寸
-    private static final int QRCODE_SIZE = 300;
+    private static final int QRCODE_SIZE = 900;
     // LOGO宽度
     private static final int LOGO_WIDTH = 60;
     // LOGO高度

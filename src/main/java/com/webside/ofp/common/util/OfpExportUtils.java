@@ -141,8 +141,8 @@ public class OfpExportUtils extends ExportUtils{
 				startRow += 3;
 			}
 			ProductEntityWithBLOBs product = products.get(i);
-			sheet.setRowView(startRow, 1000, false); //设置行高
-			sheet.setColumnView(startColumn, 20); //设置列宽
+			sheet.setRowView(startRow, 1500, false); //设置行高
+			sheet.setColumnView(startColumn, 14); //设置列宽
 			if(product.getQrCodePic() != null){
 				//缩略图
 				WritableImage image = new WritableImage(startColumn,startRow,1,1,product.getQrCodePic());

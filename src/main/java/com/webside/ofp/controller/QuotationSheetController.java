@@ -44,6 +44,7 @@ import com.webside.ofp.model.QuotationSubSheetEntity;
 import com.webside.ofp.service.CustomerService;
 import com.webside.ofp.service.InterestRateService;
 import com.webside.ofp.service.ProductService;
+import com.webside.ofp.service.ProductTypeService;
 import com.webside.ofp.service.QuotationSheetService;
 import com.webside.role.model.RoleEntity;
 import com.webside.role.service.RoleService;
@@ -67,6 +68,9 @@ public class QuotationSheetController extends BaseController {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private ProductTypeService productTypeService;
 	@Autowired
 	private InterestRateService interestRateService;
 
@@ -137,9 +141,19 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping("addUI.html")
 	public String addUI(Model model) {
 		try {
+			Map<String, Object> parameter = new HashMap<>();
+			parameter.put("level", 3);
+			List<ProductTypeEntity> productTypeList = productTypeService.queryAllProductTypeList(parameter);
 			// 默认
 			InterestRateEntity interestRateEntity = interestRateService.findById((long) 1);
 			model.addAttribute("Rate", interestRateEntity.getRate());
+			model.addAttribute("productTypeList", productTypeList);
+			if (productTypeList != null && !productTypeList.isEmpty()) {
+				parameter.clear();
+				parameter.put("productTypeId", productTypeList.get(0).getProductTypeId());
+				List<ProductEntity> productList = productService.queryListAll(parameter);
+				model.addAttribute("productList", productList);
+			}
 			return Common.BACKGROUND_PATH + "/ofp/quotationsheet/form";
 		} catch (Exception e) {
 			throw new AjaxException(e);
@@ -181,10 +195,8 @@ public class QuotationSheetController extends BaseController {
 					for (QuotationSubSheetEntity quotationSubSheetEntity : quotationSubSheetList) {
 						ProductEntity productEntity = productService
 								.findById((long) quotationSubSheetEntity.getProductId());
-						double totalcbm = productEntity.getCbm()
-								* quotationSubSheetEntity.getNumber();
-						double totalgw = productEntity.getGw()
-								* quotationSubSheetEntity.getNumber();
+						double totalcbm = productEntity.getCbm() * quotationSubSheetEntity.getPackNum();
+						double totalgw = productEntity.getGw() * quotationSubSheetEntity.getPackNum();
 						quotationSubSheetEntity.setTotalcbm(totalcbm);// totalCbm
 						quotationSubSheetEntity.setTotalGw(totalgw);
 						sumCbm += totalcbm;
@@ -273,6 +285,18 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping("editUI.html")
 	public String editUI(Model model, HttpServletRequest request, Long id) {
 		try {
+			//绑定商品大类
+			Map<String, Object> parameter = new HashMap<>();
+			parameter.put("level", 3);
+			List<ProductTypeEntity> productTypeList = productTypeService.queryAllProductTypeList(parameter);
+			model.addAttribute("productTypeList", productTypeList);
+			if (productTypeList != null && !productTypeList.isEmpty()) {
+				parameter.clear();
+				parameter.put("productTypeId", productTypeList.get(0).getProductTypeId());
+				List<ProductEntity> productList = productService.queryListAll(parameter);
+				model.addAttribute("productList", productList);
+			}
+			
 			Map<String, Object> map = new HashMap<>();
 			QuotationSheetEntity theQuotationSheetEntity = quotationSheetService.findById((long) id);
 			if (theQuotationSheetEntity != null) {
@@ -306,10 +330,10 @@ public class QuotationSheetController extends BaseController {
 			String exportType) throws Exception {
 		QuotationSheetEntity model = quotationSheetService.findQuotationSheetWithProducts(quotationSheetId);
 		if (model != null) {
-//			String resourcePath = request.getSession().getServletContext().getRealPath("/");
+			// String resourcePath =
+			// request.getSession().getServletContext().getRealPath("/");
 			String path = this.getClass().getResource("/template").getPath();
-			com.webside.ofp.common.util.OfpExportUtils.exportQuotationSheet(response, model,exportType,
-					path);
+			com.webside.ofp.common.util.OfpExportUtils.exportQuotationSheet(response, model, exportType, path);
 		} else {
 			throw new Exception("exportQuotationSheet is null");
 		}
@@ -541,5 +565,31 @@ public class QuotationSheetController extends BaseController {
 		}
 		return map;
 	}
+	
+	/**
+	 * 获取商品该产品大类下的商品
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getProductByProductTypeId.html", method = RequestMethod.POST)
+	@ResponseBody
+	public Object getProductByProductTypeId(long productTypeId) throws Exception {
+		Map<String, Object> map=new HashMap<>();
+		map.put("productTypeId", productTypeId);
+		List<ProductEntity> products = productService.queryListAll(map);
+		map.clear();
+		if (products != null && products.size() > 0) {
+			map.put("success", Boolean.TRUE);
+			map.put("data", products);
+			map.put("message", "成功");
+		} else {
+			map.put("success", Boolean.FALSE);
+			map.put("data", null);
+			map.put("message", "没有获取到商品列表");
+		}
+		return map;
+	}
+	
 
 }

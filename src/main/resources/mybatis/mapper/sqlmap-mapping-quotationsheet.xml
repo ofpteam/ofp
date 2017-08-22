@@ -72,6 +72,7 @@
 			<result column="PACK_NUM" jdbcType="INTEGER" property="packNum" />
 			<result column="TOTALCBM" jdbcType="DECIMAL" property="totalcbm" />
 			<result column="GW" jdbcType="DECIMAL" property="gw" />
+			<result column="CBM" jdbcType="DECIMAL" property="cbm" />
 			<result column="TOTAL_GW" jdbcType="DECIMAL" property="totalGw" />
 		</collection>
 	</resultMap>
@@ -100,7 +101,7 @@
 		qss.TOP, qss.BOTTOM, qss.HEIGHT, qss.PACKING,
 		qss.PACKING_RATE,
 		qss.NUMBER, qss.PACK_NUM, qss.TOTALCBM,
-		qss.GW, qss.TOTAL_GW
+		qss.GW,qss.CBM, qss.TOTAL_GW
 	</sql>
 
 	<sql id="customer_column_List">

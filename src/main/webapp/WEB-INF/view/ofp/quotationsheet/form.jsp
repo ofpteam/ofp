@@ -56,7 +56,8 @@
 	</h1>
 </div>
 <div class="row" style="margin-top: 5px;">
-	<div class="col-xs-12"><form id="exportExcelForm" method="post"></form>
+	<div class="col-xs-12">
+		<form id="exportExcelForm" method="post"></form>
 		<form id="quotationsheetForm" name="quotationsheetForm"
 			class="form-horizontal" role="form" method="post">
 			<c:if test="${!empty quotationSheetEntity}">
@@ -255,7 +256,8 @@
 					<div class="col-sm-3">
 						<div>
 							<input class="form-control" name="homeGreight" id="homeGreight"
-								type="number" value=<c:if test="${empty quotationSheetEntity}">0</c:if>
+								type="number"
+								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
 								"${quotationSheetEntity.homeGreight }"
 								placeholder="国内运费..." />
 						</div>
@@ -279,9 +281,10 @@
 						for="commission">佣金率:</label>
 					<div class="col-sm-3">
 						<div>
-							<input class="form-control" name="commission" id="commission"
+						<input class="form-control" name="commission"
+								id="commission" type="number"
 								value=<c:if test="${empty commission}">0</c:if>
-								"${quotationSheetEntity.commission }"
+								"${quotationSheetEntity.commission }" 
 								placeholder="佣金率..." />
 						</div>
 					</div>
@@ -381,12 +384,15 @@
 <button class="btn btn-primary btn-xm" data-toggle="modal"
 	id="btnOpenModal">添加商品</button>
 <button class="btn btn-primary btn-xm" id="btnDelteRow">删除商品</button>
-<button class="btn btn-primary btn-xm" id="btnExcel"
-	onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'EXCEL')">导出Excel</button>
-<button class="btn btn-primary btn-xm" id="btnExcelOld"
-	onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'OLDEXCEL')">导出Excel(Old)</button>
-<button class="btn btn-primary btn-xm" id="btnExcelOld"
-	onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'PDF')">导出PDF</button>
+<button class="btn btn-primary btn-xm" id="btnCalculation">计算利润</button>
+<c:if test="${!empty quotationSheetEntity}">
+	<button class="btn btn-primary btn-xm" id="btnExcel"
+		onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'EXCEL')">导出Excel</button>
+	<button class="btn btn-primary btn-xm" id="btnExcelOld"
+		onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'OLDEXCEL')">导出Excel(Old)</button>
+	<button class="btn btn-primary btn-xm" id="btnExcelOld"
+		onclick="exportQuotationSheet('/quotationsheet/exportQuotationSheet.html', 'PDF')">导出PDF</button>
+</c:if>
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
@@ -402,12 +408,15 @@
 				<div class="form-group">
 					<div class="row">
 						<label class="col-sm-2 control-label no-padding-right"
-							for="productSelect">商品名称:</label>
+							for="productTypeSelect">产品大类:</label>
 						<div class="col-sm-10">
 							<div>
-								<select class="chosen-select" id="productSelect"
-									style="width: 100%;" data-placeholder="商品名称...">
-									<option value="">&nbsp;</option>
+								<select class="chosen-select" id="productTypeSelect"
+									style="width: 100%;" data-placeholder="产品大类...">
+									<c:forEach var="productType" items="${productTypeList }">
+										<option value='${productType.productTypeId}'>
+											${productType.cnName}</option>
+									</c:forEach>
 								</select>
 							</div>
 						</div>
@@ -416,16 +425,21 @@
 				<div class="form-group">
 					<div class="row">
 						<label class="col-sm-2 control-label no-padding-right"
-							for="packingRate">装箱率:</label>
+							for="productCode">商品编码:</label>
 						<div class="col-sm-10">
 							<div>
-								<input class="form-control" name="packingRate" id="packingRate"
-									type="number" placeholder="装箱率..." />
+								<select class="chosen-select" id="productSelect"
+									style="width: 100%;" data-placeholder="商品编码...">
+									<c:forEach var="product" items="${productList }">
+										<option value='${product.productId}'>
+											${product.cnName}</option>
+									</c:forEach>
+								</select>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
+				<!-- 	<div class="form-group">
 					<div class="row">
 						<label class="col-sm-2 control-label no-padding-right"
 							for="number">数量:</label>
@@ -448,7 +462,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
@@ -478,6 +492,8 @@
 			<th>箱数</th>
 			<th>TOTALCBM</th>
 			<th>总毛重</th>
+			<th>CBM</th>
+			<th>GW</th>
 			<th>操作</th>
 		</tr>
 	</thead>

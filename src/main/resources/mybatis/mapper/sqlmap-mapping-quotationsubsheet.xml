@@ -24,6 +24,7 @@
     <result column="PACK_NUM" jdbcType="INTEGER" property="packNum" />
     <result column="TOTALCBM" jdbcType="DECIMAL" property="totalcbm" />
     <result column="GW" jdbcType="DECIMAL" property="gw" />
+     <result column="CBM" jdbcType="DECIMAL" property="cbm" />
     <result column="TOTAL_GW" jdbcType="DECIMAL" property="totalGw" />
     <association property="product" column="PRODUCT_ID" javaType="com.webside.ofp.model.ProductEntityWithBLOBs">
     	<id column="PRODUCT_ID" jdbcType="INTEGER" property="productId" />
@@ -64,7 +65,7 @@
   <sql id="quotation_sub_sheet_column_list">
     q.QUOTATION_SUB_SHEET_ID, q.PRODUCT_ID, q.QUOTATION_SHEET_ID, q.USD_PRICE, q.BUY_PRICE, q.UNIT, 
     q.WEIGHT, q.VOLUME, q.TOP, q.BOTTOM, q.HEIGHT, q.PACKING, q.PACKING_RATE, q.NUMBER, q.PACK_NUM, q.TOTALCBM, 
-    q.GW, q.TOTAL_GW
+    q.GW,q.CBM, q.TOTAL_GW
   </sql>
   
  <sql id="product_column_List">
@@ -143,7 +144,7 @@
 	      WEIGHT, VOLUME, TOP, 
 	      BOTTOM, HEIGHT, PACKING, 
 	      PACKING_RATE, NUMBER, PACK_NUM, 
-	      TOTALCBM, GW, TOTAL_GW
+	      TOTALCBM, GW,CBM, TOTAL_GW
 	  	)
     	values 
     	<foreach collection="list" item="item" separator="," index="index">
@@ -152,7 +153,7 @@
 			      #{item.weight,jdbcType=INTEGER}, #{item.volume,jdbcType=INTEGER}, #{item.top,jdbcType=DECIMAL}, 
 			      #{item.bottom,jdbcType=DECIMAL}, #{item.height,jdbcType=DECIMAL}, #{item.packing,jdbcType=VARCHAR}, 
 			      #{item.packingRate,jdbcType=DECIMAL}, #{item.number,jdbcType=INTEGER}, #{item.packNum,jdbcType=INTEGER}, 
-			      #{item.totalcbm,jdbcType=DECIMAL}, #{item.gw,jdbcType=DECIMAL}, #{item.totalGw,jdbcType=DECIMAL}
+			      #{item.totalcbm,jdbcType=DECIMAL}, #{item.gw,jdbcType=DECIMAL},  #{item.cbm,jdbcType=DECIMAL},#{item.totalGw,jdbcType=DECIMAL}
 	      	)
     	</foreach>
   </insert>
@@ -163,14 +164,14 @@
       WEIGHT, VOLUME, TOP, 
       BOTTOM, HEIGHT, PACKING, 
       PACKING_RATE, NUMBER, PACK_NUM, 
-      TOTALCBM, GW, TOTAL_GW
+      TOTALCBM, GW,CBM, TOTAL_GW
       )
     values (#{productId,jdbcType=INTEGER}, #{quotationSheetId,jdbcType=INTEGER}, 
       #{usdPrice,jdbcType=DECIMAL}, #{buyPrice,jdbcType=DECIMAL}, #{unit,jdbcType=VARCHAR}, 
       #{weight,jdbcType=INTEGER}, #{volume,jdbcType=INTEGER}, #{top,jdbcType=DECIMAL}, 
       #{bottom,jdbcType=DECIMAL}, #{height,jdbcType=DECIMAL}, #{packing,jdbcType=VARCHAR}, 
       #{packingRate,jdbcType=DECIMAL}, #{number,jdbcType=INTEGER}, #{packNum,jdbcType=INTEGER}, 
-      #{totalcbm,jdbcType=DECIMAL}, #{gw,jdbcType=DECIMAL}, #{totalGw,jdbcType=DECIMAL}
+      #{totalcbm,jdbcType=DECIMAL}, #{gw,jdbcType=DECIMAL}, #{cbm,jdbcType=DECIMAL}, #{totalGw,jdbcType=DECIMAL}
       )
   </insert>
   
@@ -197,6 +198,7 @@
       PACK_NUM = #{packNum,jdbcType=INTEGER},
       TOTALCBM = #{totalcbm,jdbcType=DECIMAL},
       GW = #{gw,jdbcType=DECIMAL},
+      CBM = #{gw,jdbcType=DECIMAL},
       TOTAL_GW = #{totalGw,jdbcType=DECIMAL}
     where QUOTATION_SUB_SHEET_ID = #{quotationSubSheet,jdbcType=INTEGER}
   </update>

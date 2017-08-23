@@ -297,16 +297,16 @@ function updateRow(txtbox,iDisplayIndex){
 		
 		oTable.fnUpdate(number, iDisplayIndex,11);
 		oTable.fnUpdate(packNum, iDisplayIndex,12);
-		oTable.fnUpdate(sData.cbm*packNum, iDisplayIndex,13);//总体积=单个cbm*箱数
-		oTable.fnUpdate(sData.gw*packNum, iDisplayIndex,14);//总毛重=Gw*箱数
+		oTable.fnUpdate((sData.cbm*packNum).tofixed(2), iDisplayIndex,13);//总体积=单个cbm*箱数
+		oTable.fnUpdate((sData.gw*packNum).tofixed(2), iDisplayIndex,14);//总毛重=Gw*箱数
 	}else{//箱数
 		debugger;
 		var packNum=Number($(txtbox).val());
 		var number=packNum*sData.packingRate;
 		oTable.fnUpdate(number, iDisplayIndex,11);
 		oTable.fnUpdate(packNum, iDisplayIndex,12);
-		oTable.fnUpdate(sData.cbm*packNum, iDisplayIndex,13);//总体积=单个cbm*箱数
-		oTable.fnUpdate(sData.gw*packNum, iDisplayIndex,14);//总毛重=Gw*箱数
+		oTable.fnUpdate((sData.cbm*packNum).tofixed(2), iDisplayIndex,13);//总体积=单个cbm*箱数
+		oTable.fnUpdate((sData.gw*packNum).tofixed(2), iDisplayIndex,14);//总毛重=Gw*箱数
 	}
 }
 

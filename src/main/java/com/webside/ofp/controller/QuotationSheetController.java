@@ -259,8 +259,8 @@ public class QuotationSheetController extends BaseController {
 		double p2 = (quotationSheetEntity.getCommission() * p1) / 100;
 		// 保费=保险费率*美金总额(默认0)
 		double p3 = (quotationSheetEntity.getInsuranceCost() * p1) / 100;
-		// 管理费=1.5%*美金总额(默认1.5%)
-		double p4 = buyPriceTotal*(quotationSheetEntity.getOperationCost()) / 100;
+		// 管理费
+		double p4 = (quotationSheetEntity.getOperationCost()) / 100;
 		// 国外运费
 		double p5 = quotationSheetEntity.getForeignGreight();
 		// 折扣率
@@ -285,7 +285,7 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping("editUI.html")
 	public String editUI(Model model, HttpServletRequest request, Long id) {
 		try {
-			//绑定商品大类
+			// 绑定商品大类
 			Map<String, Object> parameter = new HashMap<>();
 			parameter.put("level", 3);
 			List<ProductTypeEntity> productTypeList = productTypeService.queryAllProductTypeList(parameter);
@@ -296,7 +296,7 @@ public class QuotationSheetController extends BaseController {
 				List<ProductEntity> productList = productService.queryListAll(parameter);
 				model.addAttribute("productList", productList);
 			}
-			
+
 			Map<String, Object> map = new HashMap<>();
 			QuotationSheetEntity theQuotationSheetEntity = quotationSheetService.findById((long) id);
 			if (theQuotationSheetEntity != null) {
@@ -329,18 +329,18 @@ public class QuotationSheetController extends BaseController {
 	public void exportQuotationSheet(HttpServletResponse response, HttpServletRequest request, long quotationSheetId,
 			String exportType) throws Exception {
 		QuotationSheetEntity model = quotationSheetService.findQuotationSheetWithProducts(quotationSheetId);
-		try{
+		try {
 			if (model != null) {
-//				String resourcePath = request.getSession().getServletContext().getRealPath("/");
+				// String resourcePath =
+				// request.getSession().getServletContext().getRealPath("/");
 				String path = this.getClass().getResource("/template").getPath();
-				com.webside.ofp.common.util.OfpExportUtils.exportQuotationSheet(response, model,exportType,
-						path);
+				com.webside.ofp.common.util.OfpExportUtils.exportQuotationSheet(response, model, exportType, path);
 			} else {
 				logger.error("导出报价单异常：报价单对象为空!");
 				throw new Exception("exportQuotationSheet is null");
 			}
-		}catch(Exception e){
-			logger.error("导出报价单异常：",e);
+		} catch (Exception e) {
+			logger.error("导出报价单异常：", e);
 		}
 	}
 
@@ -569,7 +569,7 @@ public class QuotationSheetController extends BaseController {
 		}
 		return map;
 	}
-	
+
 	/**
 	 * 获取商品该产品大类下的商品
 	 * 
@@ -579,7 +579,7 @@ public class QuotationSheetController extends BaseController {
 	@RequestMapping(value = "/getProductByProductTypeId.html", method = RequestMethod.POST)
 	@ResponseBody
 	public Object getProductByProductTypeId(long productTypeId) throws Exception {
-		Map<String, Object> map=new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("productTypeId", productTypeId);
 		List<ProductEntity> products = productService.queryListAll(map);
 		map.clear();
@@ -594,6 +594,5 @@ public class QuotationSheetController extends BaseController {
 		}
 		return map;
 	}
-	
 
 }

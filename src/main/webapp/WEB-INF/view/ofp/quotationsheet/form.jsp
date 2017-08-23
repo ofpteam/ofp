@@ -283,7 +283,7 @@
 						<div>
 						<input class="form-control" name="commission"
 								id="commission" type="number"
-								value=<c:if test="${empty commission}">0</c:if>
+								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
 								"${quotationSheetEntity.commission }" 
 								placeholder="佣金率..." />
 						</div>
@@ -349,7 +349,7 @@
 						<div>
 							<input class="form-control" name="taxRebateRate"
 								id="taxRebateRate"
-								value=<c:if test="${empty taxRebateRate}">0</c:if>
+								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
 								"${quotationSheetEntity.taxRebateRate }"
 								 type="number"
 								placeholder="退税率..." />

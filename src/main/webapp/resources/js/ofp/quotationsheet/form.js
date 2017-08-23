@@ -1,3 +1,117 @@
+//表单校验 
+function validateSubmitVal(){
+	var sb ="";
+	if (!isDecimal($('#insuranceCost').val())) {
+		sb+="保险费不能为空，且保险费大于等于0,";
+	}
+	if (!isDecimal($('#foreignGreight').val())) {
+		sb+="国外运费不能为空且大于等于0,";
+	}
+	if (!isDecimal($('#homeGreight').val())) {
+		sb+="国内运费不能为空且大于等于0";
+	}
+	if (!isDecimal($('#operationCost').val())) {
+		sb+="管理费不能为空且大于等于0,";
+	}
+	if (!isDecimal($('#commission').val())) {
+		sb+="佣金率不能为空且大于等于0,";
+	}
+	if (!isDecimal($('#rebate').val())) {
+		sb+="折扣率不能为空且大于等于0,";
+	}
+	if (!isDecimal($('#interestMonth').val())) {
+		sb+="计息月不能为空且大于等于0,";
+	}
+	if (!isDecimal($('#valueAddedTaxRate').val())) {
+		sb+="增值税率不能为空且大于等于0,";
+	}
+	if (!isDecimal($('#taxRebateRate').val())) {
+		sb+="退税率不能为空且大于等于0,";
+	}
+	return sb;
+ }
+
+//判断大于0的数字
+function isDecimal(vlNumber){
+	if(isNaN(vlNumber)) 
+		return false;
+	else   if(vlNumber.valueOf()>= 0) 
+		return true;
+	else
+		return false;
+}
+//计算利润
+$('#btnCalculation').click(function(){
+	var aaData=oTable.fnGetData();
+	if(aaData.length>0){
+		var flag = $('#quotationsheetForm').valid();
+		 if (!flag) {  
+             //alert("没有通过验证");  
+             return;  
+         }else{
+        	 var message="";
+        	 message=validateSubmitVal();
+        	 if(message!=""){
+        		 layer.msg(message, {
+        				icon : 0
+        			});
+        	 }else{//校验成功
+        		 debugger;
+        		 var profit=CalculationProfit(aaData);
+        		 $('#profit').val(profit);//利润
+        		 var usPricteTotal=0;
+        		 for (var i=0;i<aaData.length;i++) {
+        				usPricteTotal += aaData[i].usdPrice *  aaData[i].number;
+        			}
+        		 $('#swapRate').val((profit/usPricteTotal).toFixed(2));
+        	 }
+         }
+	}else{
+		layer.msg('请至少添加一条商品', {
+			icon : 0
+		});
+	}
+});
+//计算利润
+function CalculationProfit(aaData){
+	var usPricteTotal = 0;// 美金总额 = 美金单价 * 数量
+	var buyPriceTotal = 0;// 收购总价
+	var profit = 0;// 利润 = 美金总额*汇率 - 收购单价*数量 +
+	// （收购单价*数量 ） /（1+增值税率）*退税率 – 美金总额*管理费率 – 国外运费*汇率 – 国内运费 –
+	// 美金总额 * 保险费率 –美金总额*折扣率 – 收购单价 * 数量 * 计息月 * 利率-佣金
+
+	for (var i=0;i<aaData.length;i++) {
+		usPricteTotal += aaData[i].usdPrice *  aaData[i].number;
+		buyPriceTotal += aaData[i].buyPrice * aaData[i].number;
+	}
+	// 美金总额
+	var p1 = usPricteTotal;
+	//人民币总额
+	var rmbPriceTotal=usPricteTotal*Number($('#exchangeRate').val());
+	// 佣金=佣金率*人民币(默认0)
+	var p2 = (Number($('#commission').val()) * rmbPriceTotal) / 100;
+	// 保费=保险费率*人民币总额(默认0)
+	var p3 = (Number($('#insuranceCost').val()) * rmbPriceTotal) / 100;
+	// 管理费=1.5%*人民币总额(默认1.5%)
+	var p4 = rmbPriceTotal*(Number($('#operationCost').val())) / 100;
+	// 国外运费(美金)
+	var p5 = Number($('#foreignGreight').val())*Number($('#exchangeRate').val());
+	// 折扣率
+	var p6 = rmbPriceTotal*Number($('#rebate').val())/100;
+	// 汇率
+	var p7 = Number($('#rate').val());
+	// 收购单价*数量
+	var p8 = buyPriceTotal;
+	// 退税=（收购单价*数量 ） /（1+增值税率）*退税率
+	var p9 = (buyPriceTotal * Number($('#taxRebateRate').val())/100)/ ((1 + Number($('#valueAddedTaxRate').val()) / 100));
+	// 国外运费
+	var p10 = Number($('#homeGreight').val());
+	// 货款利息=收购单价 * 数量 * 计息月 * 利率
+	var p11 = buyPriceTotal * Number($('#interestMonth').val()) * Number($('#rate').val());
+	profit = rmbPriceTotal-buyPriceTotal+p9-p4-p10-p11-p2-p3-p5-p6;//(p1 - p2 - p3 - p4 - p5 - p6) * p7 - p8 + p9 - p10 - p11;
+	return profit.toFixed(2);
+}
+
 //添加商品选择大类后，商品也需要变
 $('#productTypeSelect').change(function() {
 	$.post(sys.rootPath + "/quotationsheet/getProductByProductTypeId.html", {productTypeId : $('#productTypeSelect').val()
@@ -66,7 +180,6 @@ function isInteger(obj) {
 // 导出excel
 function exportQuotationSheet(url, exportType) {
 	if ($('#quotationSheetId').val() != undefined) {
-		debugger;
 		var path = sys.rootPath + url + '?quotationSheetId='
 				+ $('#quotationSheetId').val() + '&exportType=' + exportType
 				+ '&baseUri=' + $.url().attr('path');
@@ -297,16 +410,15 @@ function updateRow(txtbox,iDisplayIndex){
 		
 		oTable.fnUpdate(number, iDisplayIndex,11);
 		oTable.fnUpdate(packNum, iDisplayIndex,12);
-		oTable.fnUpdate((sData.cbm*packNum).tofixed(2), iDisplayIndex,13);//总体积=单个cbm*箱数
-		oTable.fnUpdate((sData.gw*packNum).tofixed(2), iDisplayIndex,14);//总毛重=Gw*箱数
+		oTable.fnUpdate((sData.cbm*packNum).toFixed(2), iDisplayIndex,13);//总体积=单个cbm*箱数
+		oTable.fnUpdate((sData.gw*packNum).toFixed(2), iDisplayIndex,14);//总毛重=Gw*箱数
 	}else{//箱数
-		debugger;
 		var packNum=Number($(txtbox).val());
 		var number=packNum*sData.packingRate;
 		oTable.fnUpdate(number, iDisplayIndex,11);
 		oTable.fnUpdate(packNum, iDisplayIndex,12);
-		oTable.fnUpdate((sData.cbm*packNum).tofixed(2), iDisplayIndex,13);//总体积=单个cbm*箱数
-		oTable.fnUpdate((sData.gw*packNum).tofixed(2), iDisplayIndex,14);//总毛重=Gw*箱数
+		oTable.fnUpdate((sData.cbm*packNum).toFixed(2), iDisplayIndex,13);//总体积=单个cbm*箱数
+		oTable.fnUpdate((sData.gw*packNum).toFixed(2), iDisplayIndex,14);//总毛重=Gw*箱数
 	}
 }
 

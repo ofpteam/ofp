@@ -255,28 +255,30 @@ public class QuotationSheetController extends BaseController {
 		}
 		// 美金总额
 		double p1 = usPricteTotal;
-		// 佣金=佣金率*美金总额(默认0)
-		double p2 = (quotationSheetEntity.getCommission() * p1) / 100;
-		// 保费=保险费率*美金总额(默认0)
-		double p3 = (quotationSheetEntity.getInsuranceCost() * p1) / 100;
-		// 管理费
-		double p4 = (quotationSheetEntity.getOperationCost()) / 100;
-		// 国外运费
-		double p5 = quotationSheetEntity.getForeignGreight();
+		//人民币总额
+		double rmbPriceTotal=usPricteTotal*quotationSheetEntity.getExchangeRate();
+		// 佣金=佣金率*人民币(默认0)
+		double p2 = (quotationSheetEntity.getCommission() * rmbPriceTotal) / 100;
+		// 保费=保险费率*人民币总额(默认0)
+		double p3 = (quotationSheetEntity.getInsuranceCost() * rmbPriceTotal) / 100;
+		// 管理费=1.5%*人民币总额(默认1.5%)
+		double p4 = rmbPriceTotal*(quotationSheetEntity.getOperationCost()) / 100;
+		// 国外运费(美金)
+		double p5 = quotationSheetEntity.getForeignGreight()*quotationSheetEntity.getExchangeRate();
 		// 折扣率
-		double p6 = quotationSheetEntity.getRebate();
+		double p6 = rmbPriceTotal*quotationSheetEntity.getRebate()/100;
 		// 汇率
 		double p7 = Rate;
 		// 收购单价*数量
 		double p8 = buyPriceTotal;
-		// （收购单价*数量 ） /（1+增值税率）*退税率
-		double p9 = (buyPriceTotal * quotationSheetEntity.getTaxRebateRate())
+		// 退税=（收购单价*数量 ） /（1+增值税率）*退税率
+		double p9 = (buyPriceTotal * quotationSheetEntity.getTaxRebateRate()/100)
 				/ ((1 + (quotationSheetEntity.getValueAddedTaxRate() / 100)));
 		// 国外运费
 		double p10 = quotationSheetEntity.getHomeGreight();
-		// 收购单价 * 数量 * 计息月 * 利率
+		// 货款利息=收购单价 * 数量 * 计息月 * 利率
 		double p11 = buyPriceTotal * quotationSheetEntity.getInterestMonth() * Rate;
-		profit = (p1 - p2 - p3 - p4 - p5 - p6) * p7 - p8 + p9 - p10 - p11;
+		profit = rmbPriceTotal-buyPriceTotal+p9-p4-p10-p11-p2-p3-p5-p6;//(p1 - p2 - p3 - p4 - p5 - p6) * p7 - p8 + p9 - p10 - p11;
 		mapResult.put("profit", profit);
 		mapResult.put("usPricteTotal", usPricteTotal);
 		return mapResult;

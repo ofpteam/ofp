@@ -329,15 +329,19 @@ public class QuotationSheetController extends BaseController {
 	public void exportQuotationSheet(HttpServletResponse response, HttpServletRequest request, long quotationSheetId,
 			String exportType) throws Exception {
 		QuotationSheetEntity model = quotationSheetService.findQuotationSheetWithProducts(quotationSheetId);
-		if (model != null) {
-			// String resourcePath =
-			// request.getSession().getServletContext().getRealPath("/");
-			String path = this.getClass().getResource("/template").getPath();
-			com.webside.ofp.common.util.OfpExportUtils.exportQuotationSheet(response, model, exportType, path);
-		} else {
-			throw new Exception("exportQuotationSheet is null");
+		try{
+			if (model != null) {
+//				String resourcePath = request.getSession().getServletContext().getRealPath("/");
+				String path = this.getClass().getResource("/template").getPath();
+				com.webside.ofp.common.util.OfpExportUtils.exportQuotationSheet(response, model,exportType,
+						path);
+			} else {
+				logger.error("导出报价单异常：报价单对象为空!");
+				throw new Exception("exportQuotationSheet is null");
+			}
+		}catch(Exception e){
+			logger.error("导出报价单异常：",e);
 		}
-
 	}
 
 	@RequestMapping("edit.html")

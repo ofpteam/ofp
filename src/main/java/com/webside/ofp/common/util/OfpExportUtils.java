@@ -13,6 +13,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
@@ -53,6 +55,7 @@ public class OfpExportUtils extends ExportUtils{
 	//老的报价单excel模板名称
 	private static final String OLD_QUOTATION_SHEET_TEMPLATE_PATH = "\\quotation_sheet2.xls";
 	
+	public static Logger logger = LoggerFactory.getLogger(OfpExportUtils.class);
 	
 	/**
 	 * 导出
@@ -107,6 +110,7 @@ public class OfpExportUtils extends ExportUtils{
 	
 	
 	public static void exportQrCodeExcel(OutputStream outputStream,List<ProductEntityWithBLOBs> products)  throws Exception {
+		logger.info("批量导出二维码excel 开始");
 		// 定义Excel对象
 		WritableWorkbook book = Workbook.createWorkbook(outputStream);
 		// 创建Sheet页
@@ -167,6 +171,7 @@ public class OfpExportUtils extends ExportUtils{
 		outputStream.flush();
 		outputStream.close();
 		outputStream = null;
+		logger.info("批量导出二维码excel 结束");
 	}
 	
 	/**
@@ -177,6 +182,7 @@ public class OfpExportUtils extends ExportUtils{
 	 * @throws Exception
 	 */
 	public static void exportOldQuotationSheetExcel(OutputStream outputStream,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
+		logger.info("导出老的excel 形式报价单开始");
 		// 定义Excel对象
 		Workbook book = Workbook.getWorkbook(new File(basePath+OLD_QUOTATION_SHEET_TEMPLATE_PATH));
 		WorkbookSettings settings = new WorkbookSettings();  
@@ -337,6 +343,7 @@ public class OfpExportUtils extends ExportUtils{
 		outputStream.flush();
 		outputStream.close();
 		outputStream = null;
+		logger.info("导出老的excel 形式报价单结束");
 	}
 	
 	/**
@@ -347,6 +354,7 @@ public class OfpExportUtils extends ExportUtils{
 	 * @throws Exception
 	 */
 	public static void exportQuotationSheetExcel(OutputStream outputStream,QuotationSheetEntity quotationSheet,String basePath) throws Exception {
+		logger.info("导出excel 形式报价单开始");
 		// 定义Excel对象
 		Workbook book = Workbook.getWorkbook(new File(basePath+QUOTATION_SHEET_TEMPLATE_PATH));
 		WorkbookSettings settings = new WorkbookSettings();  
@@ -486,6 +494,7 @@ public class OfpExportUtils extends ExportUtils{
 		outputStream.flush();
 		outputStream.close();
 		outputStream = null;
+		logger.info("导出excel 形式报价单结束");
 	}
 	
 	
@@ -516,8 +525,9 @@ public class OfpExportUtils extends ExportUtils{
 	 * @throws Exception
 	 */
 	public static void exportQuotationSheetPdf(OutputStream outputStream,QuotationSheetEntity quotationSheet,String basePath,String fileName) throws Exception {
+		logger.info("导出pdf形式报价单开始");
 		String tempPath = OfpConfig.exportTempPath;
-		System.out.println("tempPath:" + tempPath);
+		logger.info("tempPath:" + tempPath);
 		File file = new File(tempPath);
 		if(!file.exists()){
 			file.mkdirs();
@@ -543,10 +553,11 @@ public class OfpExportUtils extends ExportUtils{
 		fis.close();
 		os.close();
 		outputStream.close();
+		logger.info("导出pdf形式报价单结束");
 	}
 	
 	public static void excel2Pdf(String excelPath,String pdfPath){
-		System.out.println("Starting excel...");    
+		logger.info("excel转换为pdf开始");
         ActiveXComponent ax = new ActiveXComponent("Excel.Application");   
         try {    
             ax.setProperty("Visible",new Variant(false));
@@ -573,9 +584,10 @@ public class OfpExportUtils extends ExportUtils{
                 ax=null;  
             }  
             ComThread.Release();  
-        } catch (Exception e) {    
-            System.out.println("========Error:Operation fail:" + e.getMessage());    
-        }finally {    
+        } catch (Exception e) {
+            logger.error("excel转pdf时异常,",e);    
+        }finally {
+        	logger.info("excel转换为pdf结束");
             if (ax != null){    
                 ax.invoke("Quit", new Variant[] {});
             }    

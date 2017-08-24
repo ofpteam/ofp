@@ -341,6 +341,11 @@ oTable = $('#example').dataTable({
 	} ,
 	"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
 		//数量
+		 $('td:eq(1)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')"  class="txtbuyPrice"  type="number" value="'+aData.buyPrice+'"></input>');
+		//箱数 
+		 $('td:eq(2)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')"  class="txtusdPrice" type="number" value="'+aData.usdPrice+'"></input>');
+		
+		//数量
 		 $('td:eq(11)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtnumber"  type="number" value="'+aData.number+'"></input>');
 		//箱数 
 		 $('td:eq(12)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtpackNum" type="number" value="'+aData.packNum+'"></input>');
@@ -412,13 +417,19 @@ function updateRow(txtbox,iDisplayIndex){
 		oTable.fnUpdate(packNum, iDisplayIndex,12);
 		oTable.fnUpdate((sData.cbm*packNum).toFixed(2), iDisplayIndex,13);//总体积=单个cbm*箱数
 		oTable.fnUpdate((sData.gw*packNum).toFixed(2), iDisplayIndex,14);//总毛重=Gw*箱数
-	}else{//箱数
+	}else if(className=="txtpackNum"){//箱数
 		var packNum=Number($(txtbox).val());
 		var number=packNum*sData.packingRate;
 		oTable.fnUpdate(number, iDisplayIndex,11);
 		oTable.fnUpdate(packNum, iDisplayIndex,12);
 		oTable.fnUpdate((sData.cbm*packNum).toFixed(2), iDisplayIndex,13);//总体积=单个cbm*箱数
 		oTable.fnUpdate((sData.gw*packNum).toFixed(2), iDisplayIndex,14);//总毛重=Gw*箱数
+	}else if(className=="txtbuyPrice"){//单价
+		var number=Number($(txtbox).val());
+		oTable.fnUpdate(number, iDisplayIndex,1);
+	}else if(className=="txtusdPrice"){//美金单价
+		var number=Number($(txtbox).val());
+		oTable.fnUpdate(number, iDisplayIndex,2);
 	}
 }
 

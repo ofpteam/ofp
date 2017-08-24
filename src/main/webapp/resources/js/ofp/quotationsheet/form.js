@@ -153,7 +153,7 @@ $.post(sys.rootPath + "/quotationsheet/getCustomers.html", function(resp) {// �
 	}
 
 });
-$.post(sys.rootPath + "/product/allList.html", function(resp) {
+/*$.post(sys.rootPath + "/product/allList.html", function(resp) {
 	var result = JSON.parse(resp);
 	if (result.success == true) {
 		$.each(result.data, function(index, value) {
@@ -161,13 +161,13 @@ $.post(sys.rootPath + "/product/allList.html", function(resp) {
 					'<option value=' + value.productId + '>'
 							+ value.productType.cnName + "-" + value.cnName
 							+ '</option>');
-			/* 样式会变？？？ */
-			/*
+			 样式会变？？？ 
+			
 			 * $("#productSelect").chosen().change(function(option) { });
-			 */
+			 
 		});
 	}
-});
+});*/
 // 打开模态框
 $('#btnOpenModal').click(function() {
 	$('#myModal').modal('show');

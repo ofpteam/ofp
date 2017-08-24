@@ -432,7 +432,7 @@
 									style="width: 100%;" data-placeholder="商品编码...">
 									<c:forEach var="product" items="${productList }">
 										<option value='${product.productId}'>
-											${product.cnName}</option>
+											${product.productCode}</option>
 									</c:forEach>
 								</select>
 							</div>

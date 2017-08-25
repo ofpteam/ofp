@@ -96,6 +96,12 @@
 		<if test="productCode != null and productCode != ''">
 			and p.PRODUCT_CODE like CONCAT(#{productCode},'%')
 		</if>
+		<if test="productIds != null and productIds != ''">
+			and p.PRODUCT_ID in 
+   		<foreach item="item" index="index" collection="productIds" open="(" separator="," close=")">  
+    	  #{item}  
+    	 </foreach>  
+		</if>
 	</sql>
 
 	<select id="queryListByPage" parameterType="map" resultMap="productMap"

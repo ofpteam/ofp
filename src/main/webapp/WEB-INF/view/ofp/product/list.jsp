@@ -19,6 +19,10 @@
 			<i class="fa fa-pencil-square-o"></i>&nbsp;编辑
 		</button>
 	</shiro:hasPermission>
+	<button id="btnEdit" type="button" onclick="addFromProductList()"
+		class="btn btn-success btn-sm">
+		<i class="fa fa-pencil-square-o"></i>&nbsp;创建报价单
+	</button>
 </div>
 <div class="input-group col-xs-12" style="margin-top: 5px;">
 	<input id="searchKey" type="text" class="input form-control"

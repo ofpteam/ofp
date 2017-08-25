@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.test.util.JsonExpectationsHelper;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -29,6 +30,7 @@ import com.alibaba.druid.support.opds.udf.ExportTables;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.webside.base.basecontroller.BaseController;
 import com.webside.common.Common;
 import com.webside.exception.AjaxException;
@@ -139,7 +141,7 @@ public class QuotationSheetController extends BaseController {
 	}
 
 	@RequestMapping("addUI.html")
-	public String addUI(Model model) {
+	public String addUI(Model model, String productIds) {
 		try {
 			Map<String, Object> parameter = new HashMap<>();
 			parameter.put("level", 3);
@@ -148,6 +150,7 @@ public class QuotationSheetController extends BaseController {
 			InterestRateEntity interestRateEntity = interestRateService.findById((long) 1);
 			model.addAttribute("Rate", interestRateEntity.getRate());
 			model.addAttribute("productTypeList", productTypeList);
+			model.addAttribute("productIds", productIds);// 传递商品管理中选择的商品id
 			if (productTypeList != null && !productTypeList.isEmpty()) {
 				parameter.clear();
 				parameter.put("productTypeId", productTypeList.get(0).getProductTypeId());
@@ -155,10 +158,45 @@ public class QuotationSheetController extends BaseController {
 				model.addAttribute("productList", productList);
 			}
 			return Common.BACKGROUND_PATH + "/ofp/quotationsheet/form";
-		} catch (Exception e) {
+		} catch (
+
+		Exception e)
+
+		{
 			throw new AjaxException(e);
 		}
 
+	}
+
+	// 查询商品列表
+	@RequestMapping("queryProductListByIds.html")
+	@ResponseBody
+	public Object queryListByIds(String productIds) throws AjaxException {
+		// 商品中选中哪些商品来创建报价单
+		Map<String, Object> map = new HashMap<>();
+		if (productIds != null && productIds != "") {
+			String ids[] = productIds.split(",");
+			int[] emplv = new int[ids.length];
+			for (int i = 0; i < emplv.length; i++) {
+				emplv[i] = Integer.parseInt(ids[i]);
+			}
+			map.put("productIds", emplv);
+			List<ProductEntity> productSelectList = productService.queryListAll(map);
+			if (productSelectList != null && !productSelectList.isEmpty()) {
+				map.put("success", Boolean.TRUE);
+				map.put("data", productSelectList);
+				map.put("message", "查询商品成功");
+			} else {
+				map.put("success", Boolean.FALSE);
+				map.put("data", null);
+				map.put("message", "查询商品失败");
+			}
+		} else {
+			map.put("success", Boolean.FALSE);
+			map.put("data", null);
+			map.put("message", "查询商品失败");
+		}
+		return map;
 	}
 
 	@RequestMapping("add.html")
@@ -255,30 +293,50 @@ public class QuotationSheetController extends BaseController {
 		}
 		// 美金总额
 		double p1 = usPricteTotal;
-		//人民币总额
-		double rmbPriceTotal=usPricteTotal*quotationSheetEntity.getExchangeRate();
+		// 人民币总额
+		double rmbPriceTotal = usPricteTotal * quotationSheetEntity.getExchangeRate();
 		// 佣金=佣金率*人民币(默认0)
 		double p2 = (quotationSheetEntity.getCommission() * rmbPriceTotal) / 100;
 		// 保费=保险费率*人民币总额(默认0)
 		double p3 = (quotationSheetEntity.getInsuranceCost() * rmbPriceTotal) / 100;
-		// 管理费=1.5%*人民币总额(默认1.5%)
-		double p4 = rmbPriceTotal*(quotationSheetEntity.getOperationCost()) / 100;
+		// 管理费=1.5%*人民币总额(默认1.5%)
+		double p4 = rmbPriceTotal * (quotationSheetEntity.getOperationCost()) / 100;
 		// 国外运费(美金)
-		double p5 = quotationSheetEntity.getForeignGreight()*quotationSheetEntity.getExchangeRate();
+		double p5 = quotationSheetEntity.getForeignGreight() * quotationSheetEntity.getExchangeRate();
 		// 折扣率
-		double p6 = rmbPriceTotal*quotationSheetEntity.getRebate()/100;
+		double p6 = rmbPriceTotal * quotationSheetEntity.getRebate() / 100;
 		// 汇率
 		double p7 = Rate;
 		// 收购单价*数量
 		double p8 = buyPriceTotal;
 		// 退税=（收购单价*数量 ） /（1+增值税率）*退税率
-		double p9 = (buyPriceTotal * quotationSheetEntity.getTaxRebateRate()/100)
+		double p9 = (buyPriceTotal * quotationSheetEntity.getTaxRebateRate() / 100)
 				/ ((1 + (quotationSheetEntity.getValueAddedTaxRate() / 100)));
 		// 国外运费
 		double p10 = quotationSheetEntity.getHomeGreight();
 		// 货款利息=收购单价 * 数量 * 计息月 * 利率
 		double p11 = buyPriceTotal * quotationSheetEntity.getInterestMonth() * Rate;
-		profit = rmbPriceTotal-buyPriceTotal+p9-p4-p10-p11-p2-p3-p5-p6;//(p1 - p2 - p3 - p4 - p5 - p6) * p7 - p8 + p9 - p10 - p11;
+		profit = rmbPriceTotal - buyPriceTotal + p9 - p4 - p10 - p11 - p2 - p3 - p5 - p6;// (p1
+																							// -
+																							// p2
+																							// -
+																							// p3
+																							// -
+																							// p4
+																							// -
+																							// p5
+																							// -
+																							// p6)
+																							// *
+																							// p7
+																							// -
+																							// p8
+																							// +
+																							// p9
+																							// -
+																							// p10
+																							// -
+																							// p11;
 		mapResult.put("profit", profit);
 		mapResult.put("usPricteTotal", usPricteTotal);
 		return mapResult;

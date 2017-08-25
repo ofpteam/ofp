@@ -79,6 +79,8 @@
 			<div class="form-group">
 				<input type="hidden" name="quotationSubSheetEntities"
 					id="quotationSubSheetEntities" />
+				<input type="hidden" name="productSelectList" id="productSelectList"
+					value=${productIds } />
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="customerName">客户名称:</label>
@@ -281,8 +283,8 @@
 						for="commission">佣金率:</label>
 					<div class="col-sm-3">
 						<div>
-						<input class="form-control" name="commission"
-								id="commission" type="number"
+							<input class="form-control" name="commission" id="commission"
+								type="number"
 								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
 								"${quotationSheetEntity.commission }" 
 								placeholder="佣金率..." />

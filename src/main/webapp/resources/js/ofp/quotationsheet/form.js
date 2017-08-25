@@ -1,3 +1,4 @@
+
 //表单校验 
 function validateSubmitVal(){
 	var sb ="";
@@ -314,7 +315,38 @@ oTable = $('#example').dataTable({
 			"contentType" : "application/json; charset=utf-8",
 			"url" : sSource,
 			"success" : function(modellist) {
-				fnCallback(modellist); // string to json
+				fnCallback(modellist); 
+				//如果在商品管理中选择了商品，在此处自动添加到明细里
+				if($('#productSelectList').val()!=""){
+					debugger;
+					$.post(sys.rootPath+"/quotationsheet/queryProductListByIds.html",{productIds:$(productSelectList).val()},
+							function(resp){
+						var productList=JSON.parse(resp);
+						for(var i=0;i<productList.data.length;i++){
+							$('#example').dataTable().fnAddData(
+									[ {
+										productId :productList.data[i].productId,
+										buyPrice : productList.data[i].buyPrice,
+										usdPrice : productList.data[i].usdPrice,
+										unit : productList.data[i].unit,
+										top : productList.data[i].top,
+										bottom : productList.data[i].bottom,
+										height : productList.data[i].height,
+										weight : productList.data[i].weight,
+										volume : productList.data[i].volume,
+										packing : productList.data[i].packing,
+										packingRate : productList.data[i].packingRate,
+										number : productList.data[i].packingRate,
+										packNum : 1,
+										totalcbm : 1* productList.data[i].cbm,
+										totalGw : 1* productList.data[i].gw,
+										cbm : productList.data[i].cbm,
+										gw : productList.data[i].gw,
+										quotationSheetId : $('#quotationSheetId').val() == undefined ? '': $('#quotationSheetId').val()
+									} ]);
+						}
+					});
+				}
 				 //当数量被修改
 				$('#example tbody').on('click', 'tr', function() {
 					// 多选

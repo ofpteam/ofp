@@ -1,4 +1,41 @@
+var productSelectedList= new Array();
+//更新选中记录
+function onChecked(productId){
+	if($.inArray(productId, productSelectedList)==-1 ){
+		productSelectedList.push(productId);	
+	}else{
+		productSelectedList.splice($.inArray(productId,productSelectedList),1);
+	}
+}
+//从商品列表勾选商品再创建报价单
+function addFromProductList(){
+	if(productSelectedList.length==0){
+		layer.msg("你没有选择行", {
+			icon : 0
+		});
+	}else{
+		webside.common.loadPage('/quotationsheet/addUI.html' + '?productIds='+productSelectedList );
+	}
+}
 var dtGridColumns = [{
+	id : 'productId',
+	title : '选择',
+	type : 'text',
+	columnClass : 'text-center',
+	hideType : 'xs',
+	headerClass : 'dlshouwen-grid-header',
+	resolution : function(value, record, column, grid, dataNo, columnNo) {
+		 //当前页码
+		 var nowPage = grid.pager.nowPage;
+		// 获取每页显示的记录数(即: select框中的10,20,30)
+		var pageSize = grid.pager.pageSize;
+		// 获取排序字段
+		var columnId = grid.sortParameter.columnId;
+		// 获取排序方式 [0-不排序，1-正序，2-倒序]
+		var sortType = grid.sortParameter.sortType;
+			return '<input type="checkbox" onclick="onChecked('+value+')" class="productCheckBox" id="'+value+'"/>';
+	    }
+},{
 	id : 'productId',
 	title : '图片预览',
 	type : 'string',
@@ -53,7 +90,7 @@ var dtGridColumns = [{
 var dtGridOption = {
     lang : 'zh-cn',
     ajaxLoad : true,
-    check : true,
+    /*check : true,*/
     extraWidth : '37px',
     loadURL : sys.rootPath + '/product/list.html',
     columns : dtGridColumns,
@@ -62,7 +99,19 @@ var dtGridOption = {
     tools : 'refresh|print',
     exportFileName : '商品信息',
     pageSize : 10,
-    pageSizeLimit : [10, 20, 30]
+    pageSizeLimit : [10, 20, 30],
+    onCellClick : function(value, record, column, grid, dataNo, columnNo, cell, row, extraCell, e){
+    	 var log = '<p>单元格事件触发。事件类型：'+e.type+'；触发单元格坐标：('+columnNo+','+dataNo+')；单元格内容：'+value+'。</p>';
+    	     },
+    	     /*onCheck : function(isChecked, record, grid, dataNo, row, extraCell, e){
+    	    	         var log = '<p>复选事件触发。是否复选：'+isChecked+'；触发行坐标：'+dataNo+'。</p>';
+    	    },*/onGridComplete : function(grid){
+    	    	if(productSelectedList.length>0){//之前选中的要重新勾选上
+    	    		for(var i=0;i<productSelectedList.length;i++){
+    	    			$('#'+productSelectedList[i]).attr('checked','checked');
+    	    		}
+    	    	}
+    	    }
 };
 var grid = $.fn.dlshouwen.grid.init(dtGridOption);
 $(function() {

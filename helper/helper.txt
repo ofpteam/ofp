@@ -2,3 +2,6 @@
 重启服务即可
 2.webside部署：http://git.oschina.net/wjggwm/webside/wikis/deploy
 重点看ssl配置及druid(都是一次性的配置)
+3.导出pdf文件时需要把dll文件放到java_home/jre/bin目录下，其中32位java为jacob-1.18-x86.dll，64位为jacob-1.18-x64.dll
+4.使用windows服务形式部署tomcat时，导出pdf卡住了，是因为window服务形式启动tomcat时需要设置系统用户权限，在tomcat服务器中设置登录权限，设置方法：
+右键属性，弹出框中选择登录，然后选择此账户，输入登录密码和确认密码后重启服务。

@@ -558,31 +558,35 @@ public class OfpExportUtils extends ExportUtils{
 	
 	public static void excel2Pdf(String excelPath,String pdfPath){
 		logger.info("excel转换为pdf开始");
-        ActiveXComponent ax = new ActiveXComponent("Excel.Application");   
+        ActiveXComponent ax = new ActiveXComponent("Excel.Application");
+        logger.info("ax:" + ax.toString());
         try {    
             ax.setProperty("Visible",new Variant(false));
             ax.setProperty("AutomationSecurity", new Variant(3)); //禁用宏  
+            logger.info("2");
             Dispatch excels=ax.getProperty("Workbooks").toDispatch();
-            
+            logger.info("excels:"+excels.toString());
             Dispatch excel=Dispatch.invoke(excels,"Open",Dispatch.Method,new Object[]{  
             	excelPath,
                 new Variant(false),  
                 new Variant(false)
             },  
             new int[9]).toDispatch();
+            logger.info("Open:"+excel.toString());
             //转换格式  
             Dispatch.invoke(excel,"ExportAsFixedFormat",Dispatch.Method,new Object[]{  
                 new Variant(0), //PDF格式=0  
                 pdfPath,  
                 new Variant(0)  //0=标准 (生成的PDF图片不会变模糊) 1=最小文件 (生成的PDF图片糊的一塌糊涂)  
             },new int[1]);
-            
+            logger.info("ExportAsFixedFormat:"+excel.toString());
             Dispatch.call(excel, "Close",new Variant(false));  
-            
+            logger.info("Close:"+excel.toString());
             if(ax!=null){  
                 ax.invoke("Quit",new Variant[]{});  
                 ax=null;  
-            }  
+            }
+            logger.info("quit");
             ComThread.Release();  
         } catch (Exception e) {
             logger.error("excel转pdf时异常,",e);    

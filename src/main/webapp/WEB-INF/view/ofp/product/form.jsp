@@ -73,7 +73,7 @@
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="productCode">商品编码:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="productCode" id="productCode"
 								type="text" value="${productEntity.productCode }"
@@ -83,27 +83,16 @@
 
 					<label class="col-sm-1 control-label no-padding-right"
 						for="factoryCode">工厂编码:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="factoryCode" id="factoryCode"
 								type="text" value="${productEntity.factoryCode }"
 								placeholder="工厂编码..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right" for="unit">单位:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="unit" id="unit" type="text"
-								value="${productEntity.unit }" placeholder="单位..." />
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="PRODUCT_TYPE_ID_1">商品大类(一级):</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<select class="form-control" id="productTypefather"
 							name="productTypefather">
 							<c:forEach var="productTypefather" items="${productTypeList }">
@@ -128,7 +117,7 @@
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="productType">商品大类(二级):</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<select class="form-control" id="productType" name="productTypeId">
 							<c:forEach var="productType" items="${productTypeChildrenList }">
 								<option value='${productType.productTypeId}'>
@@ -136,138 +125,143 @@
 							</c:forEach>
 						</select>
 					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right" for="enName">英文名称:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="enName" id="enName" type="text"
+								value="${productEntity.enName }" placeholder="英文名称..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right" for="cnName">中文名称:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="cnName" id="cnName" type="text"
+								value="${productEntity.cnName }" placeholder="中文名称..." />
+						</div>
+					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="customsCode">海关编码:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="customsCode" id="customsCode"
 								type="text" value="${productEntity.customsCode }"
 								placeholder="海关编码..." />
 						</div>
 					</div>
+					<label class="col-sm-1 control-label no-padding-right" for="unit">单位:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="unit" id="unit" type="text"
+								value="${productEntity.unit }" placeholder="单位..." />
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="form-group">
+			<div class="form-group"> 
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="usdPrice">美金单价:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="usdPrice" id="usdPrice"
 								type="number" value="${productEntity.usdPrice }"
 								placeholder="美金单价..." />
 						</div>
 					</div>
-
-					<label class="col-sm-1 control-label no-padding-right" for="cnName">中文名称:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="cnName" id="cnName" type="text"
-								value="${productEntity.cnName }" placeholder="中文名称..." />
-						</div>
-					</div>
-					<label class="col-sm-1 control-label no-padding-right" for="enName">英文名称:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="enName" id="enName" type="text"
-								value="${productEntity.enName }" placeholder="英文名称..." />
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right"
-						for="vatRate">增值税率:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="vatRate" id="vatRate"
-								type="number" value="${productEntity.vatRate }"
-								placeholder="增值税率..." />
-						</div>
-					</div>
-
 					<label class="col-sm-1 control-label no-padding-right"
 						for="buyPrice">收购单价:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="buyPrice" id="buyPrice"
 								type="number" value="${productEntity.buyPrice }"
 								placeholder="收购单价..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right" for="weight">单品重量:</label>
-					<div class="col-sm-3">
+				
+					<label class="col-sm-1 control-label no-padding-right"
+						for="vatRate">增值税率:</label>
+					<div class="col-sm-2">
 						<div>
-							<input class="form-control" name="weight" id="weight"
-								type="number" value="${productEntity.weight }"
-								placeholder="单品重量（g）..." />
+							<input class="form-control" name="vatRate" id="vatRate"
+								type="number" value="${productEntity.vatRate }"
+								placeholder="增值税率..." />
+						</div>
+					</div>
+					
+					<label class="col-sm-1 control-label no-padding-right"
+						for="taxRebateRate">退税率:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="taxRebateRate"
+								id="taxRebateRate" type="number"
+								value="${productEntity.taxRebateRate }" placeholder="退税率..." />
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right" for="volume">容量:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="volume" id="volume"
-								type="number" value="${productEntity.volume }"
-								placeholder="容量（ml）..." />
-						</div>
-					</div>
 
 					<label class="col-sm-1 control-label no-padding-right" for="top">Top:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="top" id="top" type="number"
 								value="${productEntity.top }" placeholder="口TopΦ(mm)..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right" for="bottom">底:</label>
-					<div class="col-sm-3">
+					<label class="col-sm-1 control-label no-padding-right" for="bottom">Bottom:</label>
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="bottom" id="bottom"
 								type="number" value="${productEntity.bottom }"
 								placeholder="底BottomΦ(mm)..." />
 						</div>
 					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right" for="height">高:</label>
-					<div class="col-sm-3">
+					
+					<label class="col-sm-1 control-label no-padding-right" for="height">Height:</label>
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="height" id="height"
 								type="number" value="${productEntity.height }"
 								placeholder="高Height(mm)..." />
 						</div>
 					</div>
-
-					<label class="col-sm-1 control-label no-padding-right" for="length">外箱长:</label>
-					<div class="col-sm-3">
+					
+					<label class="col-sm-1 control-label no-padding-right" for="gw">G.W:</label>
+					<div class="col-sm-2">
 						<div>
-							<input class="form-control" name="length" id="length"
-								type="number" value="${productEntity.length }"
-								placeholder="外箱长（单位:cm）..." />
-						</div>
-					</div>
-
-					<label class="col-sm-1 control-label no-padding-right" for="width">外箱宽:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="width" id="width" type="number"
-								value="${productEntity.width }" placeholder="外箱宽（单位：cm）..." />
+							<input class="form-control" name="gw" id="gw" type="number"
+								value="${productEntity.gw }" placeholder="G.W..." />
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right" for="length">外箱长:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="length" id="length"
+								type="number" value="${productEntity.length }"
+								placeholder="外箱长（单位:cm）..." />
+						</div>
+					</div>
+	
+					<label class="col-sm-1 control-label no-padding-right" for="width">外箱宽:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="width" id="width" type="number"
+								value="${productEntity.width }" placeholder="外箱宽（单位：cm）..." />
+						</div>
+					</div>
+				
 					<label class="col-sm-1 control-label no-padding-right"
 						for="packHeight">外箱高:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="packHeight" id="packHeight"
 								type="number" value="${productEntity.packHeight }"
@@ -275,17 +269,38 @@
 						</div>
 					</div>
 
-					<label class="col-sm-1 control-label no-padding-right" for="gw">G.W:</label>
-					<div class="col-sm-3">
+					<label class="col-sm-1 control-label no-padding-right" for="cbm">CBM:</label>
+					<div class="col-sm-2">
 						<div>
-							<input class="form-control" name="gw" id="gw" type="number"
-								value="${productEntity.gw }" placeholder="G.W..." />
+							<input class="form-control" name="cbm" id="cbm" type="number"
+								readonly value="${productEntity.cbm }" placeholder="CBM..." />
 						</div>
 					</div>
-
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right" for="volume">容量:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="volume" id="volume"
+								type="number" value="${productEntity.volume }"
+								placeholder="容量（ml）..." />
+						</div>
+					</div>
+		
+					<label class="col-sm-1 control-label no-padding-right" for="weight">单品重量:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="weight" id="weight"
+								type="number" value="${productEntity.weight }"
+								placeholder="单品重量（g）..." />
+						</div>
+					</div>
+					
 					<label class="col-sm-1 control-label no-padding-right"
 						for="packingRate">装箱率:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="packingRate" id="packingRate"
 								type="number" value="${productEntity.packingRate }"
@@ -297,30 +312,8 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="taxRebateRate">退税率:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="taxRebateRate"
-								id="taxRebateRate" type="number"
-								value="${productEntity.taxRebateRate }" placeholder="退税率..." />
-						</div>
-					</div>
-					<label class="col-sm-1 control-label no-padding-right" for="cbm">CBM:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="cbm" id="cbm" type="number"
-								readonly value="${productEntity.cbm }" placeholder="CBM..." />
-						</div>
-					</div>
-
-
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right"
-						for="packing">PACKING:</label>
-					<div class="col-sm-7">
+						for="packing">Description:</label>
+					<div class="col-sm-11">
 						<div>
 							<textarea class="form-control" name="packing" id="packing"
 								placeholder="Description and Packing...">${productEntity.packing }</textarea>
@@ -334,21 +327,21 @@
 						for="packHeight">二维码:</label>
 					<div class="col-sm-3">
 						<div>
-							<img id="qrCode" alt="二维码" height="120px" />
+							<img id="qrCode" alt="二维码" height="200px" />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="packHeight">缩略图:</label>
 					<div class="col-sm-3">
 						<div>
-							<img id="thumbnail" alt="缩略图" height="120px" />
+							<img id="thumbnail" alt="缩略图" height="200px" />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="hdMapUrl">原始图:</label>
 					<div class="col-sm-3">
 						<div>
-							<a id="downloadfile" >下载原始图</a>
+							<a id="downloadfile" ><input type="button" id="btn" value="下载原始图" class="btn btn-success btn-sm"/></a>
 						</div>
 					</div>
 				</div>
@@ -356,11 +349,11 @@
 		</form>
 		<div class="form-group">
 			<div class="row">
-				<div id="uploader-demo" class="col-sm-3">
+				<div id="uploader-demo" class="col-sm-1">
 					<div id="fileList" class="uploader-list"></div>
 					<div id="upInfo"></div>
 					<div id="filePicker">选择文件</div>
-					<input type="button" id="btn" value="开始上传" class="btn btn-default">
+					<input type="button" id="btn" value="开始上传" class="btn btn-default" style="width:83px;height:40px;float:left;margin-top:10px;"/>
 				</div>
 			</div>
 		</div>

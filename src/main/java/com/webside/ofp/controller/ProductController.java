@@ -582,7 +582,10 @@ public class ProductController extends BaseController {
 				File file = new File(productEntity.getHdMapUrl());
 				if (file.exists()) {
 					response.setContentType("application/force-download");// 设置强制下载不打开
-					response.addHeader("Content-Disposition", "attachment;fileName=" + productEntity.getHdMapUrl());// 设置文件名
+					String hdMapUrl = productEntity.getHdMapUrl();
+					String suffix = hdMapUrl.substring(hdMapUrl.lastIndexOf("."));
+					String fileName = productEntity.getFactoryCode() + suffix;
+					response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
 					byte[] buffer = new byte[1024];
 					FileInputStream fis = null;
 					BufferedInputStream bis = null;

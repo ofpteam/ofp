@@ -318,8 +318,7 @@ oTable = $('#example').dataTable({
 				fnCallback(modellist); 
 				//如果在商品管理中选择了商品，在此处自动添加到明细里
 				if($('#productSelectList').val()!=""){
-					debugger;
-					$.post(sys.rootPath+"/quotationsheet/queryProductListByIds.html",{productIds:$(productSelectList).val()},
+					$.post(sys.rootPath+"/quotationsheet/queryProductListByIds.html",{productIds:$('#productSelectList').val()},
 							function(resp){
 						var productList=JSON.parse(resp);
 						for(var i=0;i<productList.data.length;i++){

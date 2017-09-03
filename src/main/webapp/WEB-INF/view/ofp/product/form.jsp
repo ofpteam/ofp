@@ -341,7 +341,7 @@
 						for="hdMapUrl">原始图:</label>
 					<div class="col-sm-3">
 						<div>
-							<a id="downloadfile" ><input type="button" id="btn" value="下载原始图" class="btn btn-success btn-sm"/></a>
+							<a id="downloadfile" ><input type="button" value="下载原始图" class="btn btn-success btn-sm"/></a>
 						</div>
 					</div>
 				</div>

@@ -41,8 +41,10 @@ import com.webside.base.basecontroller.BaseController;
 import com.webside.common.Common;
 import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
+import com.webside.ofp.common.bean.PrintProductTagBean;
 import com.webside.ofp.common.config.OfpConfig;
 import com.webside.ofp.common.util.OfpExportUtils;
+import com.webside.ofp.common.util.PrintUtil;
 import com.webside.ofp.common.util.StrUtil;
 import com.webside.ofp.model.ProductEntity;
 import com.webside.ofp.model.ProductEntityWithBLOBs;
@@ -541,7 +543,7 @@ public class ProductController extends BaseController {
 	}
 
 	/**
-	 * 导出报价单
+	 * 批量导出二维码
 	 * 
 	 * @param response
 	 * @param quotationSheet
@@ -562,6 +564,50 @@ public class ProductController extends BaseController {
 			OfpExportUtils.exportQrCodeExcel(response, productEntityWithBLOBs);
 		} catch (Exception e) {
 			logger.error("导出二维码异常：", e);
+		}
+	}
+	
+	
+	/**
+	 * 打印产品标签
+	 * @param response
+	 * @param quotationSheet
+	 * @param request
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/printProductTag.html")
+	public void printProductTag(HttpServletResponse response, HttpServletRequest request, String productIds) {
+		String[] productIdArr = productIds.split(",");
+		List<Integer> productIdList = new ArrayList<Integer>();
+		for (String id : productIdArr) {
+			if (id != null && !"".equals(id)) {
+				productIdList.add(Integer.parseInt(id));
+			}
+		}
+		try {
+			String path = request.getSession().getServletContext().getRealPath("/");
+			String logoUrl = path + "\\resources\\images\\ofplogo.png";
+			List<ProductEntityWithBLOBs> productEntityWithBLOBs = productService.findByIdsWithBLOBS(productIdList);
+			List<PrintProductTagBean> productTagBeanlist = new ArrayList<PrintProductTagBean>();
+			for(ProductEntityWithBLOBs productEntity:productEntityWithBLOBs){
+				PrintProductTagBean productTagBean = new PrintProductTagBean();
+				productTagBean.setArtNo("Art No.:"+productEntity.getProductCode());
+				productTagBean.setFacNo("Fac No.:"+productEntity.getFactoryCode());
+				productTagBean.setTbh("T/B/H(mm):"+productEntity.getTop()+"*"+productEntity.getBottom()+"*"+productEntity.getHeight());
+				productTagBean.setWeightAndVol("W(g):"+productEntity.getWeight()+" Vol(ml):"+productEntity.getVolume());
+				productTagBean.setMeas("Meas.:"+productEntity.getLength()+"*"+productEntity.getWidth()+"*"+productEntity.getPackHeight());
+				productTagBean.setGw("Gw(kgs).:"+productEntity.getGw());
+				productTagBean.setQcAndCbm("Q/C:"+productEntity.getPackingRate()+productEntity.getUnit()+" CBM:"+productEntity.getCbm());
+				productTagBean.setSmallLogo(logoUrl);
+				productTagBeanlist.add(productTagBean);
+			}
+			
+			if(productTagBeanlist.size() > 0){
+				PrintUtil printUtil = new PrintUtil(productTagBeanlist);
+				printUtil.printContent();
+			}
+		} catch (Exception e) {
+			logger.error("打印产品标签：", e);
 		}
 	}
 

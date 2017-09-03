@@ -50,6 +50,28 @@ $(document).ready(function(){
 $('#btnPrint').click(function(){
 	var url = "/product/exportQrCodeBatch.html";
 	var MliSelected = oTable.$('tr.selected');
+	if(MliSelected.length == 0){
+		alert("请先选择产品！");
+		return;
+	}
+	var productIds="";
+	$.each(MliSelected,function(i,v){
+		//选中
+		productIds += oTable.fnGetData(v).productId + ",";
+		//var t=oTable.rows('.selected').data();
+	});
+	var path =sys.rootPath+url+'?productIds=' + productIds + '&baseUri=' + $.url().attr('path');  
+	debugger;
+    $('#productForm').attr("action", path).submit();
+});
+
+$('#btnPrintTag').click(function(){
+	var url = "/product/printProductTag.html";
+	var MliSelected = oTable.$('tr.selected');
+	if(MliSelected.length == 0){
+		alert("请先选择产品！");
+		return;
+	}
 	var productIds="";
 	$.each(MliSelected,function(i,v){
 		//选中

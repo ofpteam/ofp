@@ -174,6 +174,70 @@ public class OfpExportUtils extends ExportUtils{
 		logger.info("批量导出二维码excel 结束");
 	}
 	
+	
+	public static void exportProductTags(OutputStream outputStream,List<ProductEntityWithBLOBs> products)  throws Exception {
+		logger.info("批量导出产品标签excel 开始");
+		// 定义Excel对象
+		WritableWorkbook book = Workbook.createWorkbook(outputStream);
+		// 创建Sheet页
+		WritableSheet sheet = book.createSheet("标签", 0);
+	
+		// 定义表头字体样式、表格字体样式
+		WritableFont headerFont = new WritableFont(
+				WritableFont.createFont("Lucida Grande"), 9, WritableFont.BOLD);
+		WritableCellFormat headerCellFormat = new WritableCellFormat(headerFont);
+		
+		// 设置表头样式：加边框、背景颜色为淡灰、居中样式
+//		headerCellFormat.setBorder(Border.ALL, BorderLineStyle.THIN);
+//		headerCellFormat.setBackground(Colour.PALE_BLUE);
+		headerCellFormat.setAlignment(Alignment.CENTRE);
+		headerCellFormat.setVerticalAlignment(VerticalAlignment.CENTRE);
+		
+		// 定义表头字体样式、表格字体样式
+		WritableFont spaceFont = new WritableFont(
+					WritableFont.createFont("Lucida Grande"), 3, WritableFont.NO_BOLD);
+		WritableCellFormat spaceCellFormat = new WritableCellFormat(spaceFont);
+		
+		int startRow = 1;
+		int startColumn = 1;
+		for(int i=0;i<products.size();i++){
+			//每行3个
+			int column = i%3;
+			if(column == 0 && i != 0){
+				startColumn = 1;
+				startRow += 3;
+			}
+			ProductEntityWithBLOBs product = products.get(i);
+			sheet.setRowView(startRow, 1500, false); //设置行高
+			sheet.setColumnView(startColumn, 14); //设置列宽
+			if(product.getQrCodePic() != null){
+				//缩略图
+				WritableImage image = new WritableImage(startColumn,startRow,1,1,product.getQrCodePic());
+				sheet.addImage(image);
+			}
+			Label labelCustomer = new Label(startColumn,startRow+1,product.getProductCode(),headerCellFormat);
+			sheet.addCell(labelCustomer);
+			
+			sheet.setColumnView(startColumn+1, 3); //设置列宽
+			Label labelSpace = new Label(startColumn+1,startRow,"",spaceCellFormat);
+			sheet.addCell(labelSpace);
+			
+			sheet.setRowView(startRow+2, 500, false); //设置行高
+			startColumn += 2;
+		}
+		
+		// 写入Excel工作表
+		book.write();
+		// 关闭Excel工作薄对象
+		book.close();
+		// 关闭流
+		outputStream.flush();
+		outputStream.close();
+		outputStream = null;
+		logger.info("批量导出产品标签excel 结束");
+	}
+	
+	
 	/**
 	 * 导出老的报价单格式
 	 * @param outputStream

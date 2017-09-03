@@ -19,9 +19,9 @@
 	<table id="example" class="display" cellspacing="0" width="100%">
 		<thead>
 			<tr>
-				<th>商品名称</th>
-				<th>商品类型名称</th>
+				<th>商品编号</th>
 				<th>商品编码</th>
+				<th>商品名称</th>
 				<th>工厂编码</th>
 			</tr>
 		</thead>
@@ -32,5 +32,9 @@
 	<button id="btnPrint" type="button"
 		class="btn btn-success btn-sm" >
 		<i class="fa fa-user-plus"></i>&nbsp; 导出excel
+	</button>
+	<button id="btnPrintTag" type="button"
+		class="btn btn-success btn-sm" >
+		<i class="fa fa-user-plus"></i>&nbsp; 打印标签
 	</button>
 </div>

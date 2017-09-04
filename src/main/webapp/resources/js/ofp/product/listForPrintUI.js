@@ -78,7 +78,17 @@ $('#btnPrintTag').click(function(){
 		productIds += oTable.fnGetData(v).productId + ",";
 		//var t=oTable.rows('.selected').data();
 	});
-	var path =sys.rootPath+url+'?productIds=' + productIds + '&baseUri=' + $.url().attr('path');  
-	debugger;
-    $('#productForm').attr("action", path).submit();
+//	var path =sys.rootPath+url+'?productIds=' + productIds + '&baseUri=' + $.url().attr('path');
+	
+	$.post(sys.rootPath+'/product/printProductTag.html',{productIds:productIds},function(resp){
+		debugger;
+		var result = JSON.parse(resp);
+		if(result.success==false){
+			layer.msg('打印失败', {icon : 0});
+		}else{
+			layer.msg('打印成功', {icon : 0});
+		}
+	});
+	
+//    $('#productForm').attr("action", path).submit();
 });

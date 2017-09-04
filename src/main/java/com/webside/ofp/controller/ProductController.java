@@ -575,8 +575,9 @@ public class ProductController extends BaseController {
 	 * @param request
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/printProductTag.html")
-	public void printProductTag(HttpServletResponse response, HttpServletRequest request, String productIds) {
+	@RequestMapping(value = "/printProductTag.html", method = RequestMethod.POST)
+	@ResponseBody
+	public Object printProductTag(HttpServletRequest request, String productIds)  throws Exception{
 		String[] productIdArr = productIds.split(",");
 		List<Integer> productIdList = new ArrayList<Integer>();
 		for (String id : productIdArr) {
@@ -584,6 +585,7 @@ public class ProductController extends BaseController {
 				productIdList.add(Integer.parseInt(id));
 			}
 		}
+		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			String path = request.getSession().getServletContext().getRealPath("/");
 			String logoUrl = path + "\\resources\\images\\ofplogo.png";
@@ -604,11 +606,14 @@ public class ProductController extends BaseController {
 			
 			if(productTagBeanlist.size() > 0){
 				PrintUtil printUtil = new PrintUtil(productTagBeanlist);
-				printUtil.printContent();
+				int result = printUtil.printContent();
+				map.put("success", result==0?true:false);
 			}
 		} catch (Exception e) {
-			logger.error("打印产品标签：", e);
+			logger.error("打印产品标签异常：", e);
+			map.put("success",false);
 		}
+		return map;
 	}
 
 	/**

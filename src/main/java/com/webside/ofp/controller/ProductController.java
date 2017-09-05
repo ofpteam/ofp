@@ -147,7 +147,7 @@ public class ProductController extends BaseController {
 		if (parameters.size() < 0) {
 			parameters.put("CN_NAME", null);
 			parameters.put("parentId", null);
-		} 
+		}
 		// 获取当前登录用户
 		/*
 		 * UserEntity user = ShiroAuthenticationManager.getUserEntity(); int
@@ -259,6 +259,12 @@ public class ProductController extends BaseController {
 	private StringBuilder validateSubmitVal(ProductEntityWithBLOBs productEntityWithBLOBs,
 			ProductTypeEntity productTypeEntity) {
 		StringBuilder sb = new StringBuilder();
+		Map<String, Object> parameter = new HashMap<>();
+		parameter.put("productCode", productEntityWithBLOBs.getProductCode());
+		Integer count = productService.count(parameter);
+		if (count > 0) {
+			sb.append("工厂编码已经存在,");
+		}
 		if (productTypeEntity.getProductTypeId() == null) {
 			sb.append("商品类型不能为空,");
 		}
@@ -566,10 +572,10 @@ public class ProductController extends BaseController {
 			logger.error("导出二维码异常：", e);
 		}
 	}
-	
-	
+
 	/**
 	 * 打印产品标签
+	 * 
 	 * @param response
 	 * @param quotationSheet
 	 * @param request
@@ -577,7 +583,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/printProductTag.html", method = RequestMethod.POST)
 	@ResponseBody
-	public Object printProductTag(HttpServletRequest request, String productIds)  throws Exception{
+	public Object printProductTag(HttpServletRequest request, String productIds) throws Exception {
 		String[] productIdArr = productIds.split(",");
 		List<Integer> productIdList = new ArrayList<Integer>();
 		for (String id : productIdArr) {
@@ -591,27 +597,31 @@ public class ProductController extends BaseController {
 			String logoUrl = path + "\\resources\\images\\ofplogo.png";
 			List<ProductEntityWithBLOBs> productEntityWithBLOBs = productService.findByIdsWithBLOBS(productIdList);
 			List<PrintProductTagBean> productTagBeanlist = new ArrayList<PrintProductTagBean>();
-			for(ProductEntityWithBLOBs productEntity:productEntityWithBLOBs){
+			for (ProductEntityWithBLOBs productEntity : productEntityWithBLOBs) {
 				PrintProductTagBean productTagBean = new PrintProductTagBean();
-				productTagBean.setArtNo("Art No.:"+productEntity.getProductCode());
-				productTagBean.setFacNo("Fac No.:"+productEntity.getFactoryCode());
-				productTagBean.setTbh("T/B/H(mm):"+productEntity.getTop()+"*"+productEntity.getBottom()+"*"+productEntity.getHeight());
-				productTagBean.setWeightAndVol("W(g):"+productEntity.getWeight()+" Vol(ml):"+productEntity.getVolume());
-				productTagBean.setMeas("Meas.:"+productEntity.getLength()+"*"+productEntity.getWidth()+"*"+productEntity.getPackHeight());
-				productTagBean.setGw("Gw(kgs).:"+productEntity.getGw());
-				productTagBean.setQcAndCbm("Q/C:"+productEntity.getPackingRate()+productEntity.getUnit()+" CBM:"+productEntity.getCbm());
+				productTagBean.setArtNo("Art No.:" + productEntity.getProductCode());
+				productTagBean.setFacNo("Fac No.:" + productEntity.getFactoryCode());
+				productTagBean.setTbh("T/B/H(mm):" + productEntity.getTop() + "*" + productEntity.getBottom() + "*"
+						+ productEntity.getHeight());
+				productTagBean
+						.setWeightAndVol("W(g):" + productEntity.getWeight() + " Vol(ml):" + productEntity.getVolume());
+				productTagBean.setMeas("Meas.:" + productEntity.getLength() + "*" + productEntity.getWidth() + "*"
+						+ productEntity.getPackHeight());
+				productTagBean.setGw("Gw(kgs).:" + productEntity.getGw());
+				productTagBean.setQcAndCbm("Q/C:" + productEntity.getPackingRate() + productEntity.getUnit() + " CBM:"
+						+ productEntity.getCbm());
 				productTagBean.setSmallLogo(logoUrl);
 				productTagBeanlist.add(productTagBean);
 			}
-			
-			if(productTagBeanlist.size() > 0){
+
+			if (productTagBeanlist.size() > 0) {
 				PrintUtil printUtil = new PrintUtil(productTagBeanlist);
 				int result = printUtil.printContent();
-				map.put("success", result==0?true:false);
+				map.put("success", result == 0 ? true : false);
 			}
 		} catch (Exception e) {
 			logger.error("打印产品标签异常：", e);
-			map.put("success",false);
+			map.put("success", false);
 		}
 		return map;
 	}
@@ -676,6 +686,5 @@ public class ProductController extends BaseController {
 		} else {
 			return null;
 		}
-
 	}
 }

@@ -122,7 +122,7 @@ $('#productTypeSelect').change(function() {
 		if(result.success==true){
 			$.each(result.data, function(index, value) {
 				$("#productSelect").append('<option value=' + value.productId + '>'
-						+ value.productCode + '</option>');
+						+ value.productCode + '----'+value.factoryCode+'</option>');
 			});
 		}
 	});

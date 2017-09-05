@@ -434,14 +434,14 @@
 									style="width: 100%;" data-placeholder="商品编码...">
 									<c:forEach var="product" items="${productList }">
 										<option value='${product.productId}'>
-											${product.productCode}</option>
+											${product.productCode}----${product.factoryCode}</option>
 									</c:forEach>
 								</select>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<div class="row">
 						<label class="col-sm-2 control-label no-padding-right"
 							for="factoryCode">工厂编码:</label>
@@ -452,7 +452,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 				<!-- <div class="form-group">
 					<div class="row">
 						<label class="col-sm-2 control-label no-padding-right"

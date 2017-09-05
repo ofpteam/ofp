@@ -167,7 +167,7 @@ function editProduct(nav){
 //自定义查询
 function productSearch() {
     grid.parameters = new Object();
-    grid.parameters['CN_NAME'] = $("#searchKey").val();//商品中文名称
+    grid.parameters['productCode'] = $("#searchKey").val();//商品中文名称
     grid.parameters['parentId'] = $("#parentId").val();//商品大类Id
     grid.refresh(true);
 }

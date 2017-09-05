@@ -145,8 +145,8 @@ public class ProductController extends BaseController {
 		// 2、设置查询参数
 		parameters = pager.getParameters();
 		if (parameters.size() < 0) {
-			parameters.put("CN_NAME", null);
-			parameters.put("parentId", null);
+			parameters.put("productCode", null);//商品编码
+			parameters.put("parentId", null);//分类
 		}
 		// 获取当前登录用户
 		/*

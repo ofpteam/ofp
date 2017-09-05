@@ -26,7 +26,7 @@
 </div>
 <div class="input-group col-xs-12" style="margin-top: 5px;">
 	<input id="searchKey" type="text" class="input form-control"
-		placeholder="商品编码 中文名称...">
+		placeholder="商品编码 ...">
 </div>
 <div class="input-group col-xs-12" style="margin-top: 5px;">
 	<select class="form-control" id="parentId" name="parentId">

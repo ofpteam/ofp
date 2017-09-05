@@ -78,9 +78,9 @@
 			</c:if>
 			<div class="form-group">
 				<input type="hidden" name="quotationSubSheetEntities"
-					id="quotationSubSheetEntities" />
-				<input type="hidden" name="productSelectList" id="productSelectList"
-					value=${productIds } />
+					id="quotationSubSheetEntities" /> <input type="hidden"
+					name="productSelectList" id="productSelectList"
+					value="${productIds }" />
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="customerName">客户名称:</label>
@@ -441,19 +441,19 @@
 						</div>
 					</div>
 				</div>
-				<!-- 	<div class="form-group">
+				<div class="form-group">
 					<div class="row">
 						<label class="col-sm-2 control-label no-padding-right"
-							for="number">数量:</label>
+							for="factoryCode">工厂编码:</label>
 						<div class="col-sm-10">
 							<div>
-								<input class="form-control" name="number" id="number"
-									type="number" placeholder="数量..." />
+								<input class="form-control" name="factoryCode" id="factoryCode"
+									type="text" readonly="readonly"/>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<div class="row">
 						<label class="col-sm-2 control-label no-padding-right"
 							for="packNum">箱数:</label>

@@ -260,7 +260,7 @@ public class ProductController extends BaseController {
 			ProductTypeEntity productTypeEntity) {
 		StringBuilder sb = new StringBuilder();
 		Map<String, Object> parameter = new HashMap<>();
-		parameter.put("productCode", productEntityWithBLOBs.getProductCode());
+		parameter.put("factoryCode", productEntityWithBLOBs.getFactoryCode());
 		Integer count = productService.count(parameter);
 		if (count > 0) {
 			sb.append("工厂编码已经存在,");

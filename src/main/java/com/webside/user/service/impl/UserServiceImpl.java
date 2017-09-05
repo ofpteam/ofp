@@ -132,7 +132,7 @@ public class UserServiceImpl extends AbstractService<UserEntity, Long> implement
 		{ 
 			int cnt = updateOnly(userEntity);
 			//发送邮件
-			emailUtil.send126Mail(userEntity.getAccountName(), "系统密码重置", "您好，您的密码已重置，新密码是:" + password);
+			//emailUtil.send126Mail(userEntity.getAccountName(), "系统密码重置", "您好，您的密码已重置，新密码是:" + password);
 			return cnt;
 		}catch(Exception e)
 		{

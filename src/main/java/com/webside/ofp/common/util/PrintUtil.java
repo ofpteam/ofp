@@ -76,25 +76,25 @@ public class PrintUtil implements Printable{
 		pcoord.put("smallLogoY", 3F);
 
 		pcoord.put("artNoX", 5F);
-		pcoord.put("artNoY", 23F);
+		pcoord.put("artNoY", 24.5F);
 
 		pcoord.put("facNoX", 5F);
-		pcoord.put("facNoY", 32.5F);
+		pcoord.put("facNoY", 33.5F);
 
 		pcoord.put("tbhX", 5F);
-		pcoord.put("tbhY", 42F);
+		pcoord.put("tbhY", 43F);
 
 		pcoord.put("weightAndVolX", 5F);
-		pcoord.put("weightAndVolY", 51.5F);
+		pcoord.put("weightAndVolY", 52.5F);
 
 		pcoord.put("measX", 5F);
-		pcoord.put("measY", 61F);
+		pcoord.put("measY", 62F);
 
 		pcoord.put("gwX", 5F);
-		pcoord.put("gwY", 70.5F);
+		pcoord.put("gwY", 71.5F);
 
 		pcoord.put("qcAndCbmX", 5F);
-		pcoord.put("qcAndCbmY", 80F);
+		pcoord.put("qcAndCbmY", 81F);
 	}
 	
 	/**
@@ -172,9 +172,9 @@ public class PrintUtil implements Printable{
 			// 把 PageFormat 和 Printable 添加到书中，组成一个页面
 			book.append(this, pf);
 
-			PrinterResolution printerResolution = new PrinterResolution(300, 300, PrinterResolution.DPI);
+//			PrinterResolution printerResolution = new PrinterResolution(300, 300, PrinterResolution.DPI);
 			PrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
-			attr.add(printerResolution);
+//			attr.add(printerResolution);
 			attr.add(PrintQuality.HIGH);
 			
 			// 获取打印服务对象

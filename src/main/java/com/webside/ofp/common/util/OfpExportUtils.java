@@ -303,17 +303,20 @@ public class OfpExportUtils extends ExportUtils{
 			sheet.addCell(labelPriceTerms);
 		}
 		
-		if(quotationSheet.getDest() != null){
-			Label labelDest = new Label(6,7,quotationSheet.getDest(),headerCellFormat2);
-			sheet.addCell(labelDest);
+		if(quotationSheet.getResource() != null){
+			Label labelResource = new Label(6,7,quotationSheet.getResource(),headerCellFormat2);
+			sheet.addCell(labelResource);
 		}
 		
-		/*
-		if(quotationSheet.getPayMode() != null){
-			Label labelPayMode = new Label(4,4,quotationSheet.getPayMode(),headerCellFormat2);
-			sheet.addCell(labelPayMode);
-		}*/
+		if(quotationSheet.getExpirationDate() != 0){
+			Label labelExpirationDate = new Label(11,6,quotationSheet.getExpirationDate()+" DAYS",headerCellFormat2);
+			sheet.addCell(labelExpirationDate);
+		}
 		
+		if(quotationSheet.getDeliveryDate() != 0){
+			Label labelDeliveryDate = new Label(11,7,quotationSheet.getDeliveryDate()+" DAYS",headerCellFormat2);
+			sheet.addCell(labelDeliveryDate);
+		}
 		
 		List<QuotationSubSheetEntity> subList = quotationSheet.getSubSheetList();
 		int subStartRow = 12;
@@ -470,8 +473,18 @@ public class OfpExportUtils extends ExportUtils{
 			sheet.addCell(labelCustomer);
 		}
 		
+		if(quotationSheet.getExpirationDate() != 0){
+			Label labelExpirationDate = new Label(5,2,quotationSheet.getExpirationDate()+" DAYS",headerCellFormat2);
+			sheet.addCell(labelExpirationDate);
+		}
+		
+		if(quotationSheet.getDeliveryDate() != 0){
+			Label labelDeliveryDate = new Label(5,5,quotationSheet.getDeliveryDate()+" DAYS",headerCellFormat2);
+			sheet.addCell(labelDeliveryDate);
+		}
+		
 		if(quotationSheet.getPayMode() != null){
-			Label labelPayMode = new Label(4,4,quotationSheet.getPayMode(),headerCellFormat2);
+			Label labelPayMode = new Label(5,4,quotationSheet.getPayMode(),headerCellFormat2);
 			sheet.addCell(labelPayMode);
 		}
 		

@@ -42,4 +42,9 @@ public interface QuotationSheetService extends BaseService<QuotationSheetEntity,
 	 * 报价单查询页面
 	 */
 	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet);
+	
+	/**
+	 * 查询报价单子表
+	 */
+	public List<Map<String, Object>> selectSubSheets(Long id);
 }

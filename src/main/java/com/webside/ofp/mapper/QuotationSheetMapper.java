@@ -18,4 +18,6 @@ public interface QuotationSheetMapper extends BaseMapper<QuotationSheetEntity, L
 	public List<QuotationSheetEntity> findByCustomerId(String id);
 	
 	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet);
+	
+	
 }

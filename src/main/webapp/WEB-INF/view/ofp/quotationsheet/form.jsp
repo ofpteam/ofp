@@ -479,6 +479,7 @@
 <table id="example" class="display" cellspacing="0" width="100%">
 	<thead>
 		<tr>
+			<th>报价单ID</th>
 			<th>商品编码</th>
 			<th>收购单价</th>
 			<th>美金单价</th>

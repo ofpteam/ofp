@@ -576,15 +576,11 @@ public class QuotationSheetController extends BaseController {
 		Map<String, Object> jsonMap = new HashMap<>();
 		jsonMap.put("iTotalRecords", 0);
 		jsonMap.put("iTotalDisplayRecords", 0);
-
-		List<QuotationSubSheetEntity> datas = new ArrayList<>();
+		List<Map<String, Object>> list = new ArrayList<>();
 		if (request.getParameter("id") != null) {
-			QuotationSheetEntity quotationSheetEntity = quotationSheetService
-					.findById(Long.parseLong(request.getParameter("id").toString()));
-			datas = quotationSheetEntity.getSubSheetList();
-			jsonMap.put("iTotalRecords", quotationSheetEntity.getSubSheetList().size());
-			jsonMap.put("iTotalDisplayRecords", quotationSheetEntity.getSubSheetList().size());
-
+			list = quotationSheetService.selectSubSheets(Long.parseLong(request.getParameter("id").toString()));
+			jsonMap.put("iTotalRecords", list.size());
+			jsonMap.put("iTotalDisplayRecords", list.size());
 		}
 		/*
 		 * QuotationSubSheetEntity model = null; for (int i = 0; i < 57; i++) {
@@ -600,7 +596,7 @@ public class QuotationSheetController extends BaseController {
 		 * 
 		 * datas.add(model); }
 		 */
-		jsonMap.put("aaData", datas);
+		jsonMap.put("aaData", list);
 		/*
 		 * String obj=JSON.toJSONString(jsonMap); logger.info(obj);
 		 */

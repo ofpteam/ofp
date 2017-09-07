@@ -2,6 +2,14 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<style>
+/* 放大 */
+.productCheckBox {
+width:20px;
+height:20px;
+}
+
+</style>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/resources/js/ofp/product/list.js"></script>
 <div class="page-header">
@@ -12,13 +20,13 @@
 			<i class="fa fa-user-plus"></i>&nbsp;添加
 		</button>
 	</shiro:hasPermission>
-	<shiro:hasPermission name="product:editUI">
+	<%-- <shiro:hasPermission name="product:editUI">
 		<button id="btnEdit" type="button"
 			onclick="editProduct('/product/editUI.html')"
 			class="btn btn-success btn-sm">
 			<i class="fa fa-pencil-square-o"></i>&nbsp;编辑
 		</button>
-	</shiro:hasPermission>
+	</shiro:hasPermission> --%>
 	<button id="btnEdit" type="button" onclick="addFromProductList()"
 		class="btn btn-success btn-sm">
 		<i class="fa fa-pencil-square-o"></i>&nbsp;创建报价单

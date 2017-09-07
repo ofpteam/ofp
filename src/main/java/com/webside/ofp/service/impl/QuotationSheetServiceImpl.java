@@ -83,4 +83,11 @@ public class QuotationSheetServiceImpl extends AbstractService<QuotationSheetEnt
 	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet) {
 		return quotationSheetMapper.selectByPage(paramet);
 	}
+
+	/**
+	 * 查询报价单子表
+	 */
+	public List<Map<String, Object>> selectSubSheets(Long id) {
+		return quotationSubSheetMapper.selectSubSheets(id);
+	}
 }

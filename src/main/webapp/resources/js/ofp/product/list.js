@@ -61,13 +61,31 @@ var dtGridColumns = [{
     type : 'string',
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
-}/*, {
-    id : 'cnName',
-    title : '中文名称',
+}, {
+    id : 'top',
+    title : '口',
     type : 'string',
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
-}*/,{
+}, {
+    id : 'bottom',
+    title : '底',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header'
+}, {
+    id : 'height',
+    title : '高',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header'
+}, {
+    id : 'volume',
+    title : '容量',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header'
+},{
 	id : 'productId',
 	title : '操作',
 	type : 'number',

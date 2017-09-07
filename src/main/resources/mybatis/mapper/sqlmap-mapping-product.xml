@@ -400,6 +400,10 @@
 		a.PRODUCT_CODE productCode,
 		a.CN_NAME
 		cnName,
+		a.TOP top,
+		a.BOTTOM bottom,
+		a.HEIGHT height,
+		a.VOLUME volume,
 		a.FACTORY_CODE factoryCode,
 		b.CN_NAME AS typecn_name
 		FROM product

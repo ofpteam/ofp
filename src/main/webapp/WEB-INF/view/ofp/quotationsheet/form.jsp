@@ -61,14 +61,14 @@
 		<form id="quotationsheetForm" name="quotationsheetForm"
 			class="form-horizontal" role="form" method="post">
 			<c:if test="${!empty quotationSheetEntity}">
-				<%-- <input type="hidden" id="pageNum" name="pageNum"
+				<input type="hidden" id="pageNum" name="pageNum"
 					value="${page.pageNum }">
 				<input type="hidden" id="pageSize" name="pageSize"
 					value="${page.pageSize }">
 				<input type="hidden" id="orderByColumn" name="orderByColumn"
 					value="${page.orderByColumn }">
 				<input type="hidden" id="orderByType" name="orderByType"
-					value="${page.orderByType }"> --%>
+					value="${page.orderByType }">
 				<input type="hidden" name="createUser" id="createUser"
 					value="${quotationSheetEntity.createUser }">
 				<input type="hidden" name="quotationSheetId" id="quotationSheetId"

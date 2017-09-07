@@ -12,17 +12,39 @@ var dtGridColumns = [{
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
 },{
-	   id : 'QUOTATION_DATE',
+	    id : 'QUOTATION_DATE',
 	    title : '报价日期',
-	    type : 'date',
 	    columnClass : 'text-center',
-	    headerClass : 'dlshouwen-grid-header'
+	    headerClass : 'dlshouwen-grid-header',
+	    type:'date', 
+	    format:'yyyy-MM-dd',
+	    oformat:'yyyy-MM-dd',
+	    otype:'string'
 	
+},{
+	id : 'QUOTATION_SHEET_ID',
+	title : '操作',
+	type : 'number',
+	columnClass : 'text-center',
+	hideType : 'xs',
+	headerClass : 'dlshouwen-grid-header',
+	resolution : function(value, record, column, grid, dataNo, columnNo) {
+		 //当前页码
+		 var nowPage = grid.pager.nowPage;
+		// 获取每页显示的记录数(即: select框中的10,20,30)
+		var pageSize = grid.pager.pageSize;
+		// 获取排序字段
+		var columnId = grid.sortParameter.columnId;
+		// 获取排序方式 [0-不排序，1-正序，2-倒序]
+		var sortType = grid.sortParameter.sortType;
+			var nav="/quotationsheet/editUI.html";
+			return '<a onclick="editQuotationSheet(\''+nav+'\',\''+value+'\');" href="javascript:void(0);"><span class="btn btn-sm btn-primary">编辑</span></a>';
+	    }
 }];
 var dtGridOption = {
     lang : 'zh-cn',
     ajaxLoad : true,
-    check : true,
+    check : false,
     extraWidth : '37px',
     loadURL : sys.rootPath + '/quotationsheet/list.html',
     columns : dtGridColumns,
@@ -59,7 +81,7 @@ function customSearch() {
 
 
 //编辑
-function editQuotationSheet(nav){
+function editQuotationSheet(nav,id){
 	 //当前页码
 	 var nowPage = grid.pager.nowPage;
 	// 获取每页显示的记录数(即: select框中的10,20,30)
@@ -69,15 +91,8 @@ function editQuotationSheet(nav){
 	// 获取排序方式 [0-不排序，1-正序，2-倒序]
 	var sortType = grid.sortParameter.sortType;
 	// 获取选择的行
-	var rows = grid.getCheckedRecords();
-	if (rows.length == 1) {
-		webside.common.loadPage(nav + '?id=' + rows[0].QUOTATION_SHEET_ID + "&page="
+		webside.common.loadPage(nav + '?id=' +id + "&page="
 				+ nowPage + "&rows=" + pageSize + "&sidx=" + columnId
 				+ "&sord=" + sortType);
-	} else {
-		layer.msg("你没有选择行或选择了多行数据", {
-			icon : 0
-		});
-	}
 }
 

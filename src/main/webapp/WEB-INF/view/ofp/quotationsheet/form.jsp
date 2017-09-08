@@ -84,7 +84,7 @@
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="customerName">客户名称:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<select class="chosen-select" style="width: 100%"
 								name="customerId" id="customerSelect" data-placeholder="客户名称...">
@@ -92,38 +92,29 @@
 							</select>
 						</div>
 					</div>
-
+					<label class="col-sm-1 control-label no-padding-right"
+						for="country">国家:</label>
+					<div class="col-sm-2">
+						<div>
+							<input readonly class="form-control" id="country" type="text"
+								value="${quotationSheetEntity.customer.country }"
+								placeholder="国家..." />
+						</div>
+					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="contacts">联系人:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input readonly class="form-control" id="contacts" type="text"
 								value="${quotationSheetEntity.customer.contacts }"
 								placeholder="联系人..." />
 						</div>
 					</div>
-					<label class="col-sm-1 control-label no-padding-right"
-						for="telephone">联系电话:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" readonly id="telephone" type="text"
-								value="${quotationSheetEntity.customer.telephone }"
-								placeholder="联系电话..." />
-						</div>
-					</div>
+
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right"
-						for="quotationSheetCode">报价单号:</label>
-					<div class="col-sm-3">
-						<!-- 自动生成(时间戳) -->
-						<input readonly class="form-control" name="quotationSheetCode"
-							id="quotationSheetCode" type="text"
-							value="${quotationSheetEntity.quotationSheetCode }"
-							placeholder="报价单号..." />
-					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="quotationDate">报价日期:</label>
 					<div class="col-sm-3">
@@ -147,15 +138,14 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="country">国家:</label>
+						for="telephone">联系电话:</label>
 					<div class="col-sm-3">
 						<div>
-							<input readonly class="form-control" id="country" type="text"
-								value="${quotationSheetEntity.customer.country }"
-								placeholder="国家..." />
+							<input class="form-control" readonly id="telephone" type="text"
+								value="${quotationSheetEntity.customer.telephone }"
+								placeholder="联系电话..." />
 						</div>
 					</div>
-
 					<label class="col-sm-1 control-label no-padding-right"
 						for="currency">币种:</label>
 					<div class="col-sm-3">

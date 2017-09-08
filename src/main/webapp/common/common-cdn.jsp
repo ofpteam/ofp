@@ -4,14 +4,14 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<title>webside	用心、专业、开源免费</title>
+<title>外贸报价系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Cache-Control" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
 <meta http-equiv="X-UA-Compatible" content="E=edge;chrome=1" />
-<meta name="keywords" content="webside,响应式前端解决方案,RBAC权限管理,一站式架构设计,java web" />
-<meta name="description" content="webside,响应式前端解决方案,RBAC权限管理,一站式架构设计,java web" />
+<meta name="keywords" content="外贸报价系统" />
+<meta name="description" content="外贸报价系统" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <link href="${ctx }/resources/images/webside.ico" rel="icon"/>
 <link href="${ctx }/resources/images/webside.ico" type="image/x-icon" rel="bookmark"/>   

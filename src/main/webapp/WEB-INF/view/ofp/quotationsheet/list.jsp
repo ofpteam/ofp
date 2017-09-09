@@ -28,13 +28,13 @@
 			<i class="fa fa-user-plus"></i>&nbsp;添加
 		</button>
 	</shiro:hasPermission>
-	<shiro:hasPermission name="quotationsheet:editUI">
+<%-- 	<shiro:hasPermission name="quotationsheet:editUI">
 		<button id="btnEdit" type="button"
 			onclick="editQuotationSheet('/quotationsheet/editUI.html')"
 			class="btn btn-success btn-sm">
 			<i class="fa fa-pencil-square-o"></i>&nbsp;编辑
 		</button>
-	</shiro:hasPermission>
+	</shiro:hasPermission> --%>
 </div>
 <div class="input-group col-xs-12">
 	<label class="col-sm-1 control-label no-padding-right" for="times">报价单日期:</label>

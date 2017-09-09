@@ -41,7 +41,7 @@ $(function() {
 				<!-- #section:basics/navbar.layout.brand -->
 				<div class="navbar-brand"> 
 					<small> 
-						<img src="${ctx }/resources/images/logo_no_title.png" height="25px"/> WebSide管理系统
+						<img src="${ctx }/resources/images/logo_no_title.png" height="25px"/> 外贸报价系统
 					</small>
 				</div>
 

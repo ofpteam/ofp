@@ -316,7 +316,13 @@ oTable = $('#example').dataTable({
 			"contentType" : "application/json; charset=utf-8",
 			"url" : sSource,
 			"success" : function(modellist) {
-				debugger;
+				if(modellist.aaData.length>0){
+					for(var i=0;i<modellist.aaData.length;i++){
+						if(modellist.aaData[i].productCode.length>=5){
+							modellist.aaData[i].productCode=modellist.aaData[i].productCode.substring(0,5)+"...";
+						}
+					}
+				}
 				fnCallback(modellist); 
 				//如果在商品管理中选择了商品，在此处自动添加到明细里
 				if($('#productSelectList').val()!=""){
@@ -338,7 +344,7 @@ oTable = $('#example').dataTable({
 										volume : productList.data[i].volume,
 										packing : productList.data[i].packing,
 										packingRate : productList.data[i].packingRate,
-										number : productList.data[i].packingRate,
+										number : productList.data[i].number,
 										packNum : 1,
 										totalcbm : 1* productList.data[i].cbm,
 										totalGw : 1* productList.data[i].gw,
@@ -380,9 +386,9 @@ oTable = $('#example').dataTable({
 		 $('td:eq(3)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')"  class="txtusdPrice" type="number" value="'+aData.usdPrice+'"></input>');
 		
 		//数量
-		 $('td:eq(12)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtnumber"  type="number" value="'+aData.number+'"></input>');
+		 $('td:eq(11)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtnumber"  type="number" value="'+aData.number+'"></input>');
 		//箱数 
-		 $('td:eq(13)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtpackNum" type="number" value="'+aData.packNum+'"></input>');
+		 $('td:eq(12)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtpackNum" type="number" value="'+aData.packNum+'"></input>');
 		
 		 /* Append the grade to the default row class name */
 		/* if (aData[4] == "A") { */
@@ -606,7 +612,9 @@ function validateForm() {
 									url = '/quotationsheet/add.html';
 								}
 								webside.common.commit('quotationsheetForm',
-										url, '/quotationsheet/listUI.html');
+										url, '/quotationsheet/editUI.html?id='+quotationSheetId+"&page="
+										+ $('#pageNum').val() + "&rows=" + $('#pageSize').val() + "&sidx=" + $('#orderByColumn').val()
+										+ "&sord=" + $('#orderByType').val());
 							} else {
 								layer.msg('请添加至少一种商品', {
 									icon : 0

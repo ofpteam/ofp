@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.print.DocFlavor;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.PrintQuality;
@@ -31,6 +34,8 @@ import com.webside.ofp.common.bean.PrintProductTagBean;
 
 public class PrintUtil implements Printable{
 	public static Logger logger = LoggerFactory.getLogger(PrintUtil.class);
+	
+	private static final String PRINTER_NAME = "Xprinter XP-350B";
 	
 	private static final int SUCCESS = 0;
 	private static final int ERROR = 1;
@@ -177,6 +182,26 @@ public class PrintUtil implements Printable{
 //			attr.add(printerResolution);
 			attr.add(PrintQuality.HIGH);
 			
+			/*PrintService PS = PrintServiceLookup.lookupDefaultPrintService();
+			System.out.println("当前打印机名称：" + PS.getName());*/
+			
+			PrintService myPrintService = null;
+			
+			//可用的打印机列表(字符串数组)
+			PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+			DocFlavor flavor = DocFlavor.BYTE_ARRAY.PNG;
+			PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
+			for(int i=0;i<printService.length;i++){
+				System.out.println("打印机名称：" + printService[i].getName());
+				if(PRINTER_NAME.equals(printService[i].getName())){
+					myPrintService = printService[i];
+				}
+			}
+			
+			if(myPrintService == null){
+				logger.error("没有找到打印机服务：" + PRINTER_NAME);
+			}
+			
 			// 获取打印服务对象
 			PrinterJob job = PrinterJob.getPrinterJob();
 			// 设置打印类
@@ -185,6 +210,7 @@ public class PrintUtil implements Printable{
 				// 直接打印
 				for (PrintProductTagBean obj : sourcelist) {
 					this.obj = obj;
+					job.setPrintService(myPrintService);
 //					job.printDialog();
 					logger.info("开始打印产品标签,产品编号：" + obj.getArtNo());
 					job.print(attr);

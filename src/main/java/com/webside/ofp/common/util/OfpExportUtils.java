@@ -40,6 +40,7 @@ import jxl.format.Alignment;
 import jxl.format.Border;
 import jxl.format.BorderLineStyle;
 import jxl.format.Colour;
+import jxl.format.PaperSize;
 import jxl.format.VerticalAlignment;
 import jxl.write.Label;
 import jxl.write.WritableCellFormat;
@@ -637,7 +638,8 @@ public class OfpExportUtils extends ExportUtils{
 		logger.info("excel转换为pdf开始");
         ActiveXComponent ax = new ActiveXComponent("Excel.Application");
         logger.info("ax:" + ax.toString());
-        try {    
+        try {
+//        	ax.setProperty("ActivePrinter", new Variant("Microsoft XPS Document Writer"));
             ax.setProperty("Visible",new Variant(false));
             ax.setProperty("AutomationSecurity", new Variant(3)); //禁用宏  
             logger.info("2");
@@ -650,6 +652,18 @@ public class OfpExportUtils extends ExportUtils{
             },  
             new int[9]).toDispatch();
             logger.info("Open:"+excel.toString());
+          /*  
+            Dispatch currentSheet = Dispatch.get((Dispatch) excel,
+                    "ActiveSheet").toDispatch();
+
+
+            Dispatch pageSetup = Dispatch.get(currentSheet, "PageSetup")
+                    .toDispatch();
+            Dispatch.put(pageSetup, "Orientation", new Variant(2));
+            Dispatch.put(pageSetup, "Zoom", false); // 值为100或false
+//            Dispatch.put(pageSetup, "PaperSize",new Variant("xlPaperA4"));
+            Dispatch.put(pageSetup, "FitToPagesWide", 1); // 所有列为一页(1或false)
+*/           
             //转换格式  
             Dispatch.invoke(excel,"ExportAsFixedFormat",Dispatch.Method,new Object[]{  
                 new Variant(0), //PDF格式=0  

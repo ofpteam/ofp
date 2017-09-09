@@ -23,7 +23,8 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long>impl
 	@Autowired
 	private ProductMapper productMapper;
 
-	public static final int THUMBNAIL_DEFAULT_HEIGHT = 100;
+	public static final int THUMBNAIL_DEFAULT_HEIGHT = 500;
+	public static final String THUMBNAIL_WATER_DEFAULT_URL = "\\resources\\images\\ofplogomiddle.png";
 
 	// 这句必须要加上。不然会报空指针异常，因为在实际调用的时候不是BaseMapper调用，而是具体的mapper
 	@Autowired
@@ -62,8 +63,8 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long>impl
 				String prefix = hdMapUrl.substring(0, hdMapUrl.lastIndexOf("."));
 				String endfix = hdMapUrl.substring(hdMapUrl.lastIndexOf(".") + 1);
 				String thumbnailUrl = prefix + "_thumbnail." + endfix;
-				// 生成固定高度缩略图，默认为100
-				String waterUrl = basePath + "\\resources\\images\\ofplogo.png";
+				// 生成固定高度缩略图，默认为500
+				String waterUrl = basePath + THUMBNAIL_WATER_DEFAULT_URL;
 				ImageUtils.scaleWithHeightAndWaterMark(productEntity.getHdMapUrl(), thumbnailUrl,
 						THUMBNAIL_DEFAULT_HEIGHT, waterUrl);
 				File file = new File(thumbnailUrl);
@@ -130,7 +131,7 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long>impl
 				String endfix = hdMapUrl.substring(hdMapUrl.lastIndexOf(".") + 1);
 				String thumbnailUrl = prefix + "_thumbnail." + endfix;
 				// 生成固定高度缩略图，默认为100
-				String waterUrl = basePath + "\\resources\\images\\ofplogo.png";
+				String waterUrl = basePath + THUMBNAIL_WATER_DEFAULT_URL;
 				ImageUtils.scaleWithHeightAndWaterMark(productEntity.getHdMapUrl(), thumbnailUrl,
 						THUMBNAIL_DEFAULT_HEIGHT, waterUrl);
 				File file = new File(thumbnailUrl);

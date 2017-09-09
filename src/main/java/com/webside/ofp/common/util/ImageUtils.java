@@ -36,8 +36,12 @@ import com.alibaba.simpleimage.util.ImageWriteHelper;
  */  
 public class ImageUtils {  
   
-    public static String WATER_IMAGE_URL = "D:\\img\\watermark.png";
-    protected static ImageFormat outputFormat = ImageFormat.JPEG;  
+//    public static String WATER_IMAGE_URL = "D:\\img\\watermark.png";
+    protected static ImageFormat outputFormat = ImageFormat.GIF;
+    //缩放图片质量
+    private static final float QUALITY = 1f;
+    private static final Algorithm DEFAULT_ALGORITHM = Algorithm.SUBSAMPLE_AVG; 
+    
   
     public static void main(String[] args) {  
         // 1.等比例缩放  
@@ -122,13 +126,15 @@ public class ImageUtils {
                 h1=height;  
             }  
             // 1.缩放  
-            ScaleParameter scaleParam = new ScaleParameter((int)w1, (int)h1, Algorithm.LANCZOS); // 缩放参数  
+            ScaleParameter scaleParam = new ScaleParameter((int)w1, (int)h1, DEFAULT_ALGORITHM); // 缩放参数 
             PlanarImage planrImage = ImageScaleHelper.scale(imageWrapper.getAsPlanarImage(), scaleParam);  
-            imageWrapper = new ImageWrapper(planrImage);  
+            imageWrapper = new ImageWrapper(planrImage);
             // 4.输出  
             outStream = new FileOutputStream(out);  
-            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);  
-            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), new WriteParameter());  
+            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);
+            WriteParameter param = new WriteParameter();
+            param.setDefaultQuality(QUALITY);
+            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), param);  
         } catch (IOException e) {  
             e.printStackTrace();  
         } catch (SimpleImageException e) {  
@@ -178,14 +184,16 @@ public class ImageUtils {
             if(isDeal){  
                 CropParameter cropParam = new CropParameter(x, y, cw, ch);// 裁切参数  
                 PlanarImage planrImage = ImageCropHelper.crop(imageWrapper.getAsPlanarImage(), cropParam);  
-                ScaleParameter scaleParam = new ScaleParameter(width, height, Algorithm.LANCZOS); // 缩放参数  
+                ScaleParameter scaleParam = new ScaleParameter(width, height, DEFAULT_ALGORITHM); // 缩放参数  
                 planrImage = ImageScaleHelper.scale(planrImage, scaleParam);  
                 imageWrapper = new ImageWrapper(planrImage);  
             }  
             // 4.输出  
             outStream = new FileOutputStream(out);  
-            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);  
-            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), new WriteParameter());  
+            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);
+            WriteParameter param = new WriteParameter();
+            param.setDefaultQuality(QUALITY);
+            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), param);  
         } catch (IOException e) {  
             e.printStackTrace();  
         } catch (SimpleImageException e) {  
@@ -203,7 +211,7 @@ public class ImageUtils {
      * @param width 
      * @param height 
      */  
-    public final static void scaleWithWaterMark(String src, String target, int width, int height) {  
+    public final static void scaleWithWaterMark(String src, String target, int width, int height,String waterUrl) {  
         File out = new File(target); // 目的图片  
         FileOutputStream outStream = null;  
         File in = new File(src); // 原图片  
@@ -243,12 +251,12 @@ public class ImageUtils {
             if(isDeal){  
                 CropParameter cropParam = new CropParameter(x, y, cw, ch);// 裁切参数  
                 PlanarImage planrImage = ImageCropHelper.crop(imageWrapper.getAsPlanarImage(), cropParam);  
-                ScaleParameter scaleParam = new ScaleParameter(width, height, Algorithm.LANCZOS); // 缩放参数  
+                ScaleParameter scaleParam = new ScaleParameter(width, height, DEFAULT_ALGORITHM); // 缩放参数  
                 planrImage = ImageScaleHelper.scale(planrImage, scaleParam);  
                 imageWrapper = new ImageWrapper(planrImage);  
             }  
             // 3.打水印  
-            BufferedImage waterImage = ImageIO.read(new File(WATER_IMAGE_URL));  
+            BufferedImage waterImage = ImageIO.read(new File(waterUrl));  
             ImageWrapper waterWrapper = new ImageWrapper(waterImage);  
             Point p =calculate(imageWrapper.getWidth(),imageWrapper.getHeight(),  
                     waterWrapper.getWidth(), waterWrapper.getHeight());  
@@ -257,8 +265,10 @@ public class ImageUtils {
             imageWrapper = new ImageWrapper(bufferedImage);  
             // 4.输出  
             outStream = new FileOutputStream(out);  
-            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);  
-            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), new WriteParameter());  
+            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);
+            WriteParameter writeParameter = new WriteParameter();
+            writeParameter.setDefaultQuality(QUALITY);
+            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), writeParameter);  
         } catch (IOException e) {  
             e.printStackTrace();  
         } catch (SimpleImageException e) {  
@@ -289,19 +299,21 @@ public class ImageUtils {
             int w = imageWrapper.getWidth();  
             int h = imageWrapper.getHeight();  
             // 1.缩放  
-            ScaleParameter scaleParam = new ScaleParameter(w, h, Algorithm.LANCZOS); // 缩放参数  
+            ScaleParameter scaleParam = new ScaleParameter(w, h, DEFAULT_ALGORITHM); // 缩放参数  
             if (w < width) {// 如果图片宽和高都小于目标图片则不做缩放处理  
-                scaleParam = new ScaleParameter(w, h, Algorithm.LANCZOS);  
+                scaleParam = new ScaleParameter(w, h, DEFAULT_ALGORITHM);  
             } else {  
                 int newHeight = getHeight(w, h, width);  
-                scaleParam = new ScaleParameter(width, newHeight + 1, Algorithm.LANCZOS);  
+                scaleParam = new ScaleParameter(width, newHeight + 1, DEFAULT_ALGORITHM);  
             }  
             PlanarImage planrImage = ImageScaleHelper.scale(imageWrapper.getAsPlanarImage(), scaleParam);  
             imageWrapper = new ImageWrapper(planrImage);  
             // 4.输出  
             outStream = new FileOutputStream(out);  
-            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);  
-            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), new WriteParameter());  
+            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);
+            WriteParameter writeParameter = new WriteParameter();
+            writeParameter.setDefaultQuality(QUALITY);
+            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix),writeParameter);  
         } catch (IOException e) {  
             e.printStackTrace();  
         } catch (SimpleImageException e) {  
@@ -331,13 +343,13 @@ public class ImageUtils {
             int w = imageWrapper.getWidth();  
             int h = imageWrapper.getHeight();  
             // 1.缩放  
-            ScaleParameter scaleParam = new ScaleParameter(w, h, Algorithm.LANCZOS); // 缩放参数  
+            ScaleParameter scaleParam = new ScaleParameter(w, h, DEFAULT_ALGORITHM); // 缩放参数  
             if (w < height) {// 如果图片宽和高都小于目标图片则不做缩放处理  
-                scaleParam = new ScaleParameter(w, h, Algorithm.LANCZOS);  
+                scaleParam = new ScaleParameter(w, h, DEFAULT_ALGORITHM);  
   
             } else {  
                 int newWidth = getWidth(w, h, height);  
-                scaleParam = new ScaleParameter(newWidth + 1, height, Algorithm.LANCZOS);  
+                scaleParam = new ScaleParameter(newWidth + 1, height, DEFAULT_ALGORITHM);  
   
             }  
             PlanarImage planrImage = ImageScaleHelper.scale(imageWrapper.getAsPlanarImage(), scaleParam);  
@@ -345,8 +357,10 @@ public class ImageUtils {
             
             // 4.输出  
             outStream = new FileOutputStream(out);  
-            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);  
-            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), new WriteParameter());  
+            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);
+            WriteParameter writeParameter = new WriteParameter();
+            writeParameter.setDefaultQuality(QUALITY);
+            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), writeParameter);  
         } catch (IOException e) {  
             e.printStackTrace();  
         } catch (SimpleImageException e) {  
@@ -377,13 +391,13 @@ public class ImageUtils {
             int w = imageWrapper.getWidth();  
             int h = imageWrapper.getHeight();  
             // 1.缩放  
-            ScaleParameter scaleParam = new ScaleParameter(w, h, Algorithm.LANCZOS); // 缩放参数  
+            ScaleParameter scaleParam = new ScaleParameter(w, h, DEFAULT_ALGORITHM); // 缩放参数  
             if (w < height) {// 如果图片宽和高都小于目标图片则不做缩放处理  
-                scaleParam = new ScaleParameter(w, h, Algorithm.LANCZOS);  
+                scaleParam = new ScaleParameter(w, h, DEFAULT_ALGORITHM);  
   
             } else {  
                 int newWidth = getWidth(w, h, height);  
-                scaleParam = new ScaleParameter(newWidth + 1, height, Algorithm.LANCZOS);  
+                scaleParam = new ScaleParameter(newWidth + 1, height, DEFAULT_ALGORITHM);  
   
             }  
             PlanarImage planrImage = ImageScaleHelper.scale(imageWrapper.getAsPlanarImage(), scaleParam);  
@@ -400,8 +414,10 @@ public class ImageUtils {
             
             // 4.输出  
             outStream = new FileOutputStream(out);
-            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);  
-            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), new WriteParameter());  
+            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);
+            WriteParameter writeParameter = new WriteParameter();
+            writeParameter.setDefaultQuality(QUALITY);
+            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), writeParameter);  
         } catch (IOException e) {  
             e.printStackTrace();  
         } catch (SimpleImageException e) {  
@@ -470,8 +486,10 @@ public class ImageUtils {
             imageWrapper = new ImageWrapper(planrImage);  
             // 4.输出  
             outStream = new FileOutputStream(out);  
-            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);  
-            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), new WriteParameter());  
+            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);
+            WriteParameter writeParameter = new WriteParameter();
+            writeParameter.setDefaultQuality(QUALITY);
+            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), writeParameter);  
         } catch (IOException e) {  
             e.printStackTrace();  
         } catch (SimpleImageException e) {  
@@ -512,8 +530,10 @@ public class ImageUtils {
             imageWrapper = new ImageWrapper(planrImage);  
             // 4.输出  
             outStream = new FileOutputStream(out);  
-            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);  
-            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), new WriteParameter());  
+            String prefix = out.getName().substring(out.getName().lastIndexOf(".") + 1);
+            WriteParameter writeParameter = new WriteParameter();
+            writeParameter.setDefaultQuality(QUALITY);
+            ImageWriteHelper.write(imageWrapper, outStream, outputFormat.getImageFormat(prefix), writeParameter);  
         } catch (IOException e) {  
             e.printStackTrace();  
         } catch (SimpleImageException e) {  

@@ -145,8 +145,8 @@ public class ProductController extends BaseController {
 		// 2、设置查询参数
 		parameters = pager.getParameters();
 		if (parameters.size() < 0) {
-			parameters.put("productCode", null);//商品编码
-			parameters.put("parentId", null);//分类
+			parameters.put("productCode", null);// 商品编码
+			parameters.put("parentId", null);// 分类
 		}
 		// 获取当前登录用户
 		/*
@@ -260,10 +260,14 @@ public class ProductController extends BaseController {
 			ProductTypeEntity productTypeEntity) {
 		StringBuilder sb = new StringBuilder();
 		Map<String, Object> parameter = new HashMap<>();
-		parameter.put("factoryCode", productEntityWithBLOBs.getFactoryCode());
-		Integer count = productService.count(parameter);
-		if (count > 0) {
-			sb.append("工厂编码已经存在,");
+		ProductEntity productEntity = productService.findById((long) productEntityWithBLOBs.getProductId());
+		if (!productEntity.getFactoryCode().equals(productEntityWithBLOBs.getFactoryCode())) {
+
+			parameter.put("factoryCode", productEntityWithBLOBs.getFactoryCode());
+			Integer count = productService.count(parameter);
+			if (count > 0) {
+				sb.append("工厂编码已经存在,");
+			}
 		}
 		if (productTypeEntity.getProductTypeId() == null) {
 			sb.append("商品类型不能为空,");

@@ -316,10 +316,13 @@
 		resultType="java.util.Map">
 		SELECT
 		<include refid="quotation_sheet_column_list" />
-		,
+		,(select GROUP_CONCAT(CN_NAME) from product WHERE 	find_in_set(product_id ,s.productIds) ) CN_NAMES,
 		<include refid="customer_column_List" />
 		from quotation_sheet qs left join customer c on qs.customer_id =
 		c.customer_id
+		left JOIN (SELECT QUOTATION_SHEET_ID,GROUP_CONCAT(PRODUCT_ID) productIds from quotation_sub_sheet 
+		group by QUOTATION_SHEET_ID) s 
+		on qs.QUOTATION_SHEET_ID=s.QUOTATION_SHEET_ID
 		where qs.is_delete = 0
 		<include refid="where_clause" />
 		order by qs.QUOTATION_SHEET_ID desc

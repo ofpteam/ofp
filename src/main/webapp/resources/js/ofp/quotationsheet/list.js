@@ -6,11 +6,35 @@ var dtGridColumns = [{
 	hideType : 'xs',
 	headerClass : 'dlshouwen-grid-header'
 }, {
+    id : 'CN_NAMES',
+    title : '商品内容项',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header',
+    resolution:function(value, record, column, grid, dataNo, columnNo){
+    	var content='';
+    	var array=value.split(',');
+    	if(array.length>5){
+    		for(var index=0;index<array.length;index++){
+    			if(index==6){
+    				content+="...";
+    				break;
+    			}
+    			content+=array[index]+",";
+    		}
+    	}else{
+    		content=value;
+    	}
+    	return content;
+    }
+    
+}, {
     id : 'CUSTOMER_NAME',
     title : '客户名称',
     type : 'string',
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
+    
 },{
 	    id : 'QUOTATION_DATE',
 	    title : '报价日期',

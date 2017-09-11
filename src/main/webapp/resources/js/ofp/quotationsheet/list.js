@@ -6,8 +6,25 @@ var dtGridColumns = [{
 	hideType : 'xs',
 	headerClass : 'dlshouwen-grid-header'
 }, {
-    id : 'CN_NAMES',
-    title : '商品内容项',
+    id : 'CUSTOMER_NAME',
+    title : '客户名称',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header'
+    
+},{
+	    id : 'QUOTATION_DATE',
+	    title : '报价日期',
+	    columnClass : 'text-center',
+	    headerClass : 'dlshouwen-grid-header',
+	    type:'date', 
+	    format:'yyyy-MM-dd',
+	    oformat:'yyyy-MM-dd',
+	    otype:'string'
+	
+}, {
+    id : 'PRODUCT_CODES',
+    title : '商品编码',
     type : 'string',
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header',
@@ -28,23 +45,6 @@ var dtGridColumns = [{
     	return content;
     }
     
-}, {
-    id : 'CUSTOMER_NAME',
-    title : '客户名称',
-    type : 'string',
-    columnClass : 'text-center',
-    headerClass : 'dlshouwen-grid-header'
-    
-},{
-	    id : 'QUOTATION_DATE',
-	    title : '报价日期',
-	    columnClass : 'text-center',
-	    headerClass : 'dlshouwen-grid-header',
-	    type:'date', 
-	    format:'yyyy-MM-dd',
-	    oformat:'yyyy-MM-dd',
-	    otype:'string'
-	
 },{
 	id : 'QUOTATION_SHEET_ID',
 	title : '操作',

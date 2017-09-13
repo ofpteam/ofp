@@ -1,4 +1,45 @@
-
+ function commit(formId, commitUrl, jumpUrl) {
+            //组装表单数据
+            var index;
+            var data = $("#" + formId).serialize();
+            if (undefined != $("#pageNum").val()) {//编辑
+                jumpUrl = jumpUrl + '?id='+ $("#quotationSheetId").val()+'&page=' + $("#pageNum").val() + '&rows=' + $("#pageSize").val() + '&sidx=' + $("#orderByColumn").val() + '&sord=' + $("#orderByType").val();
+            }else{//新增
+            	 jumpUrl = jumpUrl + '?page=1&rows=10&sidx=&sord=0';
+            }
+            $.ajax({
+                type : "POST",
+                url : sys.rootPath + commitUrl,
+                data : data,
+                dataType : "json",
+                beforeSend : function() {
+                    index = layer.load();
+                },
+                success : function(resultdata) {
+                    layer.close(index);
+                    debugger;
+                    if (resultdata.success) {
+                        layer.msg(resultdata.message, {
+                            icon : 1
+                        });
+                        if(undefined == $("#pageNum").val()){//新增
+                        	jumpUrl+='&id='+resultdata.data;
+                        }
+                        webside.common.loadPage(jumpUrl);
+                    } else {
+                        layer.msg(resultdata.message, {
+                            icon : 5
+                        });
+                    }
+                },
+                error : function(data, errorMsg) {
+                    layer.close(index);
+                    layer.msg(data.responseText, {
+                        icon : 2
+                    });
+                }
+            });
+        }
 //表单校验 
 function validateSubmitVal(){
 	var sb ="";
@@ -298,7 +339,7 @@ if ($('#quotationSheetId').val() != undefined) {// 编辑时
 }
 oTable = $('#example').dataTable({
 	"sScrollY" : "400px",
-	"sScrollX" : "200%", // 横向滚动条
+	"sScrollX" : "130%", // 横向滚动条
 	"bScrollCollapse" : true,
 	"bProcessing" : true, // 显示是否加载
 	"bStateSave" : true,
@@ -316,13 +357,6 @@ oTable = $('#example').dataTable({
 			"contentType" : "application/json; charset=utf-8",
 			"url" : sSource,
 			"success" : function(modellist) {
-				if(modellist.aaData.length>0){
-					for(var i=0;i<modellist.aaData.length;i++){
-						if(modellist.aaData[i].productCode.length>=5){
-							modellist.aaData[i].productCode=modellist.aaData[i].productCode.substring(0,5)+"...";
-						}
-					}
-				}
 				fnCallback(modellist); 
 				//如果在商品管理中选择了商品，在此处自动添加到明细里
 				if($('#productSelectList').val()!=""){
@@ -381,14 +415,14 @@ oTable = $('#example').dataTable({
 	} ,
 	"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
 		//数量
-		 $('td:eq(2)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')"  class="txtbuyPrice"  type="number" value="'+aData.buyPrice+'"></input>');
+		 $('td:eq(1)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')"  class="txtbuyPrice"  type="number" value="'+aData.buyPrice+'"></input>');
 		//箱数 
-		 $('td:eq(3)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')"  class="txtusdPrice" type="number" value="'+aData.usdPrice+'"></input>');
+		 $('td:eq(2)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')"  class="txtusdPrice" type="number" value="'+aData.usdPrice+'"></input>');
 		
 		//数量
-		 $('td:eq(6)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtnumber"  type="number" value="'+aData.number+'"></input>');
+		 $('td:eq(5)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtnumber"  type="number" value="'+aData.number+'"></input>');
 		//箱数 
-		 $('td:eq(7)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtpackNum" type="number" value="'+aData.packNum+'"></input>');
+		 $('td:eq(6)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtpackNum" type="number" value="'+aData.packNum+'"></input>');
 		
 		 /* Append the grade to the default row class name */
 		/* if (aData[4] == "A") { */
@@ -612,10 +646,8 @@ function validateForm() {
 								} else {
 									url = '/quotationsheet/add.html';
 								}
-								webside.common.commit('quotationsheetForm',
-										url, '/quotationsheet/editUI.html?id='+quotationSheetId+"&page="
-										+ $('#pageNum').val() + "&rows=" + $('#pageSize').val() + "&sidx=" + $('#orderByColumn').val()
-										+ "&sord=" + $('#orderByType').val());
+								commit('quotationsheetForm',
+										url, '/quotationsheet/editUI.html');
 							} else {
 								layer.msg('请添加至少一种商品', {
 									icon : 0

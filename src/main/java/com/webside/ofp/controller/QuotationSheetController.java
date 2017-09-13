@@ -247,7 +247,7 @@ public class QuotationSheetController extends BaseController {
 						interestRateEntity.setRate(rate);
 						interestRateService.insert(interestRateEntity);
 						map.put("success", Boolean.TRUE);
-						map.put("data", null);
+						map.put("data", quotationSheetEntity.getQuotationSheetId());
 						map.put("message", "添加成功");
 
 					} else {

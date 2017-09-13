@@ -44,6 +44,9 @@
 	font-weight: bold;
 	color: red;
 }
+#example  tbody td { 
+padding-left:18px
+}
 </style>
 <div class="page-header">
 	<h1>
@@ -110,14 +113,31 @@
 								placeholder="联系人..." />
 						</div>
 					</div>
-
+					<label class="col-sm-1 control-label no-padding-right"
+						for="telephone">联系电话:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" readonly id="telephone" type="text"
+								value="${quotationSheetEntity.customer.telephone }"
+								placeholder="联系电话..." />
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
+						for="quotationSheetCode">报价单号:</label>
+					<div class="col-sm-2">
+						<!-- 自动生成(时间戳) -->
+						<input readonly class="form-control" name="quotationSheetCode"
+							id="quotationSheetCode" type="text"
+							value="${quotationSheetEntity.quotationSheetCode }"
+							placeholder="报价单号..." />
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
 						for="quotationDate">报价日期:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<input type="text" id="quotationDate" name="quotationDate"
 							<c:if test="${!empty quotationSheetEntity}">
 							value=<fmt:formatDate value="${quotationSheetEntity.quotationDate }" pattern="yyyy-MM-dd"/>
@@ -125,12 +145,60 @@
 							class="datepicker col-sm-12" placeholder="报价日期" />
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
+						for="expirationDate">有效期限:</label>
+					<div class="col-sm-2">
+						<div>
+							<input type="text" id="expirationDate" name="expirationDate"
+								value="${quotationSheetEntity.expirationDate }"
+								class="form-control" type="number" placeholder="有效期限" />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="deliveryDate">交货期限:</label>
+					<div class="col-sm-2">
+						<div>
+							<input type="number" id="deliveryDate" name="deliveryDate"
+								value="${quotationSheetEntity.deliveryDate }"
+								class="form-control" placeholder="交货期限..." />
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right"
+						for="payMode">付款方式:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="payMode" id="payMode"
+								type="text" value="${quotationSheetEntity.payMode }"
+								placeholder="付款方式..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
 						for="priceTerms">价格术语:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="priceTerms" id="priceTerms"
 								type="text" value="${quotationSheetEntity.priceTerms }"
 								placeholder="价格术语..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="resource">起运港:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="resource" id="resource"
+								type="text" value="${quotationSheetEntity.resource }"
+								placeholder="起运港..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right" for="dest">目的港:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="dest" id="dest" type="text"
+								value="${quotationSheetEntity.dest }" placeholder="目的港..." />
 						</div>
 					</div>
 				</div>
@@ -138,17 +206,8 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
-						for="telephone">联系电话:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" readonly id="telephone" type="text"
-								value="${quotationSheetEntity.customer.telephone }"
-								placeholder="联系电话..." />
-						</div>
-					</div>
-					<label class="col-sm-1 control-label no-padding-right"
 						for="currency">币种:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="currency" id="currency"
 								type="text" value="${quotationSheetEntity.currency }"
@@ -157,69 +216,16 @@
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="exchangeRate">汇率:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="exchangeRate" id="exchangeRate"
 								type="number" value="${quotationSheetEntity.exchangeRate }"
 								placeholder="汇率..." />
 						</div>
 					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right"
-						for="expirationDate">有效期限:</label>
-					<div class="col-sm-3">
-						<div>
-							<input type="text" id="expirationDate" name="expirationDate"
-								value="${quotationSheetEntity.expirationDate }"
-								class="form-control" type="number" placeholder="有效期限" />
-						</div>
-					</div>
-
-					<label class="col-sm-1 control-label no-padding-right"
-						for="payMode">付款方式:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="payMode" id="payMode"
-								type="text" value="${quotationSheetEntity.payMode }"
-								placeholder="付款方式..." />
-						</div>
-					</div>
-					<label class="col-sm-1 control-label no-padding-right"
-						for="resource">起运地:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="resource" id="resource"
-								type="text" value="${quotationSheetEntity.resource }"
-								placeholder="起运地..." />
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right" for="dest">目的地:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="dest" id="dest" type="text"
-								value="${quotationSheetEntity.dest }" placeholder="目的地..." />
-						</div>
-					</div>
-
-					<label class="col-sm-1 control-label no-padding-right"
-						for="deliveryDate">交货期限:</label>
-					<div class="col-sm-3">
-						<div>
-							<input type="number" id="deliveryDate" name="deliveryDate"
-								value="${quotationSheetEntity.deliveryDate }"
-								class="form-control" placeholder="交货期限..." />
-						</div>
-					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="insuranceCost">保险费率:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="insuranceCost"
 								id="insuranceCost" type="number"
@@ -227,36 +233,9 @@
 								${quotationSheetEntity.insuranceCost } placeholder="保险费率..." />
 						</div>
 					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right"
-						for="foreignGreight">国外运费:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="foreignGreight"
-								id="foreignGreight" type="number"
-								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
-								"${quotationSheetEntity.foreignGreight }"
-								placeholder="国外运费..." />
-						</div>
-					</div>
-
-					<label class="col-sm-1 control-label no-padding-right"
-						for="homeGreight">国内运费:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="homeGreight" id="homeGreight"
-								type="number"
-								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
-								"${quotationSheetEntity.homeGreight }"
-								placeholder="国内运费..." />
-						</div>
-					</div>
 					<label class="col-sm-1 control-label no-padding-right"
 						for="operationCost">管理费:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="operationCost"
 								id="operationCost" type="number"
@@ -270,8 +249,31 @@
 			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
+						for="foreignGreight">国外运费:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="foreignGreight"
+								id="foreignGreight" type="number"
+								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
+								"${quotationSheetEntity.foreignGreight }"
+								placeholder="国外运费..." />
+						</div>
+					</div>
+
+					<label class="col-sm-1 control-label no-padding-right"
+						for="homeGreight">国内运费:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="homeGreight" id="homeGreight"
+								type="number"
+								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
+								"${quotationSheetEntity.homeGreight }"
+								placeholder="国内运费..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
 						for="commission">佣金率:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="commission" id="commission"
 								type="number"
@@ -280,55 +282,13 @@
 								placeholder="佣金率..." />
 						</div>
 					</div>
-
 					<label class="col-sm-1 control-label no-padding-right" for="rebate">折扣率:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="rebate" id="rebate"
 								type="number"
 								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
 								"${quotationSheetEntity.rebate }" placeholder="折扣率..." />
-						</div>
-					</div>
-					<label class="col-sm-1 control-label no-padding-right"
-						for="totalCbm">CBM合计:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="totalCbm" id="totalCbm"
-								readonly type="number" value="${quotationSheetEntity.totalCbm }"
-								placeholder="CBM合计..." />
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="row">
-					<label class="col-sm-1 control-label no-padding-right" for="profit">利润:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="profit" id="profit"
-								value="${quotationSheetEntity.profit }" type="number" readonly
-								placeholder="利润..." />
-						</div>
-					</div>
-
-					<label class="col-sm-1 control-label no-padding-right"
-						for="swapRate">换汇率:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="swapRate" id="swapRate"
-								readonly type="number" value="${quotationSheetEntity.swapRate }"
-								placeholder="换汇率..." />
-						</div>
-					</div>
-					<label class="col-sm-1 control-label no-padding-right"
-						for="interestMonth">计息月:</label>
-					<div class="col-sm-3">
-						<div>
-							<input class="form-control" name="interestMonth"
-								id="interestMonth" type="number"
-								value="${quotationSheetEntity.interestMonth }"
-								placeholder="计息月..." />
 						</div>
 					</div>
 				</div>
@@ -337,7 +297,7 @@
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="taxRebateRate">退税率:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="taxRebateRate"
 								id="taxRebateRate"
@@ -347,10 +307,9 @@
 								placeholder="退税率..." />
 						</div>
 					</div>
-
 					<label class="col-sm-1 control-label no-padding-right"
 						for="valueAddedTaxRate">增值税率:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="valueAddedTaxRate"
 								id="valueAddedTaxRate" type="number"
@@ -360,11 +319,52 @@
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right" for="rate">利率:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<input class="form-control" name="rate" id="rate" type="number"
 							value=<c:if test="${empty interestRateEntity}">${Rate }</c:if>
 							"${interestRateEntity.rate }"
 							placeholder="利率..." />
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="interestMonth">计息月:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="interestMonth"
+								id="interestMonth" type="number"
+								value="${quotationSheetEntity.interestMonth }"
+								placeholder="计息月..." />
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right"
+						for="totalCbm">CBM合计:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="totalCbm" id="totalCbm"
+								readonly type="number" value="${quotationSheetEntity.totalCbm }"
+								placeholder="CBM合计..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="swapRate">换汇率:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="swapRate" id="swapRate"
+								readonly type="number" value="${quotationSheetEntity.swapRate }"
+								placeholder="换汇率..." />
+						</div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right" for="profit">利润:</label>
+					<div class="col-sm-2">
+						<div>
+							<input class="form-control" name="profit" id="profit"
+								value="${quotationSheetEntity.profit }" type="number" readonly
+								placeholder="利润..." />
+						</div>
 					</div>
 				</div>
 			</div>
@@ -474,6 +474,27 @@
 			<th>收购单价</th>
 			<th>美金单价</th>
 			<th>单位</th>
+			<th>装箱率</th>
+			<th>数量</th>
+			<th>箱数</th>
+			<th>TOTALCBM</th>
+			<th>总毛重</th>
+			<th>Description</th>
+			<th>Top(cm)</th>
+			<th>Bottom(cm)</th>
+			<th>Height(cm)</th>
+			<th>Weight(g)</th>
+			<th>Volume(ml)</th>
+			<th>CBM</th>
+			<th>GW</th>
+			<th>操作</th>
+		</tr>
+		<!-- 	<tr>
+			<th>报价单ID</th>
+			<th>商品编码</th>
+			<th>收购单价</th>
+			<th>美金单价</th>
+			<th>单位</th>
 			<th>Top(cm)</th>
 			<th>Bottom(cm)</th>
 			<th>Height(cm)</th>
@@ -488,8 +509,10 @@
 			<th>CBM</th>
 			<th>GW</th>
 			<th>操作</th>
-		</tr>
+		</tr> -->
 	</thead>
+	<tbody>
+	</tbody>
 </table>
 <div class="center">
 	<button id="btnAdd" type="button"

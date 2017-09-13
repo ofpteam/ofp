@@ -224,17 +224,17 @@ $('#btnAddRows').click(function() {
 																buyPrice : v.data.buyPrice,
 																usdPrice : v.data.usdPrice,
 																unit : v.data.unit,
-																top : v.data.top,
-																bottom : v.data.bottom,
-																height : v.data.height,
-																weight : v.data.weight,
-																volume : v.data.volume,
-																packing : v.data.packing,
 																packingRate : v.data.packingRate,
 																number : v.data.packingRate,
 																packNum : 1,
 																totalcbm : 1* v.data.cbm,
 																totalGw : 1* v.data.gw,
+																packing : v.data.packing,
+																top : v.data.top,
+																bottom : v.data.bottom,
+																height : v.data.height,
+																weight : v.data.weight,
+																volume : v.data.volume,
 																cbm : v.data.cbm,
 																gw : v.data.gw,
 																quotationSheetId : $('#quotationSheetId').val() == undefined ? '': $('#quotationSheetId').val()
@@ -298,14 +298,14 @@ if ($('#quotationSheetId').val() != undefined) {// 编辑时
 }
 oTable = $('#example').dataTable({
 	"sScrollY" : "400px",
-	"sScrollX" : "150%", // 横向滚动条
+	"sScrollX" : "200%", // 横向滚动条
 	"bScrollCollapse" : true,
 	"bProcessing" : true, // 显示是否加载
 	"bStateSave" : true,
 	"bSort" : false,
 	"bServerSide" : false,
 	"sAjaxSource" : url, // 后台地址
-	"bAutoWidth" : true,
+	"bAutoWidth" : false,
 	"bPaginate" : true, // 翻页功能
 	"iDisplayLength" : 5,
 	"iDisplayStart" : 0,
@@ -337,17 +337,17 @@ oTable = $('#example').dataTable({
 										buyPrice : productList.data[i].buyPrice,
 										usdPrice : productList.data[i].usdPrice,
 										unit : productList.data[i].unit,
-										top : productList.data[i].top,
-										bottom : productList.data[i].bottom,
-										height : productList.data[i].height,
-										weight : productList.data[i].weight,
-										volume : productList.data[i].volume,
-										packing : productList.data[i].packing,
 										packingRate : productList.data[i].packingRate,
 										number : productList.data[i].number,
 										packNum : 1,
 										totalcbm : 1* productList.data[i].cbm,
 										totalGw : 1* productList.data[i].gw,
+										packing : productList.data[i].packing,
+										top : productList.data[i].top,
+										bottom : productList.data[i].bottom,
+										height : productList.data[i].height,
+										weight : productList.data[i].weight,
+										volume : productList.data[i].volume,
 										cbm : productList.data[i].cbm,
 										gw : productList.data[i].gw,
 										quotationSheetId : $('#quotationSheetId').val() == undefined ? '': $('#quotationSheetId').val()
@@ -386,9 +386,9 @@ oTable = $('#example').dataTable({
 		 $('td:eq(3)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')"  class="txtusdPrice" type="number" value="'+aData.usdPrice+'"></input>');
 		
 		//数量
-		 $('td:eq(11)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtnumber"  type="number" value="'+aData.number+'"></input>');
+		 $('td:eq(6)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtnumber"  type="number" value="'+aData.number+'"></input>');
 		//箱数 
-		 $('td:eq(12)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtpackNum" type="number" value="'+aData.packNum+'"></input>');
+		 $('td:eq(7)', nRow).html('<input onchange="updateRow(this,'+iDisplayIndex+')" class="txtpackNum" type="number" value="'+aData.packNum+'"></input>');
 		
 		 /* Append the grade to the default row class name */
 		/* if (aData[4] == "A") { */
@@ -405,43 +405,44 @@ oTable = $('#example').dataTable({
 	"aoColumns" : [{
 		"mDataProp" : "productId"
 	},{
-		"mDataProp" : "productCode"
+		"mDataProp" : "productCode","sWidth": "5%"
 	}, {
-		"mDataProp" : "buyPrice"
+		"mDataProp" : "buyPrice","sWidth": "5%"
 	}, {
-		"mDataProp" : "usdPrice"
+		"mDataProp" : "usdPrice","sWidth": "5%"
 	}, {
-		"mDataProp" : "unit"
+		"mDataProp" : "unit","sWidth": "5%"
 	}, {
-		"mDataProp" : "top"
+		"mDataProp" : "packingRate","sWidth": "5%"
 	}, {
-		"mDataProp" : "bottom"
+		"mDataProp" : "number","sWidth": "5%"
 	}, {
-		"mDataProp" : "height"
+		"mDataProp" : "packNum","sWidth": "5%"
 	}, {
-		"mDataProp" : "weight"
+		"mDataProp" : "totalcbm","sWidth": "5%"
 	}, {
-		"mDataProp" : "volume"
+		"mDataProp" : "totalGw","sWidth": "5%"
 	}, {
-		"mDataProp" : "packing"
+		"mDataProp" : "packing","sWidth": "10%"
 	}, {
-		"mDataProp" : "packingRate"
+		"mDataProp" : "top","sWidth": "5%"
 	}, {
-		"mDataProp" : "number"
+		"mDataProp" : "bottom","sWidth": "5%"
 	}, {
-		"mDataProp" : "packNum"
+		"mDataProp" : "height","sWidth": "5%"
 	}, {
-		"mDataProp" : "totalcbm"
+		"mDataProp" : "weight","sWidth": "5%"
 	}, {
-		"mDataProp" : "totalGw"
+		"mDataProp" : "volume","sWidth": "5%"
 	}, {
-		"mDataProp" : "cbm"
+		"mDataProp" : "cbm","sWidth": "5%"
 	}, {
-		"mDataProp" : "gw"
+		"mDataProp" : "gw","sWidth": "5%"
 	}, {
 		"mDataProp" : "quotationSheetId"
-	} ], "aoColumnDefs": [
-	{ "bVisible": false, "aTargets": [ 0,15,16 ] }]
+	} ], 
+	"aoColumnDefs": [
+	{ "bVisible": false, "aTargets": [ 0,16,17,18 ] }]
 });
 
 //自动计算装箱数量、箱数
@@ -455,17 +456,17 @@ function updateRow(txtbox,iDisplayIndex){
 		var number=Number($(txtbox).val());
 		var packNum=number/sData.packingRate;
 		
-		oTable.fnUpdate(number, iDisplayIndex,12);
-		oTable.fnUpdate(packNum, iDisplayIndex,13);
-		oTable.fnUpdate((sData.cbm*packNum).toFixed(2), iDisplayIndex,14);//总体积=单个cbm*箱数
-		oTable.fnUpdate((sData.gw*packNum).toFixed(2), iDisplayIndex,15);//总毛重=Gw*箱数
+		oTable.fnUpdate(number, iDisplayIndex,6);
+		oTable.fnUpdate(packNum, iDisplayIndex,7);
+		oTable.fnUpdate((sData.cbm*packNum).toFixed(2), iDisplayIndex,8);//总体积=单个cbm*箱数
+		oTable.fnUpdate((sData.gw*packNum).toFixed(2), iDisplayIndex,9);//总毛重=Gw*箱数
 	}else if(className=="txtpackNum"){//箱数
 		var packNum=Number($(txtbox).val());
 		var number=packNum*sData.packingRate;
-		oTable.fnUpdate(number, iDisplayIndex,12);
-		oTable.fnUpdate(packNum, iDisplayIndex,13);
-		oTable.fnUpdate((sData.cbm*packNum).toFixed(2), iDisplayIndex,14);//总体积=单个cbm*箱数
-		oTable.fnUpdate((sData.gw*packNum).toFixed(2), iDisplayIndex,15);//总毛重=Gw*箱数
+		oTable.fnUpdate(number, iDisplayIndex,6);
+		oTable.fnUpdate(packNum, iDisplayIndex,7);
+		oTable.fnUpdate((sData.cbm*packNum).toFixed(2), iDisplayIndex,8);//总体积=单个cbm*箱数
+		oTable.fnUpdate((sData.gw*packNum).toFixed(2), iDisplayIndex,9);//总毛重=Gw*箱数
 	}else if(className=="txtbuyPrice"){//单价
 		var number=Number($(txtbox).val());
 		oTable.fnUpdate(number, iDisplayIndex,2);

@@ -157,6 +157,23 @@ CREATE TABLE `quotation_sheet` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : localhost
+Source Server Version : 50528
+Source Host           : localhost:3306
+Source Database       : webside2
+
+Target Server Type    : MYSQL
+Target Server Version : 50528
+File Encoding         : 65001
+
+Date: 2017-09-14 13:08:59
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
 -- ----------------------------
 -- Table structure for quotation_sub_sheet
 -- ----------------------------
@@ -179,11 +196,17 @@ CREATE TABLE `quotation_sub_sheet` (
   `PACK_NUM` int(11) DEFAULT NULL COMMENT '箱数',
   `TOTALCBM` decimal(10,4) DEFAULT NULL COMMENT 'TOTALCBM',
   `GW` decimal(10,2) DEFAULT NULL COMMENT 'GW',
-  `CBM` decimal(10,4) DEFAULT NULL COMMENT 'CBM',
   `TOTAL_GW` decimal(10,2) DEFAULT NULL COMMENT '总毛重',
+  `CBM` decimal(10,4) DEFAULT NULL,
+  `CreateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`QUOTATION_SUB_SHEET_ID`),
   KEY `FK_Reference_2` (`PRODUCT_ID`),
   KEY `FK_Reference_3` (`QUOTATION_SHEET_ID`),
   CONSTRAINT `FK_Reference_2` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `product` (`PRODUCT_ID`),
   CONSTRAINT `FK_Reference_3` FOREIGN KEY (`QUOTATION_SHEET_ID`) REFERENCES `quotation_sheet` (`QUOTATION_SHEET_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+DROP TRIGGER IF EXISTS `subsheettimetrigger`;
+DELIMITER ;;
+CREATE TRIGGER `subsheettimetrigger` BEFORE INSERT ON `quotation_sub_sheet` FOR EACH ROW set new.CreateTime=now()
+;;
+DELIMITER ;

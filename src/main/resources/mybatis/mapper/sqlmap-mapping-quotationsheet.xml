@@ -321,7 +321,7 @@
 		from quotation_sheet qs left join customer c on qs.customer_id =
 		c.customer_id
 		left JOIN (SELECT QUOTATION_SHEET_ID,GROUP_CONCAT(PRODUCT_ID) productIds from quotation_sub_sheet 
-		group by QUOTATION_SHEET_ID) s 
+		group by QUOTATION_SHEET_ID ORDER BY CreateTime desc) s 
 		on qs.QUOTATION_SHEET_ID=s.QUOTATION_SHEET_ID
 		where qs.is_delete = 0
 		<include refid="where_clause" />

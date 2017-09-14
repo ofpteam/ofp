@@ -5,10 +5,9 @@
 <style>
 /* 放大 */
 .productCheckBox {
-width:20px;
-height:20px;
+	width: 20px;
+	height: 20px;
 }
-
 </style>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/resources/js/ofp/product/list.js"></script>
@@ -31,7 +30,14 @@ height:20px;
 		class="btn btn-success btn-sm">
 		<i class="fa fa-pencil-square-o"></i>&nbsp;创建报价单
 	</button>
+	<button id="btnPrint" type="button" 	class="btn btn-success btn-sm">
+		<i class="fa fa-user-plus"></i>&nbsp; 导出excel
+	</button>
+	<button id="btnPrintTag" type="button" 	class="btn btn-success btn-sm">
+		<i class="fa fa-user-plus"></i>&nbsp; 打印标签
+	</button>
 </div>
+<form id="productForm" name="productForm" method="post"></form>
 <div class="input-group col-xs-12" style="margin-top: 5px;">
 	<input id="searchKey" type="text" class="input form-control"
 		placeholder="商品编码 ...">

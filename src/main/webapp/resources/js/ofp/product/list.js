@@ -17,6 +17,55 @@ function addFromProductList(){
 		webside.common.loadPage('/quotationsheet/addUI.html' + '?productIds='+productSelectedList );
 	}
 }
+
+
+$('#btnPrint').click(function(){
+	var url = "/product/exportQrCodeBatch.html";
+	if(productSelectedList.length==0){
+		layer.msg("你没有选择行", {
+			icon : 0
+		});
+		return;
+	}
+	var productIds="";
+/*	$.each(MliSelected,function(i,v){
+		//选中
+		productIds += oTable.fnGetData(v).productId + ",";
+		//var t=oTable.rows('.selected').data();
+	});*/
+	var path =sys.rootPath+url+'?productIds=' + productSelectedList + '&baseUri=' + $.url().attr('path');  
+    $('#productForm').attr("action", path).submit();
+});
+
+$('#btnPrintTag').click(function(){
+	var url = "/product/printProductTag.html";
+	if(productSelectedList.length==0){
+		layer.msg("你没有选择行", {
+			icon : 0
+		});
+		return;
+	}
+	var productIds="";
+	/*$.each(MliSelected,function(i,v){
+		//选中
+		productIds += oTable.fnGetData(v).productId + ",";
+		//var t=oTable.rows('.selected').data();
+	});*/
+//	var path =sys.rootPath+url+'?productIds=' + productIds + '&baseUri=' + $.url().attr('path');
+	
+	$.post(sys.rootPath+'/product/printProductTag.html',{productIds:productSelectedList},function(resp){
+		var result = JSON.parse(resp);
+		if(result.success==false){
+			layer.msg('打印失败', {icon : 0});
+		}else{
+			layer.msg('打印成功', {icon : 0});
+		}
+	});
+	
+//    $('#productForm').attr("action", path).submit();
+});
+
+
 var dtGridColumns = [{
 	id : 'productId',
 	title : '选择',

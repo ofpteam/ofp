@@ -106,7 +106,7 @@
 			and p.PRODUCT_CODE like CONCAT(#{productCode},'%')
 		</if>
 		<if test="factoryCode != null and factoryCode != ''">
-			and p.FACTORY_CODE like CONCAT(#{factoryCode},'%')
+			and p.FACTORY_CODE = #{factoryCode}
 		</if>
 
 		<if test="productIds != null and productIds != ''">

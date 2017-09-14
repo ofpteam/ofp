@@ -260,15 +260,22 @@ public class ProductController extends BaseController {
 			ProductTypeEntity productTypeEntity) {
 		StringBuilder sb = new StringBuilder();
 		Map<String, Object> parameter = new HashMap<>();
-		ProductEntity productEntity = productService.findById((long) productEntityWithBLOBs.getProductId());
-		if (!productEntity.getFactoryCode().equals(productEntityWithBLOBs.getFactoryCode())) {
-
-			parameter.put("factoryCode", productEntityWithBLOBs.getFactoryCode());
-			Integer count = productService.count(parameter);
+		parameter.put("factoryCode", productEntityWithBLOBs.getFactoryCode());
+		if (productEntityWithBLOBs.getProductId() == null) {// 新增
+			int count = productService.count(parameter);
 			if (count > 0) {
 				sb.append("工厂编码已经存在,");
 			}
+		} else {// 编辑
+			ProductEntity productEntity = productService.findById((long) productEntityWithBLOBs.getProductId());// 编辑时如果还是那个工厂编码则通过
+			if (!productEntity.getFactoryCode().equals(productEntityWithBLOBs.getFactoryCode())) {
+				int count = productService.count(parameter);// 编辑时如果还是那个工厂编码则通过
+				if (count > 0) {
+					sb.append("工厂编码已经存在,");
+				}
+			}
 		}
+
 		if (productTypeEntity.getProductTypeId() == null) {
 			sb.append("商品类型不能为空,");
 		}

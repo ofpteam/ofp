@@ -31,7 +31,7 @@
 		<i class="fa fa-pencil-square-o"></i>&nbsp;创建报价单
 	</button>
 	<button id="btnPrint" type="button" 	class="btn btn-success btn-sm">
-		<i class="fa fa-user-plus"></i>&nbsp; 导出excel
+		<i class="fa fa-user-plus"></i>&nbsp; 导出二维码
 	</button>
 	<button id="btnPrintTag" type="button" 	class="btn btn-success btn-sm">
 		<i class="fa fa-user-plus"></i>&nbsp; 打印标签

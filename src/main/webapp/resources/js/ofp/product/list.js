@@ -45,15 +45,15 @@ $('#btnPrintTag').click(function(){
 		});
 		return;
 	}
-	var productIds="";
-	/*$.each(MliSelected,function(i,v){
+	var products="";
+	$.each(productSelectedList,function(i,v){
 		//选中
-		productIds += oTable.fnGetData(v).productId + ",";
+		products += productSelectedList[i] + ",";
 		//var t=oTable.rows('.selected').data();
-	});*/
+	});
 //	var path =sys.rootPath+url+'?productIds=' + productIds + '&baseUri=' + $.url().attr('path');
-	
-	$.post(sys.rootPath+'/product/printProductTag.html',{productIds:productSelectedList},function(resp){
+	debugger;
+	$.post(sys.rootPath+'/product/printProductTag.html',{productIds:products},function(resp){
 		var result = JSON.parse(resp);
 		if(result.success==false){
 			layer.msg('打印失败', {icon : 0});

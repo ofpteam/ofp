@@ -371,14 +371,11 @@
 		#{gw,jdbcType=DECIMAL},
 		PACKING_RATE = #{packingRate,jdbcType=DECIMAL},
 		TAX_REBATE_RATE = #{taxRebateRate,jdbcType=DECIMAL},
-		CBM =
-		#{cbm,jdbcType=DECIMAL},
+		CBM = #{cbm,jdbcType=DECIMAL},
 		PACKING = #{packing,jdbcType=VARCHAR},
 		HD_MAP_URL = #{hdMapUrl,jdbcType=VARCHAR},
-		QR_CODE_PIC =
-		#{qrCodePic,jdbcType=LONGVARBINARY},
-		THUMBNAIL =
-		#{thumbnail,jdbcType=LONGVARBINARY},
+		QR_CODE_PIC = #{qrCodePic,jdbcType=LONGVARBINARY},
+		THUMBNAIL = #{thumbnail,jdbcType=LONGVARBINARY},
 		MODIFY_TIME = now(),
 		MODIFY_USER =
 		#{modifyUser,jdbcType=INTEGER},

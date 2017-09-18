@@ -37,6 +37,24 @@ $('#btnPrint').click(function(){
     $('#productForm').attr("action", path).submit();
 });
 
+$('#btnBatchExport').click(function(){
+	var url = "/product/exportProductBatch.html";
+	if(productSelectedList.length==0){
+		layer.msg("你没有选择行", {
+			icon : 0
+		});
+		return;
+	}
+	var productIds="";
+/*	$.each(MliSelected,function(i,v){
+		//选中
+		productIds += oTable.fnGetData(v).productId + ",";
+		//var t=oTable.rows('.selected').data();
+	});*/
+	var path =sys.rootPath+url+'?productIds=' + productSelectedList + '&baseUri=' + $.url().attr('path');  
+    $('#productForm').attr("action", path).submit();
+});
+
 $('#btnPrintTag').click(function(){
 	var url = "/product/printProductTag.html";
 	if(productSelectedList.length==0){

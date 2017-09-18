@@ -584,6 +584,31 @@ public class ProductController extends BaseController {
 		}
 	}
 
+	
+	/**
+	 * 批量导出商品
+	 * @param response
+	 * @param quotationSheet
+	 * @param request
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/exportProductBatch.html")
+	public void exportProductBatch(HttpServletResponse response, HttpServletRequest request, String productIds) {
+		String[] productIdArr = productIds.split(",");
+		List<Integer> productIdList = new ArrayList<Integer>();
+		for (String id : productIdArr) {
+			if (id != null && !"".equals(id)) {
+				productIdList.add(Integer.parseInt(id));
+			}
+		}
+		try {
+			List<ProductEntityWithBLOBs> productEntityWithBLOBs = productService.findByIdsWithBLOBS(productIdList);
+			OfpExportUtils.exportProductExcel(response, productEntityWithBLOBs);
+		} catch (Exception e) {
+			logger.error("导出商品异常：", e);
+		}
+	}
+	
 	/**
 	 * 打印产品标签
 	 * 
@@ -605,7 +630,7 @@ public class ProductController extends BaseController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			String path = request.getSession().getServletContext().getRealPath("/");
-			String logoUrl = path + "\\resources\\images\\ofplogo.png";
+			String logoUrl = path + "\\resources\\images\\ofplogomiddle.png";
 			List<ProductEntityWithBLOBs> productEntityWithBLOBs = productService.findByIdsWithBLOBS(productIdList);
 			List<PrintProductTagBean> productTagBeanlist = new ArrayList<PrintProductTagBean>();
 			for (ProductEntityWithBLOBs productEntity : productEntityWithBLOBs) {

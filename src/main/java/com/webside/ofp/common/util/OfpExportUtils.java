@@ -13,9 +13,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -23,14 +25,18 @@ import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
+import com.webside.dtgrid.model.Column;
 import com.webside.dtgrid.model.Pager;
 import com.webside.dtgrid.util.ExportUtils;
+import com.webside.dtgrid.util.GridUtils;
 import com.webside.enums.ExportType;
 import com.webside.ofp.common.config.OfpConfig;
 import com.webside.ofp.model.ProductEntity;
 import com.webside.ofp.model.ProductEntityWithBLOBs;
+import com.webside.ofp.model.ProductTypeEntity;
 import com.webside.ofp.model.QuotationSheetEntity;
 import com.webside.ofp.model.QuotationSubSheetEntity;
+import com.webside.ofp.service.ProductTypeService;
 
 import jxl.CellView;
 import jxl.SheetSettings;
@@ -49,6 +55,7 @@ import jxl.write.WritableImage;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
+@Component
 public class OfpExportUtils extends ExportUtils{
 	//报价单excel模板名称
 	private static final String QUOTATION_SHEET_TEMPLATE_PATH = "\\quotation_sheet.xls";
@@ -58,6 +65,13 @@ public class OfpExportUtils extends ExportUtils{
 	
 	public static Logger logger = LoggerFactory.getLogger(OfpExportUtils.class);
 	
+	private static ProductTypeService productTypeService;
+	
+	@Autowired(required = true)
+	public void setProductTypeService(ProductTypeService productTypeService) {
+		OfpExportUtils.productTypeService = productTypeService;
+	}
+
 	/**
 	 * 导出
 	 * 
@@ -413,6 +427,124 @@ public class OfpExportUtils extends ExportUtils{
 		outputStream = null;
 		logger.info("导出老的excel 形式报价单结束");
 	}
+	
+	/**
+	 * 批量导出产品Excel
+	 * @param response
+	 * @param products 产品集合
+	 */
+	public static void exportProductExcel(HttpServletResponse response,List<ProductEntityWithBLOBs> products) throws Exception {
+		// 设置响应头
+		response.setContentType("application/vnd.ms-excel");
+		// 执行文件写入
+		response.setHeader("Content-Disposition", "attachment;filename=products"
+				+ (System.currentTimeMillis()) + ".xls");
+		// 获取输出流
+		OutputStream outputStream = response.getOutputStream();
+		String[] exportColumns = new String[]{"商品编码","工厂编码","商品大类（一级）","商品大类（二级）","英文名称","中文名称","海关编码","单位","美金单价",
+				"收购单价","增值税率","退税率","Top(mm)","Bottom(mm)","Height(mm)","G.W.","外箱长","外箱宽","外箱高","CBM","容量(ml)",
+				"单品重量(g)","装箱率","Description"};
+		exportProductExcel(outputStream,products,exportColumns);
+	}
+	
+	/**
+	 * 批量导出产品excel
+	 * @param outputStream
+	 * @param quotationSheet
+	 * @param basePath
+	 * @throws Exception
+	 */
+	public static void exportProductExcel(OutputStream outputStream,List<ProductEntityWithBLOBs> products,String[] exportColumns) throws Exception {
+		logger.info("导出产品excel开始");
+		// 定义Excel对象
+		WritableWorkbook book = Workbook.createWorkbook(outputStream);
+		// 创建Sheet页
+		WritableSheet sheet = book.createSheet("数据", 0);
+		sheet.getSettings().setSelected(true);
+		
+		// 冻结表头
+		SheetSettings settings = sheet.getSettings();
+		settings.setVerticalFreeze(1);
+		
+		// 定义表头字体样式、表格字体样式
+		WritableFont headerFont = new WritableFont(
+				WritableFont.createFont("Lucida Grande"), 9, WritableFont.BOLD);
+		WritableFont bodyFont = new WritableFont(
+				WritableFont.createFont("Lucida Grande"), 9,
+				WritableFont.NO_BOLD);
+		WritableCellFormat headerCellFormat = new WritableCellFormat(headerFont);
+		WritableCellFormat bodyCellFormat = new WritableCellFormat(bodyFont);
+		
+		WritableCellFormat headerCellFormat2 = new WritableCellFormat(bodyFont);
+		
+		// 设置表头样式：加边框、背景颜色为淡灰、居中样式
+		headerCellFormat.setBorder(Border.ALL, BorderLineStyle.THIN);
+		headerCellFormat.setBackground(Colour.PALE_BLUE);
+		headerCellFormat.setAlignment(Alignment.CENTRE);
+		headerCellFormat.setVerticalAlignment(VerticalAlignment.CENTRE);
+		
+		// 设置表头样式：加边框、居中样式
+		headerCellFormat2.setBorder(Border.ALL, BorderLineStyle.THIN);
+		headerCellFormat2.setAlignment(Alignment.CENTRE);
+		headerCellFormat2.setVerticalAlignment(VerticalAlignment.CENTRE);
+		
+		// 设置表格体样式：加边框、居中
+		bodyCellFormat.setBorder(Border.ALL, BorderLineStyle.THIN);
+		bodyCellFormat.setAlignment(Alignment.CENTRE);
+		bodyCellFormat.setVerticalAlignment(VerticalAlignment.CENTRE);
+		
+		if(exportColumns != null){
+			int seq = 0;
+			for (String column : exportColumns) {
+				sheet.addCell(new Label(seq, 0, column,
+						headerCellFormat));
+				seq++;
+			}
+			for(int i = 0; i < products.size(); i++){
+				ProductEntityWithBLOBs product = products.get(i);
+				sheet.addCell(new Label(0, i + 1, product.getProductCode(),bodyCellFormat));
+				sheet.addCell(new Label(1, i + 1, product.getFactoryCode(),bodyCellFormat));
+				if(product.getProductType().getParentId() != null){
+					ProductTypeEntity parentType = productTypeService.findById((long)product.getProductType().getParentId());
+					sheet.addCell(new Label(2, i + 1, parentType.getCnName(),bodyCellFormat));
+				}
+				sheet.addCell(new Label(3, i + 1, product.getProductType().getCnName()+"",bodyCellFormat));
+				sheet.addCell(new Label(4, i + 1, product.getEnName(),bodyCellFormat));
+				sheet.addCell(new Label(5, i + 1, product.getCnName(),bodyCellFormat));
+				sheet.addCell(new Label(6, i + 1, product.getCustomsCode(),bodyCellFormat));
+				sheet.addCell(new Label(7, i + 1, product.getUnit(),bodyCellFormat));
+				sheet.addCell(new Label(8, i + 1, product.getUsdPrice()+"",bodyCellFormat));
+				sheet.addCell(new Label(9, i + 1, product.getBuyPrice()+"",bodyCellFormat));
+				sheet.addCell(new Label(10, i + 1, product.getVatRate()+"",bodyCellFormat));
+				sheet.addCell(new Label(11, i + 1, product.getTaxRebateRate()+"",bodyCellFormat));
+				sheet.addCell(new Label(12, i + 1, product.getTop()+"",bodyCellFormat));
+				sheet.addCell(new Label(13, i + 1, product.getBottom()+"",bodyCellFormat));
+				sheet.addCell(new Label(14, i + 1, product.getHeight()+"",bodyCellFormat));
+				sheet.addCell(new Label(15, i + 1, product.getGw()+"",bodyCellFormat));
+				sheet.addCell(new Label(16, i + 1, product.getLength()+"",bodyCellFormat));
+				sheet.addCell(new Label(17, i + 1, product.getWidth()+"",bodyCellFormat));
+				sheet.addCell(new Label(18, i + 1, product.getPackHeight()+"",bodyCellFormat));
+				sheet.addCell(new Label(19, i + 1, product.getCbm()+"",bodyCellFormat));
+				sheet.addCell(new Label(20, i + 1, product.getVolume()+"",bodyCellFormat));
+				sheet.addCell(new Label(21, i + 1, product.getWeight()+"",bodyCellFormat));
+				sheet.addCell(new Label(22, i + 1, product.getPackingRate()+"",bodyCellFormat));
+				if(product.getDescription() != null){
+					sheet.addCell(new Label(23, i + 1, product.getDescription()+"",bodyCellFormat));
+				}
+			}
+		}
+		
+		// 写入Excel工作表
+		book.write();
+		// 关闭Excel工作薄对象
+		book.close();
+		// 关闭流
+		outputStream.flush();
+		outputStream.close();
+		outputStream = null;
+		logger.info("导出产品excel结束");
+	}
+	
 	
 	/**
 	 * 导出新的报价单格式

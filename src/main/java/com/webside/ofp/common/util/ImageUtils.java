@@ -407,7 +407,8 @@ public class ImageUtils {
             BufferedImage waterImage = ImageIO.read(new File(waterUrl));  
             ImageWrapper waterWrapper = new ImageWrapper(waterImage);  
             Point p =calculate(imageWrapper.getWidth(),imageWrapper.getHeight(),  
-                    waterWrapper.getWidth(), waterWrapper.getHeight());  
+                    waterWrapper.getWidth(), waterWrapper.getHeight());
+            //水印位置
             WatermarkParameter param = new WatermarkParameter(waterWrapper, 0.4f,0,0);
             BufferedImage bufferedImage = ImageDrawHelper.drawWatermark(imageWrapper.getAsBufferedImage(), param);  
             imageWrapper = new ImageWrapper(bufferedImage);  

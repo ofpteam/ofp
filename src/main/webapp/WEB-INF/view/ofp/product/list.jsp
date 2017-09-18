@@ -36,6 +36,9 @@
 	<button id="btnPrintTag" type="button" 	class="btn btn-success btn-sm">
 		<i class="fa fa-user-plus"></i>&nbsp; 打印标签
 	</button>
+	<button id="btnBatchExport" type="button" 	class="btn btn-success btn-sm">
+		<i class="fa fa-user-plus"></i>&nbsp; 批量导出
+	</button>
 </div>
 <form id="productForm" name="productForm" method="post"></form>
 <div class="input-group col-xs-12" style="margin-top: 5px;">

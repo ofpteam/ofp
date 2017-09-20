@@ -230,10 +230,12 @@
 		p.PACKING, p.HD_MAP_URL,
 		p.IS_DELETE, p.CREATE_TIME,
 		p.MODIFY_TIME, p.CREATE_USER, p.MODIFY_USER,
-		p.DESCRIPTION,p.THUMBNAIL,p.QR_CODE_PIC,
+		p.DESCRIPTION,p.THUMBNAIL,p.QR_CODE_PIC,a.attachmentNames,
 		<include refid="product_type_column_list" />
 		from product p left join product_type pt on p.PRODUCT_TYPE_ID =
 		pt.PRODUCT_TYPE_ID
+		left join  (SELECT productId,GROUP_CONCAT(attachmentName) attachmentNames from attachment 	group by productId) a
+		on p.PRODUCT_ID=a.productId
 		where p.is_delete = 0 and p.product_id = #{id}
 	</select>
 
@@ -252,10 +254,12 @@
 		p.PACKING, p.HD_MAP_URL,
 		p.IS_DELETE, p.CREATE_TIME,
 		p.MODIFY_TIME, p.CREATE_USER, p.MODIFY_USER,
-		p.DESCRIPTION,p.THUMBNAIL,p.QR_CODE_PIC,
+		p.DESCRIPTION,p.THUMBNAIL,p.QR_CODE_PIC,a.attachmentNames,
 		<include refid="product_type_column_list" />
 		from product p left join product_type pt on p.PRODUCT_TYPE_ID =
 		pt.PRODUCT_TYPE_ID
+		left join  (SELECT productId,GROUP_CONCAT(attachmentName) attachmentNames from attachment 	group by productId) a
+		on p.PRODUCT_ID=a.productId
 		where p.is_delete = 0 and p.product_id in
 		<foreach collection="list" item="id" open="(" separator=","
 			close=")">
@@ -296,6 +300,20 @@
 			#{id}
 		</foreach>
 	</delete>
+	<delete id="deleteAttachmentsByProductId">
+		delete from attachment where productId=#{0}
+	</delete>
+	<!-- TODO：完善批量导入附件 -->
+	<insert id="insertAttachments"  parameterType="java.util.Map">
+		<!-- delete from attachment where productId=#{productId}; -->
+		insert into attachment
+		(productId, attachmentName,createTime) values
+		<foreach collection="list" item="item"   index="index"  close=";"
+            separator="," >
+			(#{productId},	#{item},now())
+		</foreach>
+	</insert>
+
 
 	<insert id="insert" parameterType="com.webside.ofp.model.ProductEntityWithBLOBs"
 		useGeneratedKeys="true" keyProperty="productId">
@@ -371,11 +389,14 @@
 		#{gw,jdbcType=DECIMAL},
 		PACKING_RATE = #{packingRate,jdbcType=DECIMAL},
 		TAX_REBATE_RATE = #{taxRebateRate,jdbcType=DECIMAL},
-		CBM = #{cbm,jdbcType=DECIMAL},
+		CBM =
+		#{cbm,jdbcType=DECIMAL},
 		PACKING = #{packing,jdbcType=VARCHAR},
 		HD_MAP_URL = #{hdMapUrl,jdbcType=VARCHAR},
-		QR_CODE_PIC = #{qrCodePic,jdbcType=LONGVARBINARY},
-		THUMBNAIL = #{thumbnail,jdbcType=LONGVARBINARY},
+		QR_CODE_PIC =
+		#{qrCodePic,jdbcType=LONGVARBINARY},
+		THUMBNAIL =
+		#{thumbnail,jdbcType=LONGVARBINARY},
 		MODIFY_TIME = now(),
 		MODIFY_USER =
 		#{modifyUser,jdbcType=INTEGER},
@@ -405,7 +426,8 @@
 		b.CN_NAME AS typecn_name
 		FROM product
 		a
-		LEFT JOIN product_type b
+		LEFT
+		JOIN product_type b
 		ON a.PRODUCT_TYPE_ID = b.PRODUCT_TYPE_ID
 		<if test="roleId != null">
 			join role_product rp on rp.PRODUCT_TYPE_ID =

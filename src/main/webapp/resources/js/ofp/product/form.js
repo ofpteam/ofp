@@ -19,6 +19,7 @@ if ($('#hdMapUrl').val() != undefined) {//没有上传图片不显示
 			+ $.url().attr('path'));
 }
 
+
 //反现二级目录
 if($('#productTypeId').val()!=undefined){
 	$('#productType').val($('#productTypeId').val());
@@ -135,10 +136,19 @@ $('#productForm').validate({
     submitHandler : function(form) {
         var productId = $("#productId").val();
         var url = "";
+        debugger;
+        var fileNames=$('#attachmentNames').val().split(',');  
+        var fileIds="";
+       
+        if(fileNames!=undefined&&fileNames.length>0){
+        	 for(var i=0;i<fileNames.length;i++){
+        		 fileIds+=fileNames[i]+",";
+             }
+        }
         if (productId != undefined) {
-            url = '/product/edit.html';
+            url = '/product/edit.html?fileNames='+encodeURI(fileIds);
         } else {
-            url = '/product/add.html';
+            url = '/product/add.html?fileNames='+encodeURI(fileIds);
         }
         webside.common.commit('productForm', url, '/product/listUI.html');
     }

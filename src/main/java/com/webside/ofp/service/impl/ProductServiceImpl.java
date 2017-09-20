@@ -9,6 +9,7 @@ import javax.imageio.stream.FileImageInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import com.webside.base.baseservice.impl.AbstractService;
 import com.webside.ofp.common.util.ImageUtils;
@@ -48,11 +49,13 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long>impl
 		ByteOutputStream output2 = null;
 		try {
 			// 二维码
-			String content = "ART.NO: " + productEntity.getProductCode() + "%0A NAME: " + productEntity.getCnName() 
-					+ "%0A TOP(mm): " + productEntity.getTop() + "%0A BOTTOM(mm): " + productEntity.getBottom() +"%0A HEIGHT(mm): "
-					+ productEntity.getHeight() + "%0A WEIGHT(g): " + productEntity.getWeight() + "%0A VOLUME(ml): " + productEntity.getVolume() 
-					+ "%0A 长：" + productEntity.getLength() + "%0A 宽：" + productEntity.getWidth() + "%0A 高：" + productEntity.getPackHeight() + 
-					"%0A G.W.(kgs)" + productEntity.getGw() + "%0A QTY/CTN： " + productEntity.getPackingRate() + "%0A CBM： " + productEntity.getCbm();
+			String content = "ART.NO: " + productEntity.getProductCode() + "%0A NAME: " + productEntity.getCnName()
+					+ "%0A TOP(mm): " + productEntity.getTop() + "%0A BOTTOM(mm): " + productEntity.getBottom()
+					+ "%0A HEIGHT(mm): " + productEntity.getHeight() + "%0A WEIGHT(g): " + productEntity.getWeight()
+					+ "%0A VOLUME(ml): " + productEntity.getVolume() + "%0A 长：" + productEntity.getLength() + "%0A 宽："
+					+ productEntity.getWidth() + "%0A 高：" + productEntity.getPackHeight() + "%0A G.W.(kgs)"
+					+ productEntity.getGw() + "%0A QTY/CTN： " + productEntity.getPackingRate() + "%0A CBM： "
+					+ productEntity.getCbm();
 			String url = "http://rd.wechat.com/qrcode/confirm?block_type=101&content=" + content;
 			QRCodeUtil.encode(url, output);
 			productEntity.setQrCodePic(output.getBytes());
@@ -112,14 +115,19 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long>impl
 		ByteOutputStream output2 = null;
 		try {
 			// 二维码
-			/*String content = productEntity.getProductCode() + "|" + productEntity.getTop() + "|"
-					+ productEntity.getBottom() + productEntity.getWeight() + "|" + productEntity.getVolume() + "|"
-					+ productEntity.getPackingRate() + "|" + productEntity.getCbm();*/
-			String content = "ART.NO: " + productEntity.getProductCode() + "%0A NAME: " + productEntity.getCnName() 
-			+ "%0A TOP(mm): " + productEntity.getTop() + "%0A BOTTOM(mm): " + productEntity.getBottom() +"%0A HEIGHT(mm): "
-			+ productEntity.getHeight() + "%0A WEIGHT(g): " + productEntity.getWeight() + "%0A VOLUME(ml): " + productEntity.getVolume() 
-			+ "%0A 长：" + productEntity.getLength() + "%0A 宽：" + productEntity.getWidth() + "%0A 高：" + productEntity.getPackHeight() + 
-			"%0A G.W.(kgs)" + productEntity.getGw() + "%0A QTY/CTN： " + productEntity.getPackingRate() + "%0A CBM： " + productEntity.getCbm();
+			/*
+			 * String content = productEntity.getProductCode() + "|" +
+			 * productEntity.getTop() + "|" + productEntity.getBottom() +
+			 * productEntity.getWeight() + "|" + productEntity.getVolume() + "|"
+			 * + productEntity.getPackingRate() + "|" + productEntity.getCbm();
+			 */
+			String content = "ART.NO: " + productEntity.getProductCode() + "%0A NAME: " + productEntity.getCnName()
+					+ "%0A TOP(mm): " + productEntity.getTop() + "%0A BOTTOM(mm): " + productEntity.getBottom()
+					+ "%0A HEIGHT(mm): " + productEntity.getHeight() + "%0A WEIGHT(g): " + productEntity.getWeight()
+					+ "%0A VOLUME(ml): " + productEntity.getVolume() + "%0A 长：" + productEntity.getLength() + "%0A 宽："
+					+ productEntity.getWidth() + "%0A 高：" + productEntity.getPackHeight() + "%0A G.W.(kgs)"
+					+ productEntity.getGw() + "%0A QTY/CTN： " + productEntity.getPackingRate() + "%0A CBM： "
+					+ productEntity.getCbm();
 			String url = "http://rd.wechat.com/qrcode/confirm?block_type=101&content=" + content;
 			QRCodeUtil.encode(url, output);
 			productEntity.setQrCodePic(output.getBytes());
@@ -169,6 +177,17 @@ public class ProductServiceImpl extends AbstractService<ProductEntity, Long>impl
 	@Override
 	public List<ProductEntityWithBLOBs> findByIdsWithBLOBS(List<Integer> productIds) {
 		return productMapper.findByIdsWithBLOBS(productIds);
+	}
+
+	@Override
+	public void deleteAttachmentsByProductId(Integer productId) {
+		productMapper.deleteAttachmentsByProductId(productId);
+
+	}
+
+	@Override
+	public int insertAttachments(Map<String, Object> parameter) {
+		return productMapper.insertAttachments(parameter);
 	}
 
 }

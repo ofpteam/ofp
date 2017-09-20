@@ -24,7 +24,8 @@ var $ = jQuery,
 			accept : {
 				title: 'Images',
 	            extensions: 'gif,jpg,jpeg,bmp,png',
-	            mimeTypes: 'image/*'
+	            mimeTypes: 'image/jpg,image/jpeg,image/png,image/gif,image/bmp'   //修改这行
+	          //  mimeTypes: 'image/*'
 			},
 			duplicate:false//允许重复上传
     });

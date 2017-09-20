@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -212,7 +213,7 @@ public class ProductController extends BaseController {
 	@RequestMapping("add.html")
 	@ResponseBody
 	public Object add(ProductEntityWithBLOBs productEntityWithBLOBs, ProductTypeEntity productTypeEntity,
-			HttpServletRequest request) throws AjaxException {
+			HttpServletRequest request, String fileNames) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			StringBuilder sb = this.validateSubmitVal(productEntityWithBLOBs, productTypeEntity);
@@ -230,6 +231,20 @@ public class ProductController extends BaseController {
 				String path = request.getSession().getServletContext().getRealPath("/");
 				int result = productService.insertWithBlobs(productEntityWithBLOBs, path);
 				if (result == 1) {
+					if (fileNames != "") {// 上传了附件
+						try {
+							fileNames = java.net.URLDecoder.decode(fileNames, "UTF-8");
+							String[] attachments = fileNames.split(",");
+							map.clear();
+							map.put("productId", productEntityWithBLOBs.getProductId());
+							List<String> javaList = Arrays.asList(attachments);
+							map.put("list", javaList);
+							productService.deleteAttachmentsByProductId(productEntityWithBLOBs.getProductId());
+							productService.insertAttachments(map);
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+					}
 					map.put("success", Boolean.TRUE);
 					map.put("data", null);
 					map.put("message", "添加成功");
@@ -421,7 +436,7 @@ public class ProductController extends BaseController {
 	@RequestMapping("edit.html")
 	@ResponseBody
 	public Object update(ProductEntityWithBLOBs productEntityWithBLOBs, ProductTypeEntity productTypeEntity,
-			HttpServletRequest request) throws AjaxException {
+			HttpServletRequest request, String fileNames) throws AjaxException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			StringBuilder sb = this.validateSubmitVal(productEntityWithBLOBs, productTypeEntity);
@@ -440,7 +455,22 @@ public class ProductController extends BaseController {
 				productEntityWithBLOBs.setModifyUser(ShiroAuthenticationManager.getUserId().intValue());
 				String path = request.getSession().getServletContext().getRealPath("/");
 				int result = productService.updateWithBlobs(productEntityWithBLOBs, path);
+
 				if (result == 1) {
+					if (fileNames != "") {// 上传了附件
+						try {
+							fileNames = java.net.URLDecoder.decode(fileNames, "UTF-8");
+							String[] attachments = fileNames.split(",");
+							map.clear();
+							map.put("productId", productEntityWithBLOBs.getProductId());
+							List<String> javaList = Arrays.asList(attachments);
+							map.put("list", javaList);
+							productService.deleteAttachmentsByProductId(productEntityWithBLOBs.getProductId());
+							productService.insertAttachments(map);
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+					}
 					map.put("success", Boolean.TRUE);
 					map.put("data", null);
 					map.put("message", "添加成功");
@@ -458,6 +488,63 @@ public class ProductController extends BaseController {
 			throw new AjaxException(e);
 		}
 		return map;
+	}
+
+	/**
+	 * 文件下载
+	 * 
+	 * @Description:
+	 * @param fileName
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("downloadAttachmentByName.html")
+	public String downloadFile(@RequestParam("fileName") String fileName, HttpServletRequest request,
+			HttpServletResponse response) {
+		if (fileName != null) {
+			String realPath = OfpConfig.exportTempPath + File.separator;
+			File file = new File(realPath, fileName);
+			if (file.exists()) {
+				response.setContentType("application/force-download");// 设置强制下载不打开
+				response.addHeader("Content-Disposition",
+						"attachment;fileName=" + fileName.substring(36, fileName.length()));// 设置文件名
+				byte[] buffer = new byte[1024];
+				FileInputStream fis = null;
+				BufferedInputStream bis = null;
+				try {
+					fis = new FileInputStream(file);
+					bis = new BufferedInputStream(fis);
+					OutputStream os = response.getOutputStream();
+					int i = bis.read(buffer);
+					while (i != -1) {
+						os.write(buffer, 0, i);
+						i = bis.read(buffer);
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				} finally {
+					if (bis != null) {
+						try {
+							bis.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					if (fis != null) {
+						try {
+							fis.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -479,6 +566,7 @@ public class ProductController extends BaseController {
 			try {
 				// String path = System.getProperty("catalina.home");
 				// 转换成多部分request
+				String myFileName = null;
 				MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
 				// 取得request中的所有文件名
 				Iterator<String> iter = multiRequest.getFileNames();
@@ -487,7 +575,7 @@ public class ProductController extends BaseController {
 					MultipartFile file = multiRequest.getFile(iter.next());
 					if (file != null) {
 						// 取得当前上传文件的文件名称
-						String myFileName = UUID.randomUUID().toString() + file.getOriginalFilename();
+						myFileName = UUID.randomUUID().toString() + file.getOriginalFilename();
 						map.put("data", myFileName);
 						// 如果名称不为“”,说明该文件存在，否则说明该文件不存在
 						// 重命名上传后的文件名
@@ -503,6 +591,7 @@ public class ProductController extends BaseController {
 				}
 				map.put("success", Boolean.TRUE);
 				map.put("message", "添加成功");
+				map.put("fileName", myFileName);
 				// 记录上传该文件后的时间
 			} catch (IllegalStateException | IOException e) {
 				map.put("success", Boolean.FALSE);
@@ -584,9 +673,9 @@ public class ProductController extends BaseController {
 		}
 	}
 
-	
 	/**
 	 * 批量导出商品
+	 * 
 	 * @param response
 	 * @param quotationSheet
 	 * @param request
@@ -608,7 +697,7 @@ public class ProductController extends BaseController {
 			logger.error("导出商品异常：", e);
 		}
 	}
-	
+
 	/**
 	 * 打印产品标签
 	 * 

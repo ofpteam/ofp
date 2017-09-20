@@ -7,22 +7,41 @@ import com.webside.ofp.model.ProductEntityWithBLOBs;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductMapper extends BaseMapper<ProductEntity, Long>{
+public interface ProductMapper extends BaseMapper<ProductEntity, Long> {
 	public List<ProductEntity> findByTypeId(String id);
-	
+
 	public ProductEntityWithBLOBs findByIdWithBLOBS(long id);
+
 	/**
 	 * 报价单查询页面
 	 */
 	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet);
-	
+
 	/**
 	 * 根据产品id集合批量查找产品集合
-	 * @param productIds 产品ID集合
+	 * 
+	 * @param productIds
+	 *            产品ID集合
 	 * @return List<ProductEntityWithBLOBs> 产品信息
 	 */
 	public List<ProductEntityWithBLOBs> findByIdsWithBLOBS(List<Integer> productIds);
+
+	/**
+	 * 删除附件
+	 */
+	public void deleteAttachmentsByProductId(Integer productId);
+
+	/**
+	 * 添加附件
+	 * 
+	 * @param productId
+	 * @param attachments
+	 * @return
+	 */
+	public int insertAttachments(Map<String, Object> parameter);
+
 }

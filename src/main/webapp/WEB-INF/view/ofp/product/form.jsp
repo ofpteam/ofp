@@ -16,10 +16,12 @@
 	src="${ctx }/resources/js/webuploader/webuploader.min.js"></script>
 <script type="text/javascript"
 	src="${ctx }/resources/js/ofp/product/upload.js"></script>
+<script type="text/javascript"
+	src="${ctx }/resources/js/ofp/product/uploadAttachment.js"></script>
 <script type="text/javascript">
 	$(function() {
 		validateForm();
-		if ($('#hdMapUrl').val() != undefined) {//没有上传图片不显示
+		if ($('#hdMapUrl').val() != undefined&&$('#hdMapUrl').val() !="") {//没有上传图片不显示
 			var url = sys.rootPath + "/product/loadQRCode.html?productId="
 					+ $('#productId').val() + '&baseUri='
 					+ $.url().attr('path');
@@ -62,11 +64,12 @@
 					value="${page.orderByType }">
 				<input type="hidden" name="productId" id="productId"
 					value="${productEntity.productId }">
-
+			
 				<input type="hidden" id="productTypeId"
 					value="${productEntity.productType.productTypeId }">
 			</c:if>
-
+				<input type="hidden" id="attachmentNames"
+					value="${productEntity.attachmentNames }">
 			<div class="form-group">
 				<input type="hidden" name="hdMapUrl" id="hdMapUrl"
 					value="${productEntity.hdMapUrl }">
@@ -161,7 +164,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="form-group"> 
+			<div class="form-group">
 				<div class="row">
 					<label class="col-sm-1 control-label no-padding-right"
 						for="usdPrice">美金单价:</label>
@@ -181,7 +184,7 @@
 								placeholder="收购单价..." />
 						</div>
 					</div>
-				
+
 					<label class="col-sm-1 control-label no-padding-right"
 						for="vatRate">增值税率:</label>
 					<div class="col-sm-2">
@@ -191,7 +194,7 @@
 								placeholder="增值税率..." />
 						</div>
 					</div>
-					
+
 					<label class="col-sm-1 control-label no-padding-right"
 						for="taxRebateRate">退税率:</label>
 					<div class="col-sm-2">
@@ -221,7 +224,7 @@
 								placeholder="底BottomΦ(mm)..." />
 						</div>
 					</div>
-					
+
 					<label class="col-sm-1 control-label no-padding-right" for="height">Height:</label>
 					<div class="col-sm-2">
 						<div>
@@ -230,7 +233,7 @@
 								placeholder="高Height(mm)..." />
 						</div>
 					</div>
-					
+
 					<label class="col-sm-1 control-label no-padding-right" for="gw">G.W:</label>
 					<div class="col-sm-2">
 						<div>
@@ -250,7 +253,7 @@
 								placeholder="外箱长（单位:cm）..." />
 						</div>
 					</div>
-	
+
 					<label class="col-sm-1 control-label no-padding-right" for="width">外箱宽:</label>
 					<div class="col-sm-2">
 						<div>
@@ -258,7 +261,7 @@
 								value="${productEntity.width }" placeholder="外箱宽（单位：cm）..." />
 						</div>
 					</div>
-				
+
 					<label class="col-sm-1 control-label no-padding-right"
 						for="packHeight">外箱高:</label>
 					<div class="col-sm-2">
@@ -288,7 +291,7 @@
 								placeholder="容量（ml）..." />
 						</div>
 					</div>
-		
+
 					<label class="col-sm-1 control-label no-padding-right" for="weight">单品重量:</label>
 					<div class="col-sm-2">
 						<div>
@@ -297,7 +300,7 @@
 								placeholder="单品重量（g）..." />
 						</div>
 					</div>
-					
+
 					<label class="col-sm-1 control-label no-padding-right"
 						for="packingRate">装箱率:</label>
 					<div class="col-sm-2">
@@ -341,7 +344,8 @@
 						for="hdMapUrl">原始图:</label>
 					<div class="col-sm-3">
 						<div>
-							<a id="downloadfile" ><input type="button" value="下载原始图" class="btn btn-success btn-sm"/></a>
+							<a id="downloadfile"><input type="button" value="下载原始图"
+								class="btn btn-success btn-sm" /></a>
 						</div>
 					</div>
 				</div>
@@ -349,11 +353,20 @@
 		</form>
 		<div class="form-group">
 			<div class="row">
-				<div id="uploader-demo" class="col-sm-1">
+				<div id="uploader-demo" class="col-sm-4">
 					<div id="fileList" class="uploader-list"></div>
 					<div id="upInfo"></div>
-					<div id="filePicker">选择文件</div>
-					<input type="button" id="btn" value="开始上传" class="btn btn-default" style="width:83px;height:40px;float:left;margin-top:10px;"/>
+					<div id="filePicker">选择图片</div>
+					<input type="button" id="btn" value="开始上传" class="btn btn-default"
+						style="width: 83px; height: 40px; float: left; margin-top: 10px;" />
+				</div>
+				<div id="uploader" class="col-sm-4">
+					<div id="thelist" class="uploader-list"></div>
+					<div class="btns">
+						<div id="Picker">选择附件</div>
+						<input type="button" id="ctlBtn" value="开始上传" class="btn btn-default"
+							style="width: 83px; height: 40px; float: left; margin-top: 10px;" />
+					</div>
 				</div>
 			</div>
 		</div>

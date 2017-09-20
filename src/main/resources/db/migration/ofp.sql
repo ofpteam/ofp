@@ -210,3 +210,19 @@ DELIMITER ;;
 CREATE TRIGGER `subsheettimetrigger` BEFORE INSERT ON `quotation_sub_sheet` FOR EACH ROW set new.CreateTime=now()
 ;;
 DELIMITER ;
+
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for attachment
+-- ----------------------------
+DROP TABLE IF EXISTS `attachment`;
+CREATE TABLE `attachment` (
+  `attachmentId` int(11) NOT NULL AUTO_INCREMENT,
+  `productId` int(11) DEFAULT NULL,
+  `attachmentName` varchar(2000) DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `status` int(11) DEFAULT '1',
+  PRIMARY KEY (`attachmentId`)
+) ENGINE=InnoDB AUTO_INCREMENT=929 DEFAULT CHARSET=utf8;

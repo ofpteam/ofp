@@ -443,7 +443,7 @@
 		<where>
 			a.IS_DELETE = 0 AND b.IS_DELETE = 0
 			<if test="productCode !=null and productCode != ''">
-				and a.PRODUCT_CODE like CONCAT(#{productCode},'%')
+				and a.PRODUCT_CODE like CONCAT('%',#{productCode},'%')
 			</if>
 			<if test="parentId !=null and parentId != ''">
 				and b.PRODUCT_TYPE_ID = #{parentId}

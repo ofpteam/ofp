@@ -231,7 +231,7 @@ public class ProductController extends BaseController {
 				String path = request.getSession().getServletContext().getRealPath("/");
 				int result = productService.insertWithBlobs(productEntityWithBLOBs, path);
 				if (result == 1) {
-					if (fileNames != "") {// 上传了附件
+					if (!fileNames.equals(",")) {// 上传了附件
 						try {
 							fileNames = java.net.URLDecoder.decode(fileNames, "UTF-8");
 							String[] attachments = fileNames.split(",");
@@ -457,7 +457,7 @@ public class ProductController extends BaseController {
 				int result = productService.updateWithBlobs(productEntityWithBLOBs, path);
 
 				if (result == 1) {
-					if (fileNames != "") {// 上传了附件
+					if (!fileNames.equals(",")) {// 上传了附件
 						try {
 							fileNames = java.net.URLDecoder.decode(fileNames, "UTF-8");
 							String[] attachments = fileNames.split(",");
@@ -470,6 +470,8 @@ public class ProductController extends BaseController {
 						} catch (UnsupportedEncodingException e) {
 							e.printStackTrace();
 						}
+					}else{
+						productService.deleteAttachmentsByProductId(productEntityWithBLOBs.getProductId());
 					}
 					map.put("success", Boolean.TRUE);
 					map.put("data", null);

@@ -70,7 +70,6 @@ $('#btnPrintTag').click(function(){
 		//var t=oTable.rows('.selected').data();
 	});
 //	var path =sys.rootPath+url+'?productIds=' + productIds + '&baseUri=' + $.url().attr('path');
-	debugger;
 	$.post(sys.rootPath+'/product/printProductTag.html',{productIds:products},function(resp){
 		var result = JSON.parse(resp);
 		if(result.success==false){
@@ -146,9 +145,39 @@ var dtGridColumns = [{
     type : 'string',
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
+},{
+    id : 'length',
+    title : '外箱长',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header'
+},{
+    id : 'width',
+    title : '外箱宽',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header'
+},{
+    id : 'packHeight',
+    title : '外箱高',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header'
+},{
+    id : 'packingRate',
+    title : '装箱率',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header'
 }, {
-    id : 'volume',
-    title : '容量',
+    id : 'cbm',
+    title : 'CBM',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header'
+}, {
+    id : 'gw',
+    title : 'GW',
     type : 'string',
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'

@@ -422,6 +422,12 @@
 		a.BOTTOM bottom,
 		a.HEIGHT height,
 		a.VOLUME volume,
+		a.LENGTH length,
+		a.WIDTH  width,
+		a.PACK_HEIGHT packHeight,
+		a.PACKING_RATE packingRate,
+		a.CBM cbm,
+		a.GW gw,
 		a.FACTORY_CODE factoryCode,
 		b.CN_NAME AS typecn_name
 		FROM product

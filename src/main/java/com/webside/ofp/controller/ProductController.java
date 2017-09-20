@@ -498,17 +498,17 @@ public class ProductController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping("downloadAttachmentByName.html")
 	public String downloadFile(@RequestParam("fileName") String fileName, HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response) throws UnsupportedEncodingException {
 		if (fileName != null) {
 			String realPath = OfpConfig.exportTempPath + File.separator;
 			File file = new File(realPath, fileName);
 			if (file.exists()) {
 				response.setContentType("application/force-download");// 设置强制下载不打开
-				response.addHeader("Content-Disposition",
-						"attachment;fileName=" + fileName.substring(36, fileName.length()));// 设置文件名
+				response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(fileName.substring(36, fileName.length()), "UTF-8"));  
 				byte[] buffer = new byte[1024];
 				FileInputStream fis = null;
 				BufferedInputStream bis = null;

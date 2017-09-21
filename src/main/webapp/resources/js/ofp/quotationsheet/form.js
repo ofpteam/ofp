@@ -372,7 +372,7 @@ oTable = $('#example').dataTable({
 										usdPrice : productList.data[i].usdPrice,
 										unit : productList.data[i].unit,
 										packingRate : productList.data[i].packingRate,
-										number : productList.data[i].number,
+										number : productList.data[i].number==undefined?"":productList.data[i].number,
 										packNum : 1,
 										totalcbm : 1* productList.data[i].cbm,
 										totalGw : 1* productList.data[i].gw,

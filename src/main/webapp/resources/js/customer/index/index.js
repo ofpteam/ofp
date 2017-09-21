@@ -1,3 +1,78 @@
+lastAciontUrl=new Array();//最后一次访问地址
+
+jQuery(document).ready(function($) {
+	  if (window.history && window.history.pushState) {
+	    $(window).on('popstate', function() {
+	      var hashLocation = location.hash;
+	      var hashSplit = hashLocation.split("#!/");
+	      var hashName = hashSplit[1];
+	      if (hashName !== '') {
+	        var hash = window.location.hash;
+	        if (hash === '') {
+	        	  if(lastAciontUrl.length>1){
+              	    lastAciontUrl.pop();
+              	     $(".page-content").empty();//清除该节点子元素
+    	 			 $(".page-content").load(sys.rootPath + lastAciontUrl[lastAciontUrl.length-1],function(data, statusTxt, xhr){
+                   	if(statusTxt == "error" || statusTxt=="timeout" || statusTxt=="parsererror")
+                   	{
+                   		layer.msg("请求服务器超时,请重新登录或刷新浏览器再试!", {icon : 0});
+                   	}else //statusTxt=="success" || statusTxt=="notmodified"
+                   	{
+                   		//匹配json字符串
+                   		if(data.match("^\{(.+:.+,*){1,}\}$"))
+			            	{
+			            		$(".page-content").empty();//清除该节点子元素
+			            		
+			            		data = $.parseJSON(data);
+			            		if(data.status == "401")
+			            		{
+			            			layer.msg(data.message, {icon : 0});
+			            			//$(".page-content").load(sys.rootPath + data.url);
+			            		}else if(data.status == "403")
+			            		{
+			            			layer.confirm(data.message, {
+					                    icon : 3,
+					                    title : '提示',
+	                    				btn: ['重新登录','取消'] //按钮
+					                }, function(index, layero) {
+					                    window.location.href = sys.rootPath + data.url;
+					                });
+			            		}
+			            	}
+                   	}
+                   });
+    	 				
+                }else{
+                	  window.history.pushState('forward', null, './index.html'); //在IE中必须得有这两行
+                	   window.history.forward(1);
+              	  //返回首页
+              	  //webside.common.loadPage("/welcome.jsp");
+                    //$(".breadcrumb").html('<li><i class="ace-icon fa fa-home home-icon"></i><a href="javascript:webside.index.initHomePage();">首页</a></li><li class="active">控制台</li>');
+                }
+	        }
+	      }
+	    });
+
+	    window.history.pushState('forward', null, './index.html');
+	  }
+
+	});
+/*
+$(document).ready(function(e) { 
+    var counter = 0;
+    if (window.history && window.history.pushState) {
+                     $(window).on('popstate', function () {
+                    	 //'&baseUri=' + $.url().attr('path');
+                                    //window.history.pushState('forward', null, '');
+                    	 			debugger;
+                                
+                        });
+      }
+
+      window.history.pushState('forward', null, ''); //在IE中必须得有这两行
+     // window.history.forward(1);
+});*/
+
 $(function(){
 	$(document).ajaxSend( function(event, jqXHR, options){
 		var loc = $.url().attr('path');
@@ -49,6 +124,9 @@ var webside = {
                             $(".breadcrumb").html(breadcrumb);
                             //加载页面
                             $(".page-content").empty();//清除该节点子元素
+                            if($.inArray(sn[sn.length - 1],lastAciontUrl)==-1){//去掉重复
+                            	  lastAciontUrl.push(sn[sn.length - 1]);
+                            }
                             $(".page-content").load(sys.rootPath + sn[sn.length - 1],function(data, statusTxt, xhr){
                             	layer.close(lay);
                             	if(statusTxt == "error" || statusTxt=="timeout" || statusTxt=="parsererror")
@@ -142,6 +220,9 @@ var webside = {
          * @param nav 待加载的资源URL
          */
         loadPage : function(nav) {
+        	 if($.inArray(nav,lastAciontUrl)==-1){//去掉重复
+            	  lastAciontUrl.push(nav);
+            }
             //加载页面
             $(".page-content").load(sys.rootPath + nav ,function(data, statusTxt, xhr){
             	if(statusTxt == "error" || statusTxt=="timeout" || statusTxt=="parsererror")

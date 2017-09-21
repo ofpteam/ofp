@@ -21,7 +21,7 @@
 <script type="text/javascript">
 	$(function() {
 		validateForm();
-		if ($('#hdMapUrl').val() != undefined&&$('#hdMapUrl').val() !="") {//没有上传图片不显示
+		if ($('#hdMapUrl').val() != undefined && $('#hdMapUrl').val() != "") {//没有上传图片不显示
 			var url = sys.rootPath + "/product/loadQRCode.html?productId="
 					+ $('#productId').val() + '&baseUri='
 					+ $.url().attr('path');
@@ -64,12 +64,12 @@
 					value="${page.orderByType }">
 				<input type="hidden" name="productId" id="productId"
 					value="${productEntity.productId }">
-			
+
 				<input type="hidden" id="productTypeId"
 					value="${productEntity.productType.productTypeId }">
 			</c:if>
-				<input type="hidden" id="attachmentNames"
-					value="${productEntity.attachmentNames }">
+			<input type="hidden" id="attachmentNames"
+				value="${productEntity.attachmentNames }">
 			<div class="form-group">
 				<input type="hidden" name="hdMapUrl" id="hdMapUrl"
 					value="${productEntity.hdMapUrl }">
@@ -275,8 +275,8 @@
 					<label class="col-sm-1 control-label no-padding-right" for="cbm">CBM:</label>
 					<div class="col-sm-2">
 						<div>
-							<input class="form-control" name="cbm" id="cbm" type="number"
-								readonly value="${productEntity.cbm }" placeholder="CBM..." />
+							<input class="form-control" name="cbm" id="cbm" readonly
+								value="${productEntity.cbm }" placeholder="CBM..." />
 						</div>
 					</div>
 				</div>
@@ -333,43 +333,71 @@
 							<img id="qrCode" alt="二维码" height="200px" />
 						</div>
 					</div>
+
 					<label class="col-sm-1 control-label no-padding-right"
-						for="packHeight">缩略图:</label>
+						for="packHeight">缩略图(点击下载):</label>
 					<div class="col-sm-3">
 						<div>
-							<img id="thumbnail" alt="缩略图" height="200px" />
+							<a id="downloadfile"><img id="thumbnail" alt="缩略图"
+								height="200px" /></a>
+						</div>
+					</div>
+
+					<label class="col-sm-1 control-label no-padding-right"
+						for="packHeight">上传图片:</label>
+					<div class="col-sm-3" id="uploader-demo">
+						<div>
+							<div id="fileList" class="uploader-list"></div>
+							<div id="upInfo"></div>
+							<div id="filePicker">选择图片</div>
+							<input type="button" id="btn" value="开始上传"
+								class="btn btn-default"
+								style="width: 83px; height: 40px; float: left; margin-top: 10px;" />
+						</div>
+					</div>
+					<!-- <div id="uploader-demo" class="col-sm-3">
+						
+					</div> -->
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<label class="col-sm-1 control-label no-padding-right"
+						for="packHeight">附件列表:</label>
+					<div class="col-sm-3">
+						<div id="thelist" class="uploader-list"></div>
+					</div>
+					<label class="col-sm-1 control-label no-padding-right"
+						for="packHeight"></label>
+					<div class="col-sm-3 no-padding-left">
+						<div>
+							
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right"
-						for="hdMapUrl">原始图:</label>
-					<div class="col-sm-3">
+						for="packHeight">上传附件:</label>
+					<div class="col-sm-3" id="uploader">
 						<div>
-							<a id="downloadfile"><input type="button" value="下载原始图"
-								class="btn btn-success btn-sm" /></a>
+							<div>
+								<div class="btns">
+									<div id="Picker">选择附件</div>
+									<input type="button" id="ctlBtn" value="开始上传"
+										class="btn btn-default"
+										style="width: 83px; height: 40px; float: left; margin-top: 10px;" />
+								</div>
+							</div>
 						</div>
 					</div>
+
+					<!-- <label class="col-sm-2 control-label no-padding-right"
+					for="hdMapUrl">上传附件:</label>
+				<div class="col-sm-2" id="uploader">
+					
+				</div> -->
 				</div>
 			</div>
 		</form>
-		<div class="form-group">
-			<div class="row">
-				<div id="uploader-demo" class="col-sm-4">
-					<div id="fileList" class="uploader-list"></div>
-					<div id="upInfo"></div>
-					<div id="filePicker">选择图片</div>
-					<input type="button" id="btn" value="开始上传" class="btn btn-default"
-						style="width: 83px; height: 40px; float: left; margin-top: 10px;" />
-				</div>
-				<div id="uploader" class="col-sm-4">
-					<div id="thelist" class="uploader-list"></div>
-					<div class="btns">
-						<div id="Picker">选择附件</div>
-						<input type="button" id="ctlBtn" value="开始上传" class="btn btn-default"
-							style="width: 83px; height: 40px; float: left; margin-top: 10px;" />
-					</div>
-				</div>
-			</div>
-		</div>
+
 	</div>
 </div>
 <div class="center">

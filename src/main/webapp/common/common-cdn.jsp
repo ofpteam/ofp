@@ -74,7 +74,7 @@
 <!-- 元素动画 -->
 <script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
 
-<script type="text/javascript" src="${ctx}/resources/js/customer/index/index.min.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/customer/index/index.js"></script>
 <script type="text/javascript" type="text/javascript">
 var sys = sys || {};
 sys.rootPath = "${ctx}";

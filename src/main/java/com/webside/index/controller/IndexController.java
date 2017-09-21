@@ -254,7 +254,7 @@ public class IndexController extends BaseController {
 
 		// 注销登录
 		ShiroAuthenticationManager.logout();
-		return "redirect:/";
+		return "redirect:/login.html";
 	}
 
 	/**

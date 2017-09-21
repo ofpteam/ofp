@@ -146,6 +146,12 @@ var dtGridColumns = [{
     columnClass : 'text-center',
     headerClass : 'dlshouwen-grid-header'
 },{
+    id : 'volume',
+    title : '容量',
+    type : 'string',
+    columnClass : 'text-center',
+    headerClass : 'dlshouwen-grid-header'
+},{
     id : 'length',
     title : '外箱长',
     type : 'string',

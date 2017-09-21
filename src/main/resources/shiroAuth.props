@@ -14,6 +14,14 @@
 /index.html=kickout,kickoutAuth,login,remember
 /user/**=kickout,kickoutAuth,login,perm,remember,baseUrl
 /role/**=kickout,kickoutAuth,login,perm,remember,baseUrl
+#自定义项目添加
+/product/**=kickout,kickoutAuth,login,perm,remember,baseUrl
+/ocustomer/**=kickout,kickoutAuth,login,perm,remember,baseUrl
+/itemtype/**=kickout,kickoutAuth,login,perm,remember,baseUrl
+/producttype/**=kickout,kickoutAuth,login,perm,remember,baseUrl
+/quotationsheet/**=kickout,kickoutAuth,login,perm,remember,baseUrl
+/interestRate/**=kickout,kickoutAuth,login,perm,remember,baseUrl
+/roleProduct/**=kickout,kickoutAuth,login,perm,remember,baseUrl
 /resource/**=kickout,kickoutAuth,login,perm,remember,baseUrl
 /logInfo/**=kickout,kickoutAuth,login,perm,remember,baseUrl
 /loginInfo/**=kickout,kickoutAuth,login,perm,remember,baseUrl

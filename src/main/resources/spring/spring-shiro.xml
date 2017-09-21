@@ -133,7 +133,7 @@
 				<entry key="perm" value-ref="permissionFilter"/>
 				<entry key="roles" value-ref="roleFilter"/>
 				<entry key="baseUrl" value-ref="baseUrl"/>
-				<entry key="ssl" value-ref="sslFilter"></entry>
+			<!-- 	<entry key="ssl" value-ref="sslFilter"></entry> -->
 			</map>
 		</property>
 	</bean>

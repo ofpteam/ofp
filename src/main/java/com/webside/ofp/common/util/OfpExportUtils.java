@@ -164,8 +164,9 @@ public class OfpExportUtils extends ExportUtils{
 			sheet.setColumnView(startColumn, 14); //设置列宽
 			if(product.getQrCodePic() != null){
 				//缩略图
-				WritableImage image = new WritableImage(startColumn,startRow,1,1,product.getQrCodePic());
+				WritableImage image = new WritableImage(startColumn+0.05,startRow+0.05,0.9,0.9,product.getQrCodePic());
 				sheet.addImage(image);
+				sheet.addCell(new Label(startColumn,startRow,"",headerCellFormat));
 			}
 			Label labelCustomer = new Label(startColumn,startRow+1,product.getProductCode(),headerCellFormat);
 			sheet.addCell(labelCustomer);
@@ -339,15 +340,17 @@ public class OfpExportUtils extends ExportUtils{
 			QuotationSubSheetEntity subSheet = subList.get(i);
 			int currentRow = subStartRow + i;
 			
-		    sheet.setRowView(currentRow, 1600, false); //设置行高
+		    sheet.setRowView(currentRow, 1800, false); //设置行高
 		    
 			//产品编号
 			Label itemNoLabel = new Label(0,currentRow,subSheet.getProduct().getProductCode(),bodyCellFormat);
 			sheet.addCell(itemNoLabel);
 			
 			//缩略图
-			WritableImage image = new WritableImage(1,currentRow,1,1,subSheet.getProduct().getThumbnail());
+			//x.y是图片相对于当前cell的位置，width和height是图片高宽
+			WritableImage image = new WritableImage(1+0.05,currentRow+0.05,0.9,0.9,subSheet.getProduct().getThumbnail());
 			sheet.addImage(image);
+			sheet.addCell(new Label(1,currentRow,"",bodyCellFormat));
 			
 			//货描
 			/*Label descHLabel = new Label(2,subStartRow,"Description",headerCellFormat);
@@ -627,7 +630,7 @@ public class OfpExportUtils extends ExportUtils{
 		for(int i=0;i<subList.size();i++){
 			QuotationSubSheetEntity subSheet = subList.get(i);
 			
-		    sheet.setRowView(subStartRow+1, 1600, false); //设置行高
+		    sheet.setRowView(subStartRow+1, 1800, false); //设置行高
 		    
 			//产品编号
 			Label itemNoHLabel = new Label(0,subStartRow,"Item No.",headerCellFormat);
@@ -638,8 +641,9 @@ public class OfpExportUtils extends ExportUtils{
 			//缩略图
 			Label photoHLabel = new Label(1,subStartRow,"Photo",headerCellFormat);
 			sheet.addCell(photoHLabel);
-			WritableImage image = new WritableImage(1,subStartRow+1,1,1,subSheet.getProduct().getThumbnail());
+			WritableImage image = new WritableImage(1+0.05,subStartRow+1+0.05,0.9,0.9,subSheet.getProduct().getThumbnail());
 			sheet.addImage(image);
+			sheet.addCell(new Label(1,subStartRow+1,"",bodyCellFormat));
 			
 			//货描
 			Label descHLabel = new Label(2,subStartRow,"Description",headerCellFormat);

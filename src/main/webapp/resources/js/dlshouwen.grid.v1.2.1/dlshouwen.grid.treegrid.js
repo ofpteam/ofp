@@ -75,7 +75,7 @@
 					columnId : '',
 					//排序类型：0-不排序；1-正序；2-倒序
 					sortType : 0
-				},
+				},sortEnable:true,//是否允许排序
 				//排序缓存的原生数据
 				sortOriginalDatas : null,
 				//参数列表
@@ -110,6 +110,8 @@
 					gridReflectionObj.showProcessBar();
 					//首次加载
 					if(gridReflectionObj.init.toolsIsInit==false){
+						//加载是否排序
+						gridReflectionObj.sortEnable = gridReflectionObj.option.sortEnable;
 						//设置初始化完成
 						gridReflectionObj.init.toolsIsInit = true;
 						//加载工具按钮
@@ -1336,6 +1338,7 @@
 					
 					//绑定排序方法
 					$('#dlshouwen_grid_'+gridId+' .can-sort').click(function(){
+						if(gridReflectionObj.sortEnable==true){
 						//获取列编号
 						var columnId = $(this).attr('columnId');
 						//根据当前的排序参数设置显示的排序图标
@@ -1357,6 +1360,7 @@
 						}
 						//重新加载数据
 						gridReflectionObj.reload();
+						}
 					});
 					//绑定复选方法
 					if(gridReflectionObj.option.onCheck){
@@ -3547,6 +3551,7 @@
 			exportURL : '/grid/export',
 			pageSize : 20,
 			pageSizeLimit : [20, 50, 100],
+			sortEnable:true,
 			postParams : false,//是否传递参数,只在loadAll=true时有效
 			isreload : false,//刷新时是否重新从服务器获取数据,只在loadAll=true时有效
 			isTreeGrid : false,	//是否为treegrid方式初始化表格

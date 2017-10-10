@@ -1,4 +1,6 @@
 var productSelectedList= new Array();
+var isAllChecked=false;//默认没有全选
+
 //更新选中记录
 function onChecked(productId){
 	if($.inArray(productId, productSelectedList)==-1 ){
@@ -81,11 +83,28 @@ $('#btnPrintTag').click(function(){
 	
 //    $('#productForm').attr("action", path).submit();
 });
-
+//选取所有
+function checkAll(){
+	debugger;
+	if ($("#checkAllbutton").prop('checked')) {
+		$.each(grid.exhibitDatas,function(i,v){
+			onChecked(v.productId);
+			$("#"+v.productId).attr("checked","true"); //全选
+		});
+		//$("input[name='checkProduct']").attr("checked","true"); //全选
+	}else{
+		$.each(grid.exhibitDatas,function(i,v){
+			onChecked(v.productId);
+			$("#"+v.productId).removeAttr("checked"); //取消全选
+		});
+		//$("input[name='checkProduct']").removeAttr("checked"); //反选
+	}
+	
+}
 
 var dtGridColumns = [{
 	id : 'productId',
-	title : '选择',
+	title :'<input type="checkbox" onclick="checkAll()" id="checkAllbutton"  class="productCheckBox" />',
 	type : 'text',
 	columnClass : 'text-center',
 	hideType : 'xs',
@@ -99,7 +118,7 @@ var dtGridColumns = [{
 		var columnId = grid.sortParameter.columnId;
 		// 获取排序方式 [0-不排序，1-正序，2-倒序]
 		var sortType = grid.sortParameter.sortType;
-			return '<input type="checkbox" onclick="onChecked('+value+')" class="productCheckBox" id="'+value+'"/>';
+			return '<input type="checkbox" name="checkProduct" onclick="onChecked('+value+')" class="productCheckBox" id="'+value+'"/>';
 	    }
 },{
 	id : 'productId',
@@ -209,6 +228,7 @@ var dtGridColumns = [{
 }];
 var dtGridOption = {
     lang : 'zh-cn',
+    sortEnable:false,//不排序
     ajaxLoad : true,
     /*check : true,*/
     extraWidth : '37px',
@@ -226,16 +246,21 @@ var dtGridOption = {
     	     /*onCheck : function(isChecked, record, grid, dataNo, row, extraCell, e){
     	    	         var log = '<p>复选事件触发。是否复选：'+isChecked+'；触发行坐标：'+dataNo+'。</p>';
     	    },*/onGridComplete : function(grid){
+    	    	debugger;
     	    	if(productSelectedList.length>0){//之前选中的要重新勾选上
     	    		for(var i=0;i<productSelectedList.length;i++){
     	    			$('#'+productSelectedList[i]).attr('checked','checked');
     	    		}
     	    	}
+    	    	 if($("input[name='checkProduct']:checked").size()>=grid.pager.pageSize){//全选按钮反显
+    	    		 $('#checkAllbutton').attr('checked','checked');
+    	    	 }
     	    }
 };
 var grid = $.fn.dlshouwen.grid.init(dtGridOption);
 $(function() {
     grid.load();
+   
     $("#btnSearch").click(productSearch);
     //注册回车键事件
     document.onkeypress = function(e){

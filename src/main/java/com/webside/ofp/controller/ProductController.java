@@ -147,6 +147,7 @@ public class ProductController extends BaseController {
 		parameters = pager.getParameters();
 		if (parameters.size() < 0) {
 			parameters.put("productCode", null);// 商品编码
+			parameters.put("factoryCode", null);// 工程编码
 			parameters.put("parentId", null);// 分类
 		}
 		// 获取当前登录用户

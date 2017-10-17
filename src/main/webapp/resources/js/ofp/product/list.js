@@ -313,6 +313,7 @@ function editProduct(nav){
 function productSearch() {
     grid.parameters = new Object();
     grid.parameters['productCode'] = $("#searchKey").val();//商品中文名称
+    grid.parameters['factoryCode'] = $("#factoryCode").val();//工程编码
     grid.parameters['parentId'] = $("#parentId").val();//商品大类Id
     grid.refresh(true);
 }

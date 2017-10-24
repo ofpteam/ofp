@@ -73,9 +73,33 @@ function validateSubmitVal(){
 	return sb;
  }
 
+//明细校验 
+function validateDetailVal(aaData){
+	var sb ="";
+	for (var i=0;i<aaData.length;i++) {
+		if(!isDecimal(aaData[i].usdPrice)){
+			sb+="美元单价必须为数字,";
+			break;
+		}
+		if(!isDecimal(aaData[i].buyPrice)){
+			sb+="收购单价必须为数字,";
+			break;
+		}
+		if(!isDecimal(aaData[i].number)){
+			sb+="必须为数字,";
+			break;
+		}
+		if(!isDecimal(aaData[i].packNum)){
+			sb+="箱数必须为数字,";
+			break;
+		}
+	}
+	return sb ;
+ }
+
 //判断大于0的数字
 function isDecimal(vlNumber){
-	if(isNaN(vlNumber)) 
+	if(isNaN(vlNumber)||vlNumber=="") 
 		return false;
 	else   if(vlNumber.valueOf()>= 0) 
 		return true;
@@ -98,7 +122,6 @@ $('#btnCalculation').click(function(){
         				icon : 0
         			});
         	 }else{//校验成功
-        		 debugger;
         		 var profit=CalculationProfit(aaData);
         		 $('#profit').val(profit);//利润
         		 var usPricteTotal=0;
@@ -116,6 +139,12 @@ $('#btnCalculation').click(function(){
 });
 //计算利润
 function CalculationProfit(aaData){
+	var message=validateDetailVal(aaData);//校验明细有没有正确填写内容
+	if(message!=""){
+		layer.msg("商品明细中"+message, {
+			icon : 0
+		});
+	}else{
 	var usPricteTotal = 0;// 美金总额 = 美金单价 * 数量
 	var buyPriceTotal = 0;// 收购总价
 	var profit = 0;// 利润 = 美金总额*汇率 - 收购单价*数量 +
@@ -152,6 +181,7 @@ function CalculationProfit(aaData){
 	var p11 = buyPriceTotal * Number($('#interestMonth').val()) * Number($('#rate').val());
 	profit = rmbPriceTotal-buyPriceTotal+p9-p4-p10-p11-p2-p3-p5-p6;//(p1 - p2 - p3 - p4 - p5 - p6) * p7 - p8 + p9 - p10 - p11;
 	return profit.toFixed(2);
+	}
 }
 
 //添加商品选择大类后，商品也需要变
@@ -637,6 +667,13 @@ function validateForm() {
 							var quotationSheetId = $("#quotationSheetId").val();
 							var items = $('#example').dataTable().fnGetData();
 							if (items.length > 0) {
+								var message=validateDetailVal(items);//校验明细有没有正确填写内容
+								if(message!=""){
+									layer.msg("商品明细中"+message, {
+										icon : 0
+									});
+									return false;
+								}
 								$('#quotationSubSheetEntities').val(
 										JSON.stringify(items));
 								$('#quotationsheetForm').serializeArray();

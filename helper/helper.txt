@@ -10,4 +10,5 @@
 解决办法：找到你的mysql目录下的my.ini配置文件，加入以下代码
 max_allowed_packet=500M
 wait_timeout=288000
+
 interactive_timeout = 288000

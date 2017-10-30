@@ -368,7 +368,7 @@ if ($('#quotationSheetId').val() != undefined) {// 编辑时
 	url += "?id=" + $('#quotationSheetId').val();
 }
 oTable = $('#example').dataTable({
-	"sScrollY" : "400px",
+	"sScrollY" : "300px",
 	"sScrollX" : "130%", // 横向滚动条
 	"bScrollCollapse" : true,
 	"bProcessing" : true, // 显示是否加载
@@ -377,7 +377,7 @@ oTable = $('#example').dataTable({
 	"bServerSide" : false,
 	"sAjaxSource" : url, // 后台地址
 	"bAutoWidth" : false,
-	"bPaginate" : true, // 翻页功能
+	"bPaginate" : false, // 翻页功能
 	"iDisplayLength" : 5,
 	"iDisplayStart" : 0,
 	"aLengthMenu" : [ 5, 20 ],
@@ -402,7 +402,7 @@ oTable = $('#example').dataTable({
 										usdPrice : productList.data[i].usdPrice,
 										unit : productList.data[i].unit,
 										packingRate : productList.data[i].packingRate,
-										number : productList.data[i].number==undefined?"":productList.data[i].number,
+										number : productList.data[i].number==undefined?1*productList.data[i].packingRate:productList.data[i].number,
 										packNum : 1,
 										totalcbm : 1* productList.data[i].cbm,
 										totalGw : 1* productList.data[i].gw,

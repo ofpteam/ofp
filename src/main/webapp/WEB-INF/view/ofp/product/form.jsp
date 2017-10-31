@@ -412,6 +412,9 @@
 		保存
 		</c:if>
 	</button>
+	<button  type="button" id="btnCopy"
+		class="btn btn-danger btn-sm"><i class="fa fa-undo"></i>&nbsp;复制
+	</button>
 	<button id="btn" type="button"
 		onclick="webside.common.loadPage('/product/listUI.html<c:if test="${!empty productEntity}">?page=${page.pageNum }&rows=${page.pageSize }&sidx=${page.orderByColumn }&sord=${page.orderByType }</c:if>')"
 		class="btn btn-info btn-sm">

@@ -1,3 +1,40 @@
+//编辑
+function editProductLink(nav,id){
+	 //当前页码
+	 var nowPage = grid.pager.nowPage;
+	// 获取每页显示的记录数(即: select框中的10,20,30)
+	var pageSize = grid.pager.pageSize;
+	// 获取排序字段
+	var columnId = grid.sortParameter.columnId;
+	// 获取排序方式 [0-不排序，1-正序，2-倒序]
+	var sortType = grid.sortParameter.sortType;
+	webside.common.loadPage(nav + '?id=' +id + "&page="
+				+ nowPage + "&rows=" + pageSize + "&sidx=" + columnId
+				+ "&sord=" + sortType);
+}
+//复制商品
+$('#btnCopy').click(function(){
+	 layer.confirm('确认复制该条商品信息吗？', {
+         icon : 3,
+         title : '复制提示'
+     }, function(index, layero) {
+    	 jQuery.ajax({  
+    	        type:"post",  
+    	        url:sys.rootPath + '/product/copyProduct.html',  
+    	        dataType:"json",  
+    	        data:{id:$('#productId').val()},
+    	        success: function (result) {  
+    	    		if(result.success==true){
+    	    			layer.close(index);
+    	    			editProductLink('/product/editUI.html',result.data);
+    	    		}else{
+    	    			layer.msg('复制数据失败', {icon : 0});
+    	    		}
+    	        }
+    		});
+     })
+});
+	
 //商品大类一级选中后重新绑定二级目录
 $('#productTypefather').change(function(){
 	jQuery.ajax({  

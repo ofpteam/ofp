@@ -44,6 +44,7 @@ import com.webside.exception.AjaxException;
 import com.webside.exception.ServiceException;
 import com.webside.ofp.common.bean.PrintProductTagBean;
 import com.webside.ofp.common.config.OfpConfig;
+import com.webside.ofp.common.util.FileUtil;
 import com.webside.ofp.common.util.OfpExportUtils;
 import com.webside.ofp.common.util.PrintUtil;
 import com.webside.ofp.common.util.StrUtil;
@@ -284,7 +285,7 @@ public class ProductController extends BaseController {
 			}
 		} else {// 编辑
 			ProductEntity productEntity = productService.findById((long) productEntityWithBLOBs.getProductId());// 编辑时如果还是那个工厂编码则通过
-			if (!productEntity.getFactoryCode().equals(productEntityWithBLOBs.getFactoryCode())) {
+			if (productEntity!=null&&productEntity.getFactoryCode()!=null&&!productEntity.getFactoryCode().equals(productEntityWithBLOBs.getFactoryCode())) {
 				int count = productService.count(parameter);// 编辑时如果还是那个工厂编码则通过
 				if (count > 0) {
 					sb.append("工厂编码已经存在,");
@@ -352,6 +353,46 @@ public class ProductController extends BaseController {
 		 * sb.append("CBM不能为空或者CBM小于0,"); }
 		 */
 		return sb;
+	}
+
+	/***
+	 * 复制商品
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("copyProduct.html")
+	@ResponseBody
+	public Object copyProduct( HttpServletRequest request,long id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			ProductEntityWithBLOBs productEntityWithBLOBs = productService.findByIdWithBLOBS(id);
+			productEntityWithBLOBs.setProductId(null);
+			productEntityWithBLOBs.setFactoryCode(null);
+			int index = (OfpConfig.exportTempPath + File.separator).length() + 36;// 截取文件真正名字开始的所有位置
+			String fileRrealName = productEntityWithBLOBs.getHdMapUrl().substring(index,
+					productEntityWithBLOBs.getHdMapUrl().length());
+			String copyName = OfpConfig.exportTempPath + File.separator + UUID.randomUUID().toString() + fileRrealName;
+			File fromFile =new File(productEntityWithBLOBs.getHdMapUrl());
+			File toFile =new File(copyName);
+			FileUtil.copyFile(fromFile, toFile);
+			productEntityWithBLOBs.setHdMapUrl(copyName);
+			String path = request.getSession().getServletContext().getRealPath("/");
+			int productId=productService.insertWithBlobs(productEntityWithBLOBs, path);
+			if(productId>=1){
+				map.put("success", Boolean.TRUE);
+				map.put("data", productEntityWithBLOBs.getProductId());
+				map.put("message", "成功");
+			}else{
+				map.put("success", Boolean.FALSE);
+				map.put("data", productEntityWithBLOBs.getProductId());
+				map.put("message", "复制失败");
+			}
+		
+		} catch (Exception e) {
+			throw new AjaxException(e);
+		}
+		return map;
 	}
 
 	@RequestMapping("editUI.html")
@@ -471,7 +512,7 @@ public class ProductController extends BaseController {
 						} catch (UnsupportedEncodingException e) {
 							e.printStackTrace();
 						}
-					}else{
+					} else {
 						productService.deleteAttachmentsByProductId(productEntityWithBLOBs.getProductId());
 					}
 					map.put("success", Boolean.TRUE);
@@ -501,7 +542,7 @@ public class ProductController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping("downloadAttachmentByName.html")
 	public String downloadFile(@RequestParam("fileName") String fileName, HttpServletRequest request,
@@ -511,7 +552,8 @@ public class ProductController extends BaseController {
 			File file = new File(realPath, fileName);
 			if (file.exists()) {
 				response.setContentType("application/force-download");// 设置强制下载不打开
-				response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(fileName.substring(36, fileName.length()), "UTF-8"));  
+				response.setHeader("Content-Disposition", "attachment; filename="
+						+ java.net.URLEncoder.encode(fileName.substring(36, fileName.length()), "UTF-8"));
 				byte[] buffer = new byte[1024];
 				FileInputStream fis = null;
 				BufferedInputStream bis = null;

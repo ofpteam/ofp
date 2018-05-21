@@ -190,7 +190,8 @@
 					<div class="col-sm-2">
 						<div>
 							<input class="form-control" name="vatRate" id="vatRate"
-								type="number" value="${productEntity.vatRate }"
+								type="number" value=<c:if test="${empty productEntity}">16</c:if>
+								"${productEntity.vatRate }"
 								placeholder="增值税率..." />
 						</div>
 					</div>
@@ -201,7 +202,8 @@
 						<div>
 							<input class="form-control" name="taxRebateRate"
 								id="taxRebateRate" type="number"
-								value="${productEntity.taxRebateRate }" placeholder="退税率..." />
+								value=<c:if test="${empty productEntity}">13</c:if>
+								"${productEntity.taxRebateRate }" placeholder="退税率..." />
 						</div>
 					</div>
 				</div>

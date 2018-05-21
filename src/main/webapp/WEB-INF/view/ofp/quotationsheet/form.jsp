@@ -301,7 +301,7 @@ padding-left:18px
 						<div>
 							<input class="form-control" name="taxRebateRate"
 								id="taxRebateRate"
-								value=<c:if test="${empty quotationSheetEntity}">0</c:if>
+								value=<c:if test="${empty quotationSheetEntity}">13</c:if>
 								"${quotationSheetEntity.taxRebateRate }"
 								 type="number"
 								placeholder="退税率..." />
@@ -313,9 +313,9 @@ padding-left:18px
 						<div>
 							<input class="form-control" name="valueAddedTaxRate"
 								id="valueAddedTaxRate" type="number"
-								value=<c:if test="${empty quotationSheetEntity}">17</c:if>
+								value=<c:if test="${empty quotationSheetEntity}">16</c:if>
 								"${quotationSheetEntity.valueAddedTaxRate }"
-								placeholder="换汇率..." />
+								placeholder="增值税率..." />
 						</div>
 					</div>
 					<label class="col-sm-1 control-label no-padding-right" for="rate">利率:</label>

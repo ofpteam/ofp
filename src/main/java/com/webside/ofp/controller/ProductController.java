@@ -48,6 +48,7 @@ import com.webside.ofp.common.util.FileUtil;
 import com.webside.ofp.common.util.OfpExportUtils;
 import com.webside.ofp.common.util.PrintUtil;
 import com.webside.ofp.common.util.StrUtil;
+import com.webside.ofp.model.InterestRateEntity;
 import com.webside.ofp.model.ProductEntity;
 import com.webside.ofp.model.ProductEntityWithBLOBs;
 import com.webside.ofp.model.ProductTypeEntity;
@@ -673,6 +674,32 @@ public class ProductController extends BaseController {
 		}
 	}
 
+	@RequestMapping(value = "loadLogo.html", method = RequestMethod.GET)
+	public void loadLogo(HttpServletRequest request, HttpServletResponse response) {
+		OutputStream os = null;
+		FileInputStream fis = null;
+		try {
+			String path = request.getSession().getServletContext().getRealPath("/");
+			String logoUrl = path + "\\resources\\images\\ofplogomiddle.png";
+			response.setContentType("png/*");
+			os = response.getOutputStream();
+			fis = new FileInputStream(new File(logoUrl));
+			byte[] bytes = new byte[fis.available()];
+			fis.read(bytes);
+			os.write(bytes);
+			os.flush();
+		} catch (Exception e) {
+			logger.error("产品缩略图显示异常：", e);
+		} finally {
+			try {
+				fis.close();
+				os.close();
+			} catch (IOException e) {
+				logger.error("关闭流错误：", e);
+			}
+		}
+	}
+	
 	@RequestMapping(value = "loadThumbnail.html", method = RequestMethod.GET)
 	public void loadThumbnail(HttpServletResponse response, @RequestParam("productId") int productId) {
 		OutputStream os = null;
@@ -744,7 +771,7 @@ public class ProductController extends BaseController {
 	}
 
 	/**
-	 * 打印产品标签
+	 * 后台打印产品标签
 	 * 
 	 * @param response
 	 * @param quotationSheet
@@ -796,6 +823,54 @@ public class ProductController extends BaseController {
 		return map;
 	}
 
+	/**
+	 * 客户端打印
+	 * @param model
+	 * @param request
+	 * @param productIds
+	 * @return
+	 */
+	@RequestMapping(value = "printProductTagJsUI.html")
+	public String printProductTagJsUI(Model model,HttpServletRequest request, String productIds) {
+		try {
+			String[] productIdArr = productIds.split(",");
+			List<Integer> productIdList = new ArrayList<Integer>();
+			for (String id : productIdArr) {
+				if (id != null && !"".equals(id)) {
+					productIdList.add(Integer.parseInt(id));
+				}
+			}
+			List<ProductEntityWithBLOBs> productEntityWithBLOBs = productService.findByIdsWithBLOBS(productIdList);
+			
+			
+			String path = request.getSession().getServletContext().getRealPath("/");
+			String logoUrl = path + "\\resources\\images\\ofplogomiddle.png";
+			
+			List<PrintProductTagBean> productTagBeanlist = new ArrayList<PrintProductTagBean>();
+			for (ProductEntityWithBLOBs productEntityWithBLOB : productEntityWithBLOBs) {
+				PrintProductTagBean productTagBean = new PrintProductTagBean();
+				productTagBean.setArtNo("Art No.:" + productEntityWithBLOB.getProductCode());
+				productTagBean.setFacNo("Fac No.:" + productEntityWithBLOB.getFactoryCode());
+				productTagBean.setTbh("T/B/H(mm):" + productEntityWithBLOB.getTop() + "*" + productEntityWithBLOB.getBottom() + "*"
+						+ productEntityWithBLOB.getHeight());
+				productTagBean
+						.setWeightAndVol("W(g):" + productEntityWithBLOB.getWeight() + " Vol(ml):" + productEntityWithBLOB.getVolume());
+				productTagBean.setMeas("Meas.:" + productEntityWithBLOB.getLength() + "*" + productEntityWithBLOB.getWidth() + "*"
+						+ productEntityWithBLOB.getPackHeight());
+				productTagBean.setGw("Gw(kgs).:" + productEntityWithBLOB.getGw());
+				productTagBean.setQcAndCbm("Q/C:" + productEntityWithBLOB.getPackingRate() + productEntityWithBLOB.getUnit() + " CBM:"
+						+ productEntityWithBLOB.getCbm());
+				productTagBean.setSmallLogo(logoUrl);
+				productTagBeanlist.add(productTagBean);
+			}
+			
+			model.addAttribute("productTagBeans", productTagBeanlist);
+			return Common.BACKGROUND_PATH + "/ofp/product/printUI";
+		} catch (Exception e) {
+			throw new AjaxException(e);
+		}
+	}
+	
 	/**
 	 * 文件下载
 	 * 

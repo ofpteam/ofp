@@ -81,7 +81,6 @@ $('#btnPrintTag').click(function(){
 //	var path =sys.rootPath+url+'?productIds=' + productIds + '&baseUri=' + $.url().attr('path');
 	
 	$.post(sys.rootPath+'/product/printProductTag.html',{productIds:productIds},function(resp){
-		debugger;
 		var result = JSON.parse(resp);
 		if(result.success==false){
 			layer.msg('打印失败', {icon : 0});
@@ -91,4 +90,23 @@ $('#btnPrintTag').click(function(){
 	});
 	
 //    $('#productForm').attr("action", path).submit();
+});
+
+$('#btnPrintTagJS').click(function(){
+	var MliSelected = oTable.$('tr.selected');
+	if(MliSelected.length == 0){
+		alert("请先选择产品！");
+		return;
+	}
+	var productIds="";
+	$.each(MliSelected,function(i,v){
+		//选中
+		productIds += oTable.fnGetData(v).productId + ",";
+		//var t=oTable.rows('.selected').data();
+		
+//		productId = oTable.fnGetData(v).productId;
+	});
+//	var path =sys.rootPath+url+'?productIds=' + productIds + '&baseUri=' + $.url().attr('path');
+	
+	webside.common.loadPage('/product/printProductTagJsUI.html?productIds=' + productIds);
 });

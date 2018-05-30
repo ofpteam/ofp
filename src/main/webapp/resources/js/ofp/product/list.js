@@ -57,6 +57,7 @@ $('#btnBatchExport').click(function(){
     $('#productForm').attr("action", path).submit();
 });
 
+//后台打印标签
 $('#btnPrintTag').click(function(){
 	var url = "/product/printProductTag.html";
 	if(productSelectedList.length==0){
@@ -83,6 +84,23 @@ $('#btnPrintTag').click(function(){
 	
 //    $('#productForm').attr("action", path).submit();
 });
+
+//浏览器打印标签
+$('#btnPrintTagJS').click(function(){
+	if(productSelectedList.length==0){
+		layer.msg("你没有选择行", {
+			icon : 0
+		});
+		return;
+	}
+	var products="";
+	$.each(productSelectedList,function(i,v){
+		//选中
+		products += productSelectedList[i] + ",";
+	});
+	webside.common.loadPage('/product/printProductTagJsUI.html?productIds=' + products);
+});
+
 //选取所有
 function checkAll(){
 	debugger;

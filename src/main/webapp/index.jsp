@@ -5,7 +5,9 @@
 <html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <%@include file="common/common-cdn.jsp"%>
-
+<style media="print">
+.noprint{display:none;}     
+</style>
 <script type="text/javascript">
 $(function() {
     webside.index.initHomePage();
@@ -271,7 +273,7 @@ $(function() {
 		<div class="main-content">
 			<div class="main-content-inner">
 				<!-- #section:basics/content.breadcrumbs -->
-				<div class="breadcrumbs" id="breadcrumbs">
+				<div class="breadcrumbs noprint" id="breadcrumbs">
 					<script type="text/javascript">
 						try {
 							ace.settings.check('breadcrumbs', 'fixed')
@@ -300,7 +302,7 @@ $(function() {
 				</div>
 
 				<!-- #section:settings.box -->
-				<div class="ace-settings-container" id="ace-settings-container"
+				<div class="ace-settings-container noprint" id="ace-settings-container"
 					style="display: none;">
 					<div class="btn btn-app btn-xs btn-warning ace-settings-btn"
 						id="ace-settings-btn">
@@ -409,7 +411,7 @@ $(function() {
 		</div>
 		<!-- /.main-content -->
 
-		<div class="footer">
+		<div class="footer noprint">
 			<div class="footer-inner">
 				<!-- #section:basics/footer -->
 				<div class="footer-content">

@@ -168,7 +168,7 @@ public class ProductTest extends BaseJunit {
 	
 	@Test
 	public void testFindByIdWithBlobs(){
-		Integer id = 44;
+		Integer id = 46;
 		ProductEntityWithBLOBs productEntity  = productService.findByIdWithBLOBS(id);
 		System.out.println("分页查询返回对象：" + productEntity.toString());
 		if(productEntity.getQrCodePic() != null){
@@ -176,7 +176,7 @@ public class ProductTest extends BaseJunit {
 			byte[] data = productEntity.getThumbnail();
 			if(data != null){
 				InputStream in = new ByteArrayInputStream(data);
-				String targetPath = "D:/" + productEntity.getProductCode() + "_thumbnail.jpg";
+				String targetPath = "D:/" + productEntity.getProductCode() + "_thumbnail" + productEntity.getHdMapUrl().substring(productEntity.getHdMapUrl().lastIndexOf("."));
 //				String targetPath = "D:/" + productEntity.getProductCode() + "_qrcode.jpg";
 				File file = new File(targetPath);
 				String path = targetPath.substring(0, targetPath.lastIndexOf("/"));

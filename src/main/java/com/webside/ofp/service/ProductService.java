@@ -31,7 +31,7 @@ public interface ProductService extends BaseService<ProductEntity, Long> {
 	public List<Map<String, Object>> selectByPage(Map<String, Object> paramet);
 
 	public List<ProductEntityWithBLOBs> findByIdsWithBLOBS(List<Integer> productIds);
-
+	
 	/**
 	 * 删除附件
 	 */

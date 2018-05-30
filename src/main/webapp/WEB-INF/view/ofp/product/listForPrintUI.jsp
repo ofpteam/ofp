@@ -37,4 +37,8 @@
 		class="btn btn-success btn-sm" >
 		<i class="fa fa-user-plus"></i>&nbsp; 打印标签
 	</button>
+	<button id="btnPrintTagJS" type="button"
+		class="btn btn-success btn-sm" >
+		<i class="fa fa-user-plus"></i>&nbsp; 客户端打印标签
+	</button>
 </div>

@@ -34,7 +34,10 @@
 		<i class="fa fa-user-plus"></i>&nbsp; 导出二维码
 	</button>
 	<button id="btnPrintTag" type="button" 	class="btn btn-success btn-sm">
-		<i class="fa fa-user-plus"></i>&nbsp; 打印标签
+		<i class="fa fa-user-plus"></i>&nbsp; 后台打印标签
+	</button>
+	<button id="btnPrintTagJS" type="button" class="btn btn-success btn-sm" >
+		<i class="fa fa-user-plus"></i>&nbsp; 浏览器打印标签
 	</button>
 	<button id="btnBatchExport" type="button" 	class="btn btn-success btn-sm">
 		<i class="fa fa-user-plus"></i>&nbsp; 批量导出
